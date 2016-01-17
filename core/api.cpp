@@ -98,6 +98,7 @@
 #include "samplers/halton.h"
 #include "samplers/lowdiscrepancy.h"
 #include "samplers/random.h"
+#include "samplers/scalloped.h"
 #include "samplers/stratified.h"
 #include "shapes/cone.h"
 #include "shapes/cylinder.h"
@@ -631,6 +632,8 @@ Sampler *MakeSampler(const string &name,
         sampler = CreateLowDiscrepancySampler(paramSet, film, camera);
     else if (name == "random")
         sampler = CreateRandomSampler(paramSet, film, camera);
+    else if (name == "scalloped")
+        sampler = CreateScallopedSampler(paramSet, film, camera);
     else if (name == "stratified")
         sampler = CreateStratifiedSampler(paramSet, film, camera);
     else

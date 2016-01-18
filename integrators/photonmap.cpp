@@ -507,7 +507,7 @@ void PhotonShootingTask::Run() {
                         break;
                     alpha = anew / continueProb;
                     specularPath &= ((flags & BSDF_SPECULAR) != 0);
-                    
+
                     if (indirectDone && !specularPath) break;
                     photonRay = RayDifferential(photonIsect.dg.p, wi, photonRay,
                                                 photonIsect.rayEpsilon);
@@ -563,7 +563,7 @@ void PhotonShootingTask::Run() {
             if (causticPhotons.size() >= integrator->nCausticPhotonsWanted)
                 causticDone = true;
         }
-        
+
         for (uint32_t i = 0; i < localRadiancePhotons.size(); ++i)
             radiancePhotons.push_back(localRadiancePhotons[i]);
         localRadiancePhotons.erase(localRadiancePhotons.begin(), localRadiancePhotons.end());

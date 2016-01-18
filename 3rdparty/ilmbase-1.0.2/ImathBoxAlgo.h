@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -61,8 +61,8 @@
 //				    Vec3<T> &enterPoint,
 //				    Vec3<T> &exitPoint)
 //
-//	bool intersects(const Box<Vec3<T>> &box, 
-//			const Line3<T> &ray, 
+//	bool intersects(const Box<Vec3<T>> &box,
+//			const Line3<T> &ray,
 //			Vec3<T> intersectionPoint)
 //
 //	bool intersects(const Box<Vec3<T>> &box, const Line3<T> &ray)
@@ -182,23 +182,23 @@ transform (const Box< Vec3<S> > &box, const Matrix44<T> &m)
     {
 	Box< Vec3<S> > newBox;
 
-	for (int i = 0; i < 3; i++) 
+	for (int i = 0; i < 3; i++)
         {
 	    newBox.min[i] = newBox.max[i] = (S) m[3][i];
 
-	    for (int j = 0; j < 3; j++) 
+	    for (int j = 0; j < 3; j++)
             {
 		float a, b;
 
 		a = (S) m[j][i] * box.min[j];
 		b = (S) m[j][i] * box.max[j];
 
-		if (a < b) 
+		if (a < b)
                 {
 		    newBox.min[i] += a;
 		    newBox.max[i] += b;
 		}
-		else 
+		else
                 {
 		    newBox.min[i] += b;
 		    newBox.max[i] += a;
@@ -228,7 +228,7 @@ transform (const Box< Vec3<S> > &box, const Matrix44<T> &m)
 
     Box< Vec3<S> > newBox;
 
-    for (int i = 0; i < 8; i++) 
+    for (int i = 0; i < 8; i++)
 	newBox.extendBy (points[i] * m);
 
     return newBox;
@@ -259,23 +259,23 @@ affineTransform (const Box< Vec3<S> > &box, const Matrix44<T> &m)
 
     Box< Vec3<S> > newBox;
 
-    for (int i = 0; i < 3; i++) 
+    for (int i = 0; i < 3; i++)
     {
 	newBox.min[i] = newBox.max[i] = (S) m[3][i];
 
-	for (int j = 0; j < 3; j++) 
+	for (int j = 0; j < 3; j++)
 	{
 	    float a, b;
 
 	    a = (S) m[j][i] * box.min[j];
 	    b = (S) m[j][i] * box.max[j];
 
-	    if (a < b) 
+	    if (a < b)
 	    {
 		newBox.min[i] += a;
 		newBox.max[i] += b;
 	    }
-	    else 
+	    else
 	    {
 		newBox.min[i] += b;
 		newBox.max[i] += a;
@@ -368,7 +368,7 @@ findEntryAndExitPoints (const Line3<T> &r,
 	    {
 		tBackMin = t1;
 
-		exit.x = b.max.x; 
+		exit.x = b.max.x;
 		exit.y = clamp (r.pos.y + t1 * r.dir.y, b.min.y, b.max.y);
 		exit.z = clamp (r.pos.z + t1 * r.dir.z, b.min.z, b.max.z);
 	    }
@@ -377,7 +377,7 @@ findEntryAndExitPoints (const Line3<T> &r,
 	    {
 		tFrontMax = t2;
 
-		entry.x = b.min.x; 
+		entry.x = b.min.x;
 		entry.y = clamp (r.pos.y + t2 * r.dir.y, b.min.y, b.max.y);
 		entry.z = clamp (r.pos.z + t2 * r.dir.z, b.min.z, b.max.z);
 	    }
@@ -403,7 +403,7 @@ findEntryAndExitPoints (const Line3<T> &r,
 	    {
 		tBackMin = t1;
 
-		exit.x = b.min.x; 
+		exit.x = b.min.x;
 		exit.y = clamp (r.pos.y + t1 * r.dir.y, b.min.y, b.max.y);
 		exit.z = clamp (r.pos.z + t1 * r.dir.z, b.min.z, b.max.z);
 	    }
@@ -412,7 +412,7 @@ findEntryAndExitPoints (const Line3<T> &r,
 	    {
 		tFrontMax = t2;
 
-		entry.x = b.max.x; 
+		entry.x = b.max.x;
 		entry.y = clamp (r.pos.y + t2 * r.dir.y, b.min.y, b.max.y);
 		entry.z = clamp (r.pos.z + t2 * r.dir.z, b.min.z, b.max.z);
 	    }
@@ -444,7 +444,7 @@ findEntryAndExitPoints (const Line3<T> &r,
 		tBackMin = t1;
 
 		exit.x = clamp (r.pos.x + t1 * r.dir.x, b.min.x, b.max.x);
-		exit.y = b.max.y; 
+		exit.y = b.max.y;
 		exit.z = clamp (r.pos.z + t1 * r.dir.z, b.min.z, b.max.z);
 	    }
 
@@ -453,7 +453,7 @@ findEntryAndExitPoints (const Line3<T> &r,
 		tFrontMax = t2;
 
 		entry.x = clamp (r.pos.x + t2 * r.dir.x, b.min.x, b.max.x);
-		entry.y = b.min.y; 
+		entry.y = b.min.y;
 		entry.z = clamp (r.pos.z + t2 * r.dir.z, b.min.z, b.max.z);
 	    }
 	}
@@ -479,7 +479,7 @@ findEntryAndExitPoints (const Line3<T> &r,
 		tBackMin = t1;
 
 		exit.x = clamp (r.pos.x + t1 * r.dir.x, b.min.x, b.max.x);
-		exit.y = b.min.y; 
+		exit.y = b.min.y;
 		exit.z = clamp (r.pos.z + t1 * r.dir.z, b.min.z, b.max.z);
 	    }
 
@@ -488,7 +488,7 @@ findEntryAndExitPoints (const Line3<T> &r,
 		tFrontMax = t2;
 
 		entry.x = clamp (r.pos.x + t2 * r.dir.x, b.min.x, b.max.x);
-		entry.y = b.max.y; 
+		entry.y = b.max.y;
 		entry.z = clamp (r.pos.z + t2 * r.dir.z, b.min.z, b.max.z);
 	    }
 	}
@@ -520,7 +520,7 @@ findEntryAndExitPoints (const Line3<T> &r,
 
 		exit.x = clamp (r.pos.x + t1 * r.dir.x, b.min.x, b.max.x);
 		exit.y = clamp (r.pos.y + t1 * r.dir.y, b.min.y, b.max.y);
-		exit.z = b.max.z; 
+		exit.z = b.max.z;
 	    }
 
 	    if (tFrontMax < t2)
@@ -529,7 +529,7 @@ findEntryAndExitPoints (const Line3<T> &r,
 
 		entry.x = clamp (r.pos.x + t2 * r.dir.x, b.min.x, b.max.x);
 		entry.y = clamp (r.pos.y + t2 * r.dir.y, b.min.y, b.max.y);
-		entry.z = b.min.z; 
+		entry.z = b.min.z;
 	    }
 	}
 	else if (r.pos.z < b.min.z || r.pos.z > b.max.z)
@@ -555,7 +555,7 @@ findEntryAndExitPoints (const Line3<T> &r,
 
 		exit.x = clamp (r.pos.x + t1 * r.dir.x, b.min.x, b.max.x);
 		exit.y = clamp (r.pos.y + t1 * r.dir.y, b.min.y, b.max.y);
-		exit.z = b.min.z; 
+		exit.z = b.min.z;
 	    }
 
 	    if (tFrontMax < t2)
@@ -564,7 +564,7 @@ findEntryAndExitPoints (const Line3<T> &r,
 
 		entry.x = clamp (r.pos.x + t2 * r.dir.x, b.min.x, b.max.x);
 		entry.y = clamp (r.pos.y + t2 * r.dir.y, b.min.y, b.max.y);
-		entry.z = b.max.z; 
+		entry.z = b.max.z;
 	    }
 	}
 	else if (r.pos.z < b.min.z || r.pos.z > b.max.z)
@@ -670,7 +670,7 @@ intersects (const Box< Vec3<T> > &b, const Line3<T> &r, Vec3<T> &ip)
 	    {
 		tFrontMax = t;
 
-		ip.x = b.min.x; 
+		ip.x = b.min.x;
 		ip.y = clamp (r.pos.y + t * r.dir.y, b.min.y, b.max.y);
 		ip.z = clamp (r.pos.z + t * r.dir.z, b.min.z, b.max.z);
 	    }
@@ -700,7 +700,7 @@ intersects (const Box< Vec3<T> > &b, const Line3<T> &r, Vec3<T> &ip)
 	    {
 		tFrontMax = t;
 
-		ip.x = b.max.x; 
+		ip.x = b.max.x;
 		ip.y = clamp (r.pos.y + t * r.dir.y, b.min.y, b.max.y);
 		ip.z = clamp (r.pos.z + t * r.dir.z, b.min.z, b.max.z);
 	    }
@@ -741,7 +741,7 @@ intersects (const Box< Vec3<T> > &b, const Line3<T> &r, Vec3<T> &ip)
 		tFrontMax = t;
 
 		ip.x = clamp (r.pos.x + t * r.dir.x, b.min.x, b.max.x);
-		ip.y = b.min.y; 
+		ip.y = b.min.y;
 		ip.z = clamp (r.pos.z + t * r.dir.z, b.min.z, b.max.z);
 	    }
 	}
@@ -765,13 +765,13 @@ intersects (const Box< Vec3<T> > &b, const Line3<T> &r, Vec3<T> &ip)
 	{
 	    T d = b.max.y - r.pos.y;
 	    T t = (r.dir.y < -1 || d > TMAX * r.dir.y)? d / r.dir.y: TMAX;
-	    
+
 	    if (tFrontMax < t)
 	    {
 		tFrontMax = t;
 
 		ip.x = clamp (r.pos.x + t * r.dir.x, b.min.x, b.max.x);
-		ip.y = b.max.y; 
+		ip.y = b.max.y;
 		ip.z = clamp (r.pos.z + t * r.dir.z, b.min.z, b.max.z);
 	    }
 	}
@@ -805,14 +805,14 @@ intersects (const Box< Vec3<T> > &b, const Line3<T> &r, Vec3<T> &ip)
 	{
 	    T d = b.min.z - r.pos.z;
 	    T t = (r.dir.z > 1 || d < TMAX * r.dir.z)? d / r.dir.z: TMAX;
-	    
+
 	    if (tFrontMax < t)
 	    {
 		tFrontMax = t;
 
 		ip.x = clamp (r.pos.x + t * r.dir.x, b.min.x, b.max.x);
 		ip.y = clamp (r.pos.y + t * r.dir.y, b.min.y, b.max.y);
-		ip.z = b.min.z; 
+		ip.z = b.min.z;
 	    }
 	}
     }
@@ -835,14 +835,14 @@ intersects (const Box< Vec3<T> > &b, const Line3<T> &r, Vec3<T> &ip)
 	{
 	    T d = b.max.z - r.pos.z;
 	    T t = (r.dir.z < -1 || d > TMAX * r.dir.z)? d / r.dir.z: TMAX;
-	    
+
 	    if (tFrontMax < t)
 	    {
 		tFrontMax = t;
 
 		ip.x = clamp (r.pos.x + t * r.dir.x, b.min.x, b.max.x);
 		ip.y = clamp (r.pos.y + t * r.dir.y, b.min.y, b.max.y);
-		ip.z = b.max.z; 
+		ip.z = b.max.z;
 	    }
 	}
     }

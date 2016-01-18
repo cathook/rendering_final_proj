@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -65,7 +65,7 @@ struct Channel
 
     //--------------------------------------------
     // Subsampling: pixel (x, y) is present in the
-    // channel only if 
+    // channel only if
     //
     //  x % xSampling == 0 && y % ySampling == 0
     //
@@ -96,7 +96,7 @@ struct Channel
     //------------
     // Constructor
     //------------
-    
+
     Channel (PixelType type = HALF,
 	     int xSampling = 1,
 	     int ySampling = 1,
@@ -171,7 +171,7 @@ class ChannelList
     Iterator			find (const std::string &name);
     ConstIterator		find (const std::string &name) const;
 
-    
+
     //-----------------------------------------------------------------
     // Support for image layers:
     //
@@ -186,7 +186,7 @@ class ChannelList
     // several different virtual light sources.  The channels in
     // this image might be called "light1.R", "light1.G", "light1.B",
     // "light2.R", "light2.G", "light2.B", etc.
-    // 
+    //
     // Note that this naming convention allows layers to be nested;
     // for example, "light1.specular.R" identifies the "R" channel
     // in the "specular" sub-layer of layer "light1".
@@ -330,7 +330,7 @@ ChannelList::Iterator::Iterator (const ChannelList::ChannelMap::iterator &i):
 }
 
 
-inline ChannelList::Iterator &		
+inline ChannelList::Iterator &
 ChannelList::Iterator::operator ++ ()
 {
     ++_i;
@@ -338,7 +338,7 @@ ChannelList::Iterator::operator ++ ()
 }
 
 
-inline ChannelList::Iterator 	
+inline ChannelList::Iterator
 ChannelList::Iterator::operator ++ (int)
 {
     Iterator tmp = *this;
@@ -354,7 +354,7 @@ ChannelList::Iterator::name () const
 }
 
 
-inline Channel &	
+inline Channel &
 ChannelList::Iterator::channel () const
 {
     return _i->second;
@@ -390,7 +390,7 @@ ChannelList::ConstIterator::operator ++ ()
 }
 
 
-inline ChannelList::ConstIterator 		
+inline ChannelList::ConstIterator
 ChannelList::ConstIterator::operator ++ (int)
 {
     ConstIterator tmp = *this;
@@ -405,7 +405,7 @@ ChannelList::ConstIterator::name () const
     return *_i->first;
 }
 
-inline const Channel &	
+inline const Channel &
 ChannelList::ConstIterator::channel () const
 {
     return _i->second;

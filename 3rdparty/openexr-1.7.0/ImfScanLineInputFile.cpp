@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -196,7 +196,7 @@ struct ScanLineInputFile::Data: public Mutex
                                             // linebuffer
     vector<InSliceInfo>	slices;             // info about channels in file
     IStream *		is;                 // file stream to read from
-    
+
     vector<LineBuffer*> lineBuffers;        // each holds one line buffer
     int			linesInBuffer;      // number of scanlines each buffer
                                             // holds
@@ -204,7 +204,7 @@ struct ScanLineInputFile::Data: public Mutex
 
      Data (IStream *is, int numThreads);
     ~Data ();
-    
+
     inline LineBuffer * getLineBuffer (int number); // hash function from line
     						    // buffer indices into our
 						    // vector of line buffers
@@ -357,7 +357,7 @@ readPixelData (ScanLineInputFile::Data *ifd,
 
     Xdr::read <StreamIO> (*ifd->is, yInFile);
     Xdr::read <StreamIO> (*ifd->is, dataSize);
-    
+
     if (yInFile != minY)
         throw Iex::InputExc ("Unexpected data block y coordinate.");
 
@@ -449,19 +449,19 @@ LineBufferTask::execute ()
         //
         // Uncompress the data, if necessary
         //
-    
+
         if (_lineBuffer->uncompressedData == 0)
         {
             int uncompressedSize = 0;
             int maxY = min (_lineBuffer->maxY, _ifd->maxY);
-    
+
             for (int i = _lineBuffer->minY - _ifd->minY;
                  i <= maxY - _ifd->minY;
 		 ++i)
 	    {
                 uncompressedSize += (int) _ifd->bytesPerLine[i];
 	    }
-    
+
             if (_lineBuffer->compressor &&
                 _lineBuffer->dataSize < uncompressedSize)
             {
@@ -477,12 +477,12 @@ LineBufferTask::execute ()
                 // If the line is uncompressed, it's in XDR format,
                 // regardless of the compressor's output format.
                 //
-    
+
                 _lineBuffer->format = Compressor::XDR;
                 _lineBuffer->uncompressedData = _lineBuffer->buffer;
             }
         }
-        
+
         int yStart, yStop, dy;
 
         if (_ifd->lineOrder == INCREASING_Y)
@@ -497,7 +497,7 @@ LineBufferTask::execute ()
             yStop = _scanLineMin - 1;
             dy = -1;
         }
-    
+
         for (int y = yStart; y != yStop; y += dy)
         {
             //
@@ -505,46 +505,46 @@ LineBufferTask::execute ()
             // from the machine-independent representation, and
             // store the result in the frame buffer.
             //
-    
+
             const char *readPtr = _lineBuffer->uncompressedData +
                                   _ifd->offsetInLineBuffer[y - _ifd->minY];
-    
+
             //
             // Iterate over all image channels.
             //
-    
+
             for (unsigned int i = 0; i < _ifd->slices.size(); ++i)
             {
                 //
                 // Test if scan line y of this channel contains any data
 		// (the scan line contains data only if y % ySampling == 0).
                 //
-    
+
                 const InSliceInfo &slice = _ifd->slices[i];
-    
+
                 if (modp (y, slice.ySampling) != 0)
                     continue;
-    
+
                 //
                 // Find the x coordinates of the leftmost and rightmost
                 // sampled pixels (i.e. pixels within the data window
                 // for which x % xSampling == 0).
                 //
-    
+
                 int dMinX = divp (_ifd->minX, slice.xSampling);
                 int dMaxX = divp (_ifd->maxX, slice.xSampling);
-    
+
                 //
 		// Fill the frame buffer with pixel data.
                 //
-    
+
                 if (slice.skip)
                 {
                     //
                     // The file contains data for this channel, but
                     // the frame buffer contains no slice for this channel.
                     //
-    
+
                     skipChannel (readPtr, slice.typeInFile, dMaxX - dMinX + 1);
                 }
                 else
@@ -552,14 +552,14 @@ LineBufferTask::execute ()
                     //
                     // The frame buffer contains a slice for this channel.
                     //
-    
+
                     char *linePtr  = slice.base +
                                         divp (y, slice.ySampling) *
                                         slice.yStride;
-    
+
                     char *writePtr = linePtr + dMinX * slice.xStride;
                     char *endPtr   = linePtr + dMaxX * slice.xStride;
-                    
+
                     copyIntoFrameBuffer (readPtr, writePtr, endPtr,
                                          slice.xStride, slice.fill,
                                          slice.fillValue, _lineBuffer->format,
@@ -609,12 +609,12 @@ newLineBufferTask
     try
     {
 	lineBuffer->wait ();
-	
+
 	if (lineBuffer->number != number)
 	{
 	    lineBuffer->minY = ifd->minY + number * ifd->linesInBuffer;
 	    lineBuffer->maxY = lineBuffer->minY + ifd->linesInBuffer - 1;
-	    
+
 	    lineBuffer->number = number;
 	    lineBuffer->uncompressedData = 0;
 
@@ -648,7 +648,7 @@ newLineBufferTask
 	lineBuffer->post();
 	throw;
     }
-    
+
     scanLineMin = max (lineBuffer->minY, scanLineMin);
     scanLineMax = min (lineBuffer->maxY, scanLineMax);
 
@@ -754,7 +754,7 @@ ScanLineInputFile::version () const
 }
 
 
-void	
+void
 ScanLineInputFile::setFrameBuffer (const FrameBuffer &frameBuffer)
 {
     Lock lock (*_data);
@@ -868,7 +868,7 @@ ScanLineInputFile::isComplete () const
 }
 
 
-void	
+void
 ScanLineInputFile::readPixels (int scanLine1, int scanLine2)
 {
     try
@@ -915,10 +915,10 @@ ScanLineInputFile::readPixels (int scanLine1, int scanLine2)
 	// task group goes out of scope, the destructor waits until
 	// all tasks are complete.
         //
-        
+
         {
             TaskGroup taskGroup;
-    
+
             //
             // Add the line buffer tasks.
             //
@@ -928,7 +928,7 @@ ScanLineInputFile::readPixels (int scanLine1, int scanLine2)
 	    // for a successive task to execute the previous task which
 	    // used that line buffer must have completed already.
             //
-    
+
             for (int l = start; l != stop; l += dl)
             {
                 ThreadPool::addGlobalTask (newLineBufferTask (&taskGroup,
@@ -936,12 +936,12 @@ ScanLineInputFile::readPixels (int scanLine1, int scanLine2)
                                                               scanLineMin,
                                                               scanLineMax));
             }
-        
+
 	    //
             // finish all tasks
 	    //
         }
-        
+
 	//
 	// Exeption handling:
 	//
@@ -981,7 +981,7 @@ ScanLineInputFile::readPixels (int scanLine1, int scanLine2)
 }
 
 
-void	
+void
 ScanLineInputFile::readPixels (int scanLine)
 {
     readPixels (scanLine, scanLine);

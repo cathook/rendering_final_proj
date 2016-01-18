@@ -1,0 +1,1344 @@
+終端機在文法中未使用
+
+   ID
+
+
+文法
+
+    0 $accept: start $end
+
+    1 start: pbrt_stmt_list
+
+    2 array_init: %empty
+
+    3 string_array_init: %empty
+
+    4 num_array_init: %empty
+
+    5 array: string_array
+    6      | num_array
+
+    7 string_array: array_init LBRACK string_list RBRACK
+    8             | single_element_string_array
+
+    9 single_element_string_array: array_init string_list_entry
+
+   10 string_list: string_list string_list_entry
+   11            | string_list_entry
+
+   12 string_list_entry: string_array_init STRING
+
+   13 num_array: array_init LBRACK num_list RBRACK
+   14          | single_element_num_array
+
+   15 single_element_num_array: array_init num_list_entry
+
+   16 num_list: num_list num_list_entry
+   17         | num_list_entry
+
+   18 num_list_entry: num_array_init NUM
+
+   19 paramlist: paramlist_init paramlist_contents
+
+   20 paramlist_init: %empty
+
+   21 paramlist_contents: paramlist_entry paramlist_contents
+   22                   | %empty
+
+   23 paramlist_entry: STRING array
+
+   24 pbrt_stmt_list: pbrt_stmt_list pbrt_stmt
+   25               | pbrt_stmt
+
+   26 pbrt_stmt: ACCELERATOR STRING paramlist
+   27          | ACTIVETRANSFORM ALL
+   28          | ACTIVETRANSFORM ENDTIME
+   29          | ACTIVETRANSFORM STARTTIME
+   30          | AREALIGHTSOURCE STRING paramlist
+   31          | ATTRIBUTEBEGIN
+   32          | ATTRIBUTEEND
+   33          | CAMERA STRING paramlist
+   34          | CONCATTRANSFORM num_array
+   35          | COORDINATESYSTEM STRING
+   36          | COORDSYSTRANSFORM STRING
+   37          | FILM STRING paramlist
+   38          | IDENTITY
+   39          | INCLUDE STRING
+   40          | LIGHTSOURCE STRING paramlist
+   41          | LOOKAT NUM NUM NUM NUM NUM NUM NUM NUM NUM
+   42          | MAKENAMEDMATERIAL STRING paramlist
+   43          | MATERIAL STRING paramlist
+   44          | NAMEDMATERIAL STRING
+   45          | OBJECTBEGIN STRING
+   46          | OBJECTEND
+   47          | OBJECTINSTANCE STRING
+   48          | PIXELFILTER STRING paramlist
+   49          | RENDERER STRING paramlist
+   50          | REVERSEORIENTATION
+   51          | ROTATE NUM NUM NUM NUM
+   52          | SAMPLER STRING paramlist
+   53          | SCALE NUM NUM NUM
+   54          | SHAPE STRING paramlist
+   55          | SURFACEINTEGRATOR STRING paramlist
+   56          | TEXTURE STRING STRING STRING paramlist
+   57          | TRANSFORMBEGIN
+   58          | TRANSFORMEND
+   59          | TRANSFORMTIMES NUM NUM
+   60          | TRANSFORM num_array
+   61          | TRANSLATE NUM NUM NUM
+   62          | VOLUMEINTEGRATOR STRING paramlist
+   63          | VOLUME STRING paramlist
+   64          | WORLDBEGIN
+   65          | WORLDEND
+
+
+終結語詞，附有它們出現處的規則
+
+$end (0) 0
+error (256)
+STRING (258) 12 23 26 30 33 35 36 37 39 40 42 43 44 45 47 48 49 52
+    54 55 56 62 63
+ID (259)
+NUM (260) 18 41 51 53 59 61
+LBRACK (261) 7 13
+RBRACK (262) 7 13
+ACCELERATOR (263) 26
+ACTIVETRANSFORM (264) 27 28 29
+ALL (265) 27
+AREALIGHTSOURCE (266) 30
+ATTRIBUTEBEGIN (267) 31
+ATTRIBUTEEND (268) 32
+CAMERA (269) 33
+CONCATTRANSFORM (270) 34
+COORDINATESYSTEM (271) 35
+COORDSYSTRANSFORM (272) 36
+ENDTIME (273) 28
+FILM (274) 37
+IDENTITY (275) 38
+INCLUDE (276) 39
+LIGHTSOURCE (277) 40
+LOOKAT (278) 41
+MAKENAMEDMATERIAL (279) 42
+MATERIAL (280) 43
+NAMEDMATERIAL (281) 44
+OBJECTBEGIN (282) 45
+OBJECTEND (283) 46
+OBJECTINSTANCE (284) 47
+PIXELFILTER (285) 48
+RENDERER (286) 49
+REVERSEORIENTATION (287) 50
+ROTATE (288) 51
+SAMPLER (289) 52
+SCALE (290) 53
+SHAPE (291) 54
+STARTTIME (292) 29
+SURFACEINTEGRATOR (293) 55
+TEXTURE (294) 56
+TRANSFORMBEGIN (295) 57
+TRANSFORMEND (296) 58
+TRANSFORMTIMES (297) 59
+TRANSFORM (298) 60
+TRANSLATE (299) 61
+VOLUME (300) 63
+VOLUMEINTEGRATOR (301) 62
+WORLDBEGIN (302) 64
+WORLDEND (303) 65
+HIGH_PRECEDENCE (304)
+
+
+非終結語詞，附有它們出現處的規則
+
+$accept (50)
+    於左側： 0
+start (51)
+    於左側： 1, 於右側： 0
+array_init (52)
+    於左側： 2, 於右側： 7 9 13 15
+string_array_init (53)
+    於左側： 3, 於右側： 12
+num_array_init (54)
+    於左側： 4, 於右側： 18
+array (55)
+    於左側： 5 6, 於右側： 23
+string_array (56)
+    於左側： 7 8, 於右側： 5
+single_element_string_array (57)
+    於左側： 9, 於右側： 8
+string_list (58)
+    於左側： 10 11, 於右側： 7 10
+string_list_entry (59)
+    於左側： 12, 於右側： 9 10 11
+num_array (60)
+    於左側： 13 14, 於右側： 6 34 60
+single_element_num_array (61)
+    於左側： 15, 於右側： 14
+num_list (62)
+    於左側： 16 17, 於右側： 13 16
+num_list_entry (63)
+    於左側： 18, 於右側： 15 16 17
+paramlist (64)
+    於左側： 19, 於右側： 26 30 33 37 40 42 43 48 49 52 54
+    55 56 62 63
+paramlist_init (65)
+    於左側： 20, 於右側： 19
+paramlist_contents (66)
+    於左側： 21 22, 於右側： 19 21
+paramlist_entry (67)
+    於左側： 23, 於右側： 21
+pbrt_stmt_list (68)
+    於左側： 24 25, 於右側： 1 24
+pbrt_stmt (69)
+    於左側： 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42
+    43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63
+    64 65, 於右側： 24 25
+
+
+狀態 0
+
+    0 $accept: . start $end
+
+    ACCELERATOR         偏移，並進入狀態 1
+    ACTIVETRANSFORM     偏移，並進入狀態 2
+    AREALIGHTSOURCE     偏移，並進入狀態 3
+    ATTRIBUTEBEGIN      偏移，並進入狀態 4
+    ATTRIBUTEEND        偏移，並進入狀態 5
+    CAMERA              偏移，並進入狀態 6
+    CONCATTRANSFORM     偏移，並進入狀態 7
+    COORDINATESYSTEM    偏移，並進入狀態 8
+    COORDSYSTRANSFORM   偏移，並進入狀態 9
+    FILM                偏移，並進入狀態 10
+    IDENTITY            偏移，並進入狀態 11
+    INCLUDE             偏移，並進入狀態 12
+    LIGHTSOURCE         偏移，並進入狀態 13
+    LOOKAT              偏移，並進入狀態 14
+    MAKENAMEDMATERIAL   偏移，並進入狀態 15
+    MATERIAL            偏移，並進入狀態 16
+    NAMEDMATERIAL       偏移，並進入狀態 17
+    OBJECTBEGIN         偏移，並進入狀態 18
+    OBJECTEND           偏移，並進入狀態 19
+    OBJECTINSTANCE      偏移，並進入狀態 20
+    PIXELFILTER         偏移，並進入狀態 21
+    RENDERER            偏移，並進入狀態 22
+    REVERSEORIENTATION  偏移，並進入狀態 23
+    ROTATE              偏移，並進入狀態 24
+    SAMPLER             偏移，並進入狀態 25
+    SCALE               偏移，並進入狀態 26
+    SHAPE               偏移，並進入狀態 27
+    SURFACEINTEGRATOR   偏移，並進入狀態 28
+    TEXTURE             偏移，並進入狀態 29
+    TRANSFORMBEGIN      偏移，並進入狀態 30
+    TRANSFORMEND        偏移，並進入狀態 31
+    TRANSFORMTIMES      偏移，並進入狀態 32
+    TRANSFORM           偏移，並進入狀態 33
+    TRANSLATE           偏移，並進入狀態 34
+    VOLUME              偏移，並進入狀態 35
+    VOLUMEINTEGRATOR    偏移，並進入狀態 36
+    WORLDBEGIN          偏移，並進入狀態 37
+    WORLDEND            偏移，並進入狀態 38
+
+    start           進入狀態 39
+    pbrt_stmt_list  進入狀態 40
+    pbrt_stmt       進入狀態 41
+
+
+狀態 1
+
+   26 pbrt_stmt: ACCELERATOR . STRING paramlist
+
+    STRING  偏移，並進入狀態 42
+
+
+狀態 2
+
+   27 pbrt_stmt: ACTIVETRANSFORM . ALL
+   28          | ACTIVETRANSFORM . ENDTIME
+   29          | ACTIVETRANSFORM . STARTTIME
+
+    ALL        偏移，並進入狀態 43
+    ENDTIME    偏移，並進入狀態 44
+    STARTTIME  偏移，並進入狀態 45
+
+
+狀態 3
+
+   30 pbrt_stmt: AREALIGHTSOURCE . STRING paramlist
+
+    STRING  偏移，並進入狀態 46
+
+
+狀態 4
+
+   31 pbrt_stmt: ATTRIBUTEBEGIN .
+
+    $預設  使用規則 31 以縮減 (pbrt_stmt)
+
+
+狀態 5
+
+   32 pbrt_stmt: ATTRIBUTEEND .
+
+    $預設  使用規則 32 以縮減 (pbrt_stmt)
+
+
+狀態 6
+
+   33 pbrt_stmt: CAMERA . STRING paramlist
+
+    STRING  偏移，並進入狀態 47
+
+
+狀態 7
+
+   34 pbrt_stmt: CONCATTRANSFORM . num_array
+
+    $預設  使用規則 2 以縮減 (array_init)
+
+    array_init                進入狀態 48
+    num_array                 進入狀態 49
+    single_element_num_array  進入狀態 50
+
+
+狀態 8
+
+   35 pbrt_stmt: COORDINATESYSTEM . STRING
+
+    STRING  偏移，並進入狀態 51
+
+
+狀態 9
+
+   36 pbrt_stmt: COORDSYSTRANSFORM . STRING
+
+    STRING  偏移，並進入狀態 52
+
+
+狀態 10
+
+   37 pbrt_stmt: FILM . STRING paramlist
+
+    STRING  偏移，並進入狀態 53
+
+
+狀態 11
+
+   38 pbrt_stmt: IDENTITY .
+
+    $預設  使用規則 38 以縮減 (pbrt_stmt)
+
+
+狀態 12
+
+   39 pbrt_stmt: INCLUDE . STRING
+
+    STRING  偏移，並進入狀態 54
+
+
+狀態 13
+
+   40 pbrt_stmt: LIGHTSOURCE . STRING paramlist
+
+    STRING  偏移，並進入狀態 55
+
+
+狀態 14
+
+   41 pbrt_stmt: LOOKAT . NUM NUM NUM NUM NUM NUM NUM NUM NUM
+
+    NUM  偏移，並進入狀態 56
+
+
+狀態 15
+
+   42 pbrt_stmt: MAKENAMEDMATERIAL . STRING paramlist
+
+    STRING  偏移，並進入狀態 57
+
+
+狀態 16
+
+   43 pbrt_stmt: MATERIAL . STRING paramlist
+
+    STRING  偏移，並進入狀態 58
+
+
+狀態 17
+
+   44 pbrt_stmt: NAMEDMATERIAL . STRING
+
+    STRING  偏移，並進入狀態 59
+
+
+狀態 18
+
+   45 pbrt_stmt: OBJECTBEGIN . STRING
+
+    STRING  偏移，並進入狀態 60
+
+
+狀態 19
+
+   46 pbrt_stmt: OBJECTEND .
+
+    $預設  使用規則 46 以縮減 (pbrt_stmt)
+
+
+狀態 20
+
+   47 pbrt_stmt: OBJECTINSTANCE . STRING
+
+    STRING  偏移，並進入狀態 61
+
+
+狀態 21
+
+   48 pbrt_stmt: PIXELFILTER . STRING paramlist
+
+    STRING  偏移，並進入狀態 62
+
+
+狀態 22
+
+   49 pbrt_stmt: RENDERER . STRING paramlist
+
+    STRING  偏移，並進入狀態 63
+
+
+狀態 23
+
+   50 pbrt_stmt: REVERSEORIENTATION .
+
+    $預設  使用規則 50 以縮減 (pbrt_stmt)
+
+
+狀態 24
+
+   51 pbrt_stmt: ROTATE . NUM NUM NUM NUM
+
+    NUM  偏移，並進入狀態 64
+
+
+狀態 25
+
+   52 pbrt_stmt: SAMPLER . STRING paramlist
+
+    STRING  偏移，並進入狀態 65
+
+
+狀態 26
+
+   53 pbrt_stmt: SCALE . NUM NUM NUM
+
+    NUM  偏移，並進入狀態 66
+
+
+狀態 27
+
+   54 pbrt_stmt: SHAPE . STRING paramlist
+
+    STRING  偏移，並進入狀態 67
+
+
+狀態 28
+
+   55 pbrt_stmt: SURFACEINTEGRATOR . STRING paramlist
+
+    STRING  偏移，並進入狀態 68
+
+
+狀態 29
+
+   56 pbrt_stmt: TEXTURE . STRING STRING STRING paramlist
+
+    STRING  偏移，並進入狀態 69
+
+
+狀態 30
+
+   57 pbrt_stmt: TRANSFORMBEGIN .
+
+    $預設  使用規則 57 以縮減 (pbrt_stmt)
+
+
+狀態 31
+
+   58 pbrt_stmt: TRANSFORMEND .
+
+    $預設  使用規則 58 以縮減 (pbrt_stmt)
+
+
+狀態 32
+
+   59 pbrt_stmt: TRANSFORMTIMES . NUM NUM
+
+    NUM  偏移，並進入狀態 70
+
+
+狀態 33
+
+   60 pbrt_stmt: TRANSFORM . num_array
+
+    $預設  使用規則 2 以縮減 (array_init)
+
+    array_init                進入狀態 48
+    num_array                 進入狀態 71
+    single_element_num_array  進入狀態 50
+
+
+狀態 34
+
+   61 pbrt_stmt: TRANSLATE . NUM NUM NUM
+
+    NUM  偏移，並進入狀態 72
+
+
+狀態 35
+
+   63 pbrt_stmt: VOLUME . STRING paramlist
+
+    STRING  偏移，並進入狀態 73
+
+
+狀態 36
+
+   62 pbrt_stmt: VOLUMEINTEGRATOR . STRING paramlist
+
+    STRING  偏移，並進入狀態 74
+
+
+狀態 37
+
+   64 pbrt_stmt: WORLDBEGIN .
+
+    $預設  使用規則 64 以縮減 (pbrt_stmt)
+
+
+狀態 38
+
+   65 pbrt_stmt: WORLDEND .
+
+    $預設  使用規則 65 以縮減 (pbrt_stmt)
+
+
+狀態 39
+
+    0 $accept: start . $end
+
+    $end  偏移，並進入狀態 75
+
+
+狀態 40
+
+    1 start: pbrt_stmt_list .
+   24 pbrt_stmt_list: pbrt_stmt_list . pbrt_stmt
+
+    ACCELERATOR         偏移，並進入狀態 1
+    ACTIVETRANSFORM     偏移，並進入狀態 2
+    AREALIGHTSOURCE     偏移，並進入狀態 3
+    ATTRIBUTEBEGIN      偏移，並進入狀態 4
+    ATTRIBUTEEND        偏移，並進入狀態 5
+    CAMERA              偏移，並進入狀態 6
+    CONCATTRANSFORM     偏移，並進入狀態 7
+    COORDINATESYSTEM    偏移，並進入狀態 8
+    COORDSYSTRANSFORM   偏移，並進入狀態 9
+    FILM                偏移，並進入狀態 10
+    IDENTITY            偏移，並進入狀態 11
+    INCLUDE             偏移，並進入狀態 12
+    LIGHTSOURCE         偏移，並進入狀態 13
+    LOOKAT              偏移，並進入狀態 14
+    MAKENAMEDMATERIAL   偏移，並進入狀態 15
+    MATERIAL            偏移，並進入狀態 16
+    NAMEDMATERIAL       偏移，並進入狀態 17
+    OBJECTBEGIN         偏移，並進入狀態 18
+    OBJECTEND           偏移，並進入狀態 19
+    OBJECTINSTANCE      偏移，並進入狀態 20
+    PIXELFILTER         偏移，並進入狀態 21
+    RENDERER            偏移，並進入狀態 22
+    REVERSEORIENTATION  偏移，並進入狀態 23
+    ROTATE              偏移，並進入狀態 24
+    SAMPLER             偏移，並進入狀態 25
+    SCALE               偏移，並進入狀態 26
+    SHAPE               偏移，並進入狀態 27
+    SURFACEINTEGRATOR   偏移，並進入狀態 28
+    TEXTURE             偏移，並進入狀態 29
+    TRANSFORMBEGIN      偏移，並進入狀態 30
+    TRANSFORMEND        偏移，並進入狀態 31
+    TRANSFORMTIMES      偏移，並進入狀態 32
+    TRANSFORM           偏移，並進入狀態 33
+    TRANSLATE           偏移，並進入狀態 34
+    VOLUME              偏移，並進入狀態 35
+    VOLUMEINTEGRATOR    偏移，並進入狀態 36
+    WORLDBEGIN          偏移，並進入狀態 37
+    WORLDEND            偏移，並進入狀態 38
+
+    $預設  使用規則 1 以縮減 (start)
+
+    pbrt_stmt  進入狀態 76
+
+
+狀態 41
+
+   25 pbrt_stmt_list: pbrt_stmt .
+
+    $預設  使用規則 25 以縮減 (pbrt_stmt_list)
+
+
+狀態 42
+
+   26 pbrt_stmt: ACCELERATOR STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 77
+    paramlist_init  進入狀態 78
+
+
+狀態 43
+
+   27 pbrt_stmt: ACTIVETRANSFORM ALL .
+
+    $預設  使用規則 27 以縮減 (pbrt_stmt)
+
+
+狀態 44
+
+   28 pbrt_stmt: ACTIVETRANSFORM ENDTIME .
+
+    $預設  使用規則 28 以縮減 (pbrt_stmt)
+
+
+狀態 45
+
+   29 pbrt_stmt: ACTIVETRANSFORM STARTTIME .
+
+    $預設  使用規則 29 以縮減 (pbrt_stmt)
+
+
+狀態 46
+
+   30 pbrt_stmt: AREALIGHTSOURCE STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 79
+    paramlist_init  進入狀態 78
+
+
+狀態 47
+
+   33 pbrt_stmt: CAMERA STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 80
+    paramlist_init  進入狀態 78
+
+
+狀態 48
+
+   13 num_array: array_init . LBRACK num_list RBRACK
+   15 single_element_num_array: array_init . num_list_entry
+
+    LBRACK  偏移，並進入狀態 81
+
+    $預設  使用規則 4 以縮減 (num_array_init)
+
+    num_array_init  進入狀態 82
+    num_list_entry  進入狀態 83
+
+
+狀態 49
+
+   34 pbrt_stmt: CONCATTRANSFORM num_array .
+
+    $預設  使用規則 34 以縮減 (pbrt_stmt)
+
+
+狀態 50
+
+   14 num_array: single_element_num_array .
+
+    $預設  使用規則 14 以縮減 (num_array)
+
+
+狀態 51
+
+   35 pbrt_stmt: COORDINATESYSTEM STRING .
+
+    $預設  使用規則 35 以縮減 (pbrt_stmt)
+
+
+狀態 52
+
+   36 pbrt_stmt: COORDSYSTRANSFORM STRING .
+
+    $預設  使用規則 36 以縮減 (pbrt_stmt)
+
+
+狀態 53
+
+   37 pbrt_stmt: FILM STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 84
+    paramlist_init  進入狀態 78
+
+
+狀態 54
+
+   39 pbrt_stmt: INCLUDE STRING .
+
+    $預設  使用規則 39 以縮減 (pbrt_stmt)
+
+
+狀態 55
+
+   40 pbrt_stmt: LIGHTSOURCE STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 85
+    paramlist_init  進入狀態 78
+
+
+狀態 56
+
+   41 pbrt_stmt: LOOKAT NUM . NUM NUM NUM NUM NUM NUM NUM NUM
+
+    NUM  偏移，並進入狀態 86
+
+
+狀態 57
+
+   42 pbrt_stmt: MAKENAMEDMATERIAL STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 87
+    paramlist_init  進入狀態 78
+
+
+狀態 58
+
+   43 pbrt_stmt: MATERIAL STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 88
+    paramlist_init  進入狀態 78
+
+
+狀態 59
+
+   44 pbrt_stmt: NAMEDMATERIAL STRING .
+
+    $預設  使用規則 44 以縮減 (pbrt_stmt)
+
+
+狀態 60
+
+   45 pbrt_stmt: OBJECTBEGIN STRING .
+
+    $預設  使用規則 45 以縮減 (pbrt_stmt)
+
+
+狀態 61
+
+   47 pbrt_stmt: OBJECTINSTANCE STRING .
+
+    $預設  使用規則 47 以縮減 (pbrt_stmt)
+
+
+狀態 62
+
+   48 pbrt_stmt: PIXELFILTER STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 89
+    paramlist_init  進入狀態 78
+
+
+狀態 63
+
+   49 pbrt_stmt: RENDERER STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 90
+    paramlist_init  進入狀態 78
+
+
+狀態 64
+
+   51 pbrt_stmt: ROTATE NUM . NUM NUM NUM
+
+    NUM  偏移，並進入狀態 91
+
+
+狀態 65
+
+   52 pbrt_stmt: SAMPLER STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 92
+    paramlist_init  進入狀態 78
+
+
+狀態 66
+
+   53 pbrt_stmt: SCALE NUM . NUM NUM
+
+    NUM  偏移，並進入狀態 93
+
+
+狀態 67
+
+   54 pbrt_stmt: SHAPE STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 94
+    paramlist_init  進入狀態 78
+
+
+狀態 68
+
+   55 pbrt_stmt: SURFACEINTEGRATOR STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 95
+    paramlist_init  進入狀態 78
+
+
+狀態 69
+
+   56 pbrt_stmt: TEXTURE STRING . STRING STRING paramlist
+
+    STRING  偏移，並進入狀態 96
+
+
+狀態 70
+
+   59 pbrt_stmt: TRANSFORMTIMES NUM . NUM
+
+    NUM  偏移，並進入狀態 97
+
+
+狀態 71
+
+   60 pbrt_stmt: TRANSFORM num_array .
+
+    $預設  使用規則 60 以縮減 (pbrt_stmt)
+
+
+狀態 72
+
+   61 pbrt_stmt: TRANSLATE NUM . NUM NUM
+
+    NUM  偏移，並進入狀態 98
+
+
+狀態 73
+
+   63 pbrt_stmt: VOLUME STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 99
+    paramlist_init  進入狀態 78
+
+
+狀態 74
+
+   62 pbrt_stmt: VOLUMEINTEGRATOR STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 100
+    paramlist_init  進入狀態 78
+
+
+狀態 75
+
+    0 $accept: start $end .
+
+    $預設  接受
+
+
+狀態 76
+
+   24 pbrt_stmt_list: pbrt_stmt_list pbrt_stmt .
+
+    $預設  使用規則 24 以縮減 (pbrt_stmt_list)
+
+
+狀態 77
+
+   26 pbrt_stmt: ACCELERATOR STRING paramlist .
+
+    $預設  使用規則 26 以縮減 (pbrt_stmt)
+
+
+狀態 78
+
+   19 paramlist: paramlist_init . paramlist_contents
+
+    STRING  偏移，並進入狀態 101
+
+    $預設  使用規則 22 以縮減 (paramlist_contents)
+
+    paramlist_contents  進入狀態 102
+    paramlist_entry     進入狀態 103
+
+
+狀態 79
+
+   30 pbrt_stmt: AREALIGHTSOURCE STRING paramlist .
+
+    $預設  使用規則 30 以縮減 (pbrt_stmt)
+
+
+狀態 80
+
+   33 pbrt_stmt: CAMERA STRING paramlist .
+
+    $預設  使用規則 33 以縮減 (pbrt_stmt)
+
+
+狀態 81
+
+   13 num_array: array_init LBRACK . num_list RBRACK
+
+    $預設  使用規則 4 以縮減 (num_array_init)
+
+    num_array_init  進入狀態 82
+    num_list        進入狀態 104
+    num_list_entry  進入狀態 105
+
+
+狀態 82
+
+   18 num_list_entry: num_array_init . NUM
+
+    NUM  偏移，並進入狀態 106
+
+
+狀態 83
+
+   15 single_element_num_array: array_init num_list_entry .
+
+    $預設  使用規則 15 以縮減 (single_element_num_array)
+
+
+狀態 84
+
+   37 pbrt_stmt: FILM STRING paramlist .
+
+    $預設  使用規則 37 以縮減 (pbrt_stmt)
+
+
+狀態 85
+
+   40 pbrt_stmt: LIGHTSOURCE STRING paramlist .
+
+    $預設  使用規則 40 以縮減 (pbrt_stmt)
+
+
+狀態 86
+
+   41 pbrt_stmt: LOOKAT NUM NUM . NUM NUM NUM NUM NUM NUM NUM
+
+    NUM  偏移，並進入狀態 107
+
+
+狀態 87
+
+   42 pbrt_stmt: MAKENAMEDMATERIAL STRING paramlist .
+
+    $預設  使用規則 42 以縮減 (pbrt_stmt)
+
+
+狀態 88
+
+   43 pbrt_stmt: MATERIAL STRING paramlist .
+
+    $預設  使用規則 43 以縮減 (pbrt_stmt)
+
+
+狀態 89
+
+   48 pbrt_stmt: PIXELFILTER STRING paramlist .
+
+    $預設  使用規則 48 以縮減 (pbrt_stmt)
+
+
+狀態 90
+
+   49 pbrt_stmt: RENDERER STRING paramlist .
+
+    $預設  使用規則 49 以縮減 (pbrt_stmt)
+
+
+狀態 91
+
+   51 pbrt_stmt: ROTATE NUM NUM . NUM NUM
+
+    NUM  偏移，並進入狀態 108
+
+
+狀態 92
+
+   52 pbrt_stmt: SAMPLER STRING paramlist .
+
+    $預設  使用規則 52 以縮減 (pbrt_stmt)
+
+
+狀態 93
+
+   53 pbrt_stmt: SCALE NUM NUM . NUM
+
+    NUM  偏移，並進入狀態 109
+
+
+狀態 94
+
+   54 pbrt_stmt: SHAPE STRING paramlist .
+
+    $預設  使用規則 54 以縮減 (pbrt_stmt)
+
+
+狀態 95
+
+   55 pbrt_stmt: SURFACEINTEGRATOR STRING paramlist .
+
+    $預設  使用規則 55 以縮減 (pbrt_stmt)
+
+
+狀態 96
+
+   56 pbrt_stmt: TEXTURE STRING STRING . STRING paramlist
+
+    STRING  偏移，並進入狀態 110
+
+
+狀態 97
+
+   59 pbrt_stmt: TRANSFORMTIMES NUM NUM .
+
+    $預設  使用規則 59 以縮減 (pbrt_stmt)
+
+
+狀態 98
+
+   61 pbrt_stmt: TRANSLATE NUM NUM . NUM
+
+    NUM  偏移，並進入狀態 111
+
+
+狀態 99
+
+   63 pbrt_stmt: VOLUME STRING paramlist .
+
+    $預設  使用規則 63 以縮減 (pbrt_stmt)
+
+
+狀態 100
+
+   62 pbrt_stmt: VOLUMEINTEGRATOR STRING paramlist .
+
+    $預設  使用規則 62 以縮減 (pbrt_stmt)
+
+
+狀態 101
+
+   23 paramlist_entry: STRING . array
+
+    $預設  使用規則 2 以縮減 (array_init)
+
+    array_init                   進入狀態 112
+    array                        進入狀態 113
+    string_array                 進入狀態 114
+    single_element_string_array  進入狀態 115
+    num_array                    進入狀態 116
+    single_element_num_array     進入狀態 50
+
+
+狀態 102
+
+   19 paramlist: paramlist_init paramlist_contents .
+
+    $預設  使用規則 19 以縮減 (paramlist)
+
+
+狀態 103
+
+   21 paramlist_contents: paramlist_entry . paramlist_contents
+
+    STRING  偏移，並進入狀態 101
+
+    $預設  使用規則 22 以縮減 (paramlist_contents)
+
+    paramlist_contents  進入狀態 117
+    paramlist_entry     進入狀態 103
+
+
+狀態 104
+
+   13 num_array: array_init LBRACK num_list . RBRACK
+   16 num_list: num_list . num_list_entry
+
+    RBRACK  偏移，並進入狀態 118
+
+    $預設  使用規則 4 以縮減 (num_array_init)
+
+    num_array_init  進入狀態 82
+    num_list_entry  進入狀態 119
+
+
+狀態 105
+
+   17 num_list: num_list_entry .
+
+    $預設  使用規則 17 以縮減 (num_list)
+
+
+狀態 106
+
+   18 num_list_entry: num_array_init NUM .
+
+    $預設  使用規則 18 以縮減 (num_list_entry)
+
+
+狀態 107
+
+   41 pbrt_stmt: LOOKAT NUM NUM NUM . NUM NUM NUM NUM NUM NUM
+
+    NUM  偏移，並進入狀態 120
+
+
+狀態 108
+
+   51 pbrt_stmt: ROTATE NUM NUM NUM . NUM
+
+    NUM  偏移，並進入狀態 121
+
+
+狀態 109
+
+   53 pbrt_stmt: SCALE NUM NUM NUM .
+
+    $預設  使用規則 53 以縮減 (pbrt_stmt)
+
+
+狀態 110
+
+   56 pbrt_stmt: TEXTURE STRING STRING STRING . paramlist
+
+    $預設  使用規則 20 以縮減 (paramlist_init)
+
+    paramlist       進入狀態 122
+    paramlist_init  進入狀態 78
+
+
+狀態 111
+
+   61 pbrt_stmt: TRANSLATE NUM NUM NUM .
+
+    $預設  使用規則 61 以縮減 (pbrt_stmt)
+
+
+狀態 112
+
+    7 string_array: array_init . LBRACK string_list RBRACK
+    9 single_element_string_array: array_init . string_list_entry
+   13 num_array: array_init . LBRACK num_list RBRACK
+   15 single_element_num_array: array_init . num_list_entry
+
+    LBRACK  偏移，並進入狀態 123
+
+    NUM      使用規則 4 以縮減 (num_array_init)
+    $預設  使用規則 3 以縮減 (string_array_init)
+
+    string_array_init  進入狀態 124
+    num_array_init     進入狀態 82
+    string_list_entry  進入狀態 125
+    num_list_entry     進入狀態 83
+
+
+狀態 113
+
+   23 paramlist_entry: STRING array .
+
+    $預設  使用規則 23 以縮減 (paramlist_entry)
+
+
+狀態 114
+
+    5 array: string_array .
+
+    $預設  使用規則 5 以縮減 (array)
+
+
+狀態 115
+
+    8 string_array: single_element_string_array .
+
+    $預設  使用規則 8 以縮減 (string_array)
+
+
+狀態 116
+
+    6 array: num_array .
+
+    $預設  使用規則 6 以縮減 (array)
+
+
+狀態 117
+
+   21 paramlist_contents: paramlist_entry paramlist_contents .
+
+    $預設  使用規則 21 以縮減 (paramlist_contents)
+
+
+狀態 118
+
+   13 num_array: array_init LBRACK num_list RBRACK .
+
+    $預設  使用規則 13 以縮減 (num_array)
+
+
+狀態 119
+
+   16 num_list: num_list num_list_entry .
+
+    $預設  使用規則 16 以縮減 (num_list)
+
+
+狀態 120
+
+   41 pbrt_stmt: LOOKAT NUM NUM NUM NUM . NUM NUM NUM NUM NUM
+
+    NUM  偏移，並進入狀態 126
+
+
+狀態 121
+
+   51 pbrt_stmt: ROTATE NUM NUM NUM NUM .
+
+    $預設  使用規則 51 以縮減 (pbrt_stmt)
+
+
+狀態 122
+
+   56 pbrt_stmt: TEXTURE STRING STRING STRING paramlist .
+
+    $預設  使用規則 56 以縮減 (pbrt_stmt)
+
+
+狀態 123
+
+    7 string_array: array_init LBRACK . string_list RBRACK
+   13 num_array: array_init LBRACK . num_list RBRACK
+
+    NUM      使用規則 4 以縮減 (num_array_init)
+    $預設  使用規則 3 以縮減 (string_array_init)
+
+    string_array_init  進入狀態 124
+    num_array_init     進入狀態 82
+    string_list        進入狀態 127
+    string_list_entry  進入狀態 128
+    num_list           進入狀態 104
+    num_list_entry     進入狀態 105
+
+
+狀態 124
+
+   12 string_list_entry: string_array_init . STRING
+
+    STRING  偏移，並進入狀態 129
+
+
+狀態 125
+
+    9 single_element_string_array: array_init string_list_entry .
+
+    $預設  使用規則 9 以縮減 (single_element_string_array)
+
+
+狀態 126
+
+   41 pbrt_stmt: LOOKAT NUM NUM NUM NUM NUM . NUM NUM NUM NUM
+
+    NUM  偏移，並進入狀態 130
+
+
+狀態 127
+
+    7 string_array: array_init LBRACK string_list . RBRACK
+   10 string_list: string_list . string_list_entry
+
+    RBRACK  偏移，並進入狀態 131
+
+    $預設  使用規則 3 以縮減 (string_array_init)
+
+    string_array_init  進入狀態 124
+    string_list_entry  進入狀態 132
+
+
+狀態 128
+
+   11 string_list: string_list_entry .
+
+    $預設  使用規則 11 以縮減 (string_list)
+
+
+狀態 129
+
+   12 string_list_entry: string_array_init STRING .
+
+    $預設  使用規則 12 以縮減 (string_list_entry)
+
+
+狀態 130
+
+   41 pbrt_stmt: LOOKAT NUM NUM NUM NUM NUM NUM . NUM NUM NUM
+
+    NUM  偏移，並進入狀態 133
+
+
+狀態 131
+
+    7 string_array: array_init LBRACK string_list RBRACK .
+
+    $預設  使用規則 7 以縮減 (string_array)
+
+
+狀態 132
+
+   10 string_list: string_list string_list_entry .
+
+    $預設  使用規則 10 以縮減 (string_list)
+
+
+狀態 133
+
+   41 pbrt_stmt: LOOKAT NUM NUM NUM NUM NUM NUM NUM . NUM NUM
+
+    NUM  偏移，並進入狀態 134
+
+
+狀態 134
+
+   41 pbrt_stmt: LOOKAT NUM NUM NUM NUM NUM NUM NUM NUM . NUM
+
+    NUM  偏移，並進入狀態 135
+
+
+狀態 135
+
+   41 pbrt_stmt: LOOKAT NUM NUM NUM NUM NUM NUM NUM NUM NUM .
+
+    $預設  使用規則 41 以縮減 (pbrt_stmt)

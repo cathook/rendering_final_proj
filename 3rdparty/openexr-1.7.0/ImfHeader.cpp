@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -154,7 +154,7 @@ void checkIsNullTerminated (const char (&str)[N], const char *what)
 			return;
 	}
 	std::stringstream s;
-	s << "Invalid " << what << ": it is more than " << (N - 1) 
+	s << "Invalid " << what << ": it is more than " << (N - 1)
 		<< " characters long.";
 	throw Iex::InputExc(s);
 }
@@ -258,7 +258,7 @@ Header::~Header ()
 }
 
 
-Header &		
+Header &
 Header::operator = (const Header &other)
 {
     if (this != &other)
@@ -328,7 +328,7 @@ Header::insert (const string &name, const Attribute &attribute)
 }
 
 
-Attribute &		
+Attribute &
 Header::operator [] (const char name[])
 {
     AttributeMap::iterator i = _map.find (name);
@@ -340,7 +340,7 @@ Header::operator [] (const char name[])
 }
 
 
-const Attribute &	
+const Attribute &
 Header::operator [] (const char name[]) const
 {
     AttributeMap::const_iterator i = _map.find (name);
@@ -352,14 +352,14 @@ Header::operator [] (const char name[]) const
 }
 
 
-Attribute &		
+Attribute &
 Header::operator [] (const string &name)
 {
     return this->operator[] (name.c_str());
 }
 
 
-const Attribute &	
+const Attribute &
 Header::operator [] (const string &name) const
 {
     return this->operator[] (name.c_str());
@@ -422,7 +422,7 @@ Header::find (const string &name) const
 }
 
 
-Imath::Box2i &	
+Imath::Box2i &
 Header::displayWindow ()
 {
     return static_cast <Box2iAttribute &>
@@ -438,7 +438,7 @@ Header::displayWindow () const
 }
 
 
-Imath::Box2i &	
+Imath::Box2i &
 Header::dataWindow ()
 {
     return static_cast <Box2iAttribute &>
@@ -454,7 +454,7 @@ Header::dataWindow () const
 }
 
 
-float &		
+float &
 Header::pixelAspectRatio ()
 {
     return static_cast <FloatAttribute &>
@@ -462,7 +462,7 @@ Header::pixelAspectRatio ()
 }
 
 
-const float &	
+const float &
 Header::pixelAspectRatio () const
 {
     return static_cast <const FloatAttribute &>
@@ -470,7 +470,7 @@ Header::pixelAspectRatio () const
 }
 
 
-Imath::V2f &	
+Imath::V2f &
 Header::screenWindowCenter ()
 {
     return static_cast <V2fAttribute &>
@@ -478,7 +478,7 @@ Header::screenWindowCenter ()
 }
 
 
-const Imath::V2f &	
+const Imath::V2f &
 Header::screenWindowCenter () const
 {
     return static_cast <const V2fAttribute &>
@@ -486,7 +486,7 @@ Header::screenWindowCenter () const
 }
 
 
-float &		
+float &
 Header::screenWindowWidth ()
 {
     return static_cast <FloatAttribute &>
@@ -494,7 +494,7 @@ Header::screenWindowWidth ()
 }
 
 
-const float &	
+const float &
 Header::screenWindowWidth () const
 {
     return static_cast <const FloatAttribute &>
@@ -502,7 +502,7 @@ Header::screenWindowWidth () const
 }
 
 
-ChannelList &	
+ChannelList &
 Header::channels ()
 {
     return static_cast <ChannelListAttribute &>
@@ -510,7 +510,7 @@ Header::channels ()
 }
 
 
-const ChannelList &	
+const ChannelList &
 Header::channels () const
 {
     return static_cast <const ChannelListAttribute &>
@@ -577,7 +577,7 @@ Header::tileDescription () const
     return typedAttribute <TileDescriptionAttribute> ("tiles").value();
 }
 
-void		
+void
 Header::setPreviewImage (const PreviewImage &pi)
 {
     insert ("preview", PreviewImageAttribute (pi));
@@ -598,14 +598,14 @@ Header::previewImage () const
 }
 
 
-bool		
+bool
 Header::hasPreviewImage () const
 {
     return findTypedAttribute <PreviewImageAttribute> ("preview") != 0;
 }
 
 
-void		
+void
 Header::sanityCheck (bool isTiled) const
 {
     //
@@ -767,7 +767,7 @@ Header::sanityCheck (bool isTiled) const
     //
 
     const ChannelList &channels = this->channels();
-    
+
     if (isTiled)
     {
 	for (ChannelList::ConstIterator i = channels.begin();
@@ -787,14 +787,14 @@ Header::sanityCheck (bool isTiled) const
 		THROW (Iex::ArgExc, "The x subsampling factor for the "
 				    "\"" << i.name() << "\" channel "
 				    "is not 1.");
-	    }	
+	    }
 
 	    if (i.channel().ySampling != 1)
 	    {
 		THROW (Iex::ArgExc, "The y subsampling factor for the "
 				    "\"" << i.name() << "\" channel "
 				    "is not 1.");
-	    }	
+	    }
 	}
     }
     else
@@ -863,7 +863,7 @@ Header::sanityCheck (bool isTiled) const
 }
 
 
-void		
+void
 Header::setMaxImageSize (int maxWidth, int maxHeight)
 {
     maxImageWidth = maxWidth;
@@ -871,7 +871,7 @@ Header::setMaxImageSize (int maxWidth, int maxHeight)
 }
 
 
-void		
+void
 Header::setMaxTileSize (int maxWidth, int maxHeight)
 {
     maxTileWidth = maxWidth;
@@ -970,7 +970,7 @@ Header::readFrom (IStream &is, int &version)
 			      "image files.  Current file format version "
 			      "is " << EXR_VERSION << ".");
     }
-    
+
     if (!supportsFlags (getFlags (version)))
     {
 	THROW (Iex::InputExc, "The file format version number's flag field "
@@ -1069,7 +1069,7 @@ staticInitialize ()
 	// One-time initialization -- register
 	// some predefined attribute types.
 	//
-	
+
 	Box2fAttribute::registerAttributeType();
 	Box2iAttribute::registerAttributeType();
 	ChannelListAttribute::registerAttributeType();

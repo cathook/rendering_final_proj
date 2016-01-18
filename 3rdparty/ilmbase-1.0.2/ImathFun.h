@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -196,7 +196,7 @@ mods (int x, int y)
 //
 //	divp(x,y) == floor (double(x) / double (y))
 //	modp(x,y) == x - y * divp(x,y)
-// 
+//
 
 inline int
 divp (int x, int y)
@@ -220,7 +220,7 @@ modp (int x, int y)
 //
 // predf(f)     returns float(f-e), where e is the smallest
 //              positive number such that float(f-e) != f.
-// 
+//
 // succd(d)     returns double(d+e), where e is the smallest
 //              positive number such that double(d+e) != d.
 //
@@ -230,7 +230,7 @@ modp (int x, int y)
 // Exceptions:  If the input value is an infinity or a nan,
 //              succf(), predf(), succd(), and predd() all
 //              return the input value without changing it.
-// 
+//
 //----------------------------------------------------------
 
 float succf (float f);
@@ -243,7 +243,7 @@ double predd (double d);
 // Return true if the number is not a NaN or Infinity.
 //
 
-inline bool 
+inline bool
 finitef (float f)
 {
     union {float f; int i;} u;
@@ -252,7 +252,7 @@ finitef (float f)
     return (u.i & 0x7f800000) != 0x7f800000;
 }
 
-inline bool 
+inline bool
 finited (double d)
 {
     union {double d; Int64 i;} u;

@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -65,7 +65,7 @@ pixelTypeSize (PixelType type)
     switch (type)
     {
       case UINT:
-	
+
 	size = Xdr::size <unsigned int> ();
 	break;
 
@@ -203,7 +203,7 @@ copyIntoFrameBuffer (const char *& readPtr,
         switch (typeInFrameBuffer)
         {
 	  case UINT:
-            
+
             {
                 unsigned int fillVal = (unsigned int) (fillValue);
 
@@ -259,7 +259,7 @@ copyIntoFrameBuffer (const char *& readPtr,
         switch (typeInFrameBuffer)
         {
           case UINT:
-    
+
             switch (typeInFile)
             {
               case UINT:
@@ -309,7 +309,7 @@ copyIntoFrameBuffer (const char *& readPtr,
                     writePtr += xStride;
                 }
                 break;
-                
+
               case HALF:
 
                 while (writePtr <= endPtr)
@@ -384,7 +384,7 @@ copyIntoFrameBuffer (const char *& readPtr,
         switch (typeInFrameBuffer)
         {
           case UINT:
-    
+
             switch (typeInFile)
             {
               case UINT:
@@ -533,7 +533,7 @@ skipChannel (const char *& readPtr,
     switch (typeInFile)
     {
       case UINT:
-        
+
         Xdr::skip <CharPtrIO> (readPtr, Xdr::size <unsigned int> () * xSize);
         break;
 
@@ -563,34 +563,34 @@ convertInPlace (char *& writePtr,
     switch (type)
     {
       case UINT:
-    
+
         for (int j = 0; j < numPixels; ++j)
         {
             Xdr::write <CharPtrIO> (writePtr, *(const unsigned int *) readPtr);
             readPtr += sizeof(unsigned int);
         }
         break;
-    
+
       case HALF:
-    
+
         for (int j = 0; j < numPixels; ++j)
-        {               
+        {
             Xdr::write <CharPtrIO> (writePtr, *(const half *) readPtr);
             readPtr += sizeof(half);
         }
         break;
-    
+
       case FLOAT:
-    
+
         for (int j = 0; j < numPixels; ++j)
         {
             Xdr::write <CharPtrIO> (writePtr, *(const float *) readPtr);
             readPtr += sizeof(float);
         }
         break;
-    
+
       default:
-    
+
         throw Iex::ArgExc ("Unknown pixel data type.");
     }
 }
@@ -689,7 +689,7 @@ copyFromFrameBuffer (char *& writePtr,
                 readPtr += xStride;
             }
             break;
-            
+
           default:
 
             throw Iex::ArgExc ("Unknown pixel data type.");
@@ -732,7 +732,7 @@ fillChannelWithZeroes (char *& writePtr,
                 Xdr::write <CharPtrIO> (writePtr, (float) 0);
 
             break;
-            
+
           default:
 
             throw Iex::ArgExc ("Unknown pixel data type.");
@@ -776,7 +776,7 @@ fillChannelWithZeroes (char *& writePtr,
                     *writePtr++ = ((char *) &f)[i];
             }
             break;
-            
+
           default:
 
             throw Iex::ArgExc ("Unknown pixel data type.");

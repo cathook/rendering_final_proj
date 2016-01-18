@@ -1049,7 +1049,7 @@ void pbrtShape(const string &name, const ParamSet &params) {
             Warning("Area lights not supported with object instancing");
         renderOptions->currentInstance->push_back(prim);
     }
-    
+
     else {
         renderOptions->primitives.push_back(prim);
         if (area != NULL) {

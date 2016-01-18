@@ -441,7 +441,7 @@ static bool WriteImagePFM(const string &filename, const float *rgb,
     if (fprintf(fp, "%f\n", scale) < 0)
         goto fail;
 
-    // write the data from bottom left to upper right as specified by 
+    // write the data from bottom left to upper right as specified by
     // http://netpbm.sourceforge.net/doc/pfm.html
     // The raster is a sequence of pixels, packed one after another, with no
     // delimiters of any kind. They are grouped by row, with the pixels in each

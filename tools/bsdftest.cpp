@@ -49,7 +49,7 @@ void Gen_UniformHemisphere(BSDF* bsdf,
     const Vector & wo, Vector* wi, float* pdf, Spectrum* f);
 
 
-int main(int argc, char *argv[]) 
+int main(int argc, char *argv[])
 {
     Options opt;
     pbrtInit(opt);
@@ -254,7 +254,7 @@ int main(int argc, char *argv[])
                 redSum / goodSamples);
         }
     }
-    
+
     pbrtCleanup();
     return 0;
 }
@@ -280,7 +280,7 @@ void Gen_Sample_f(BSDF* bsdf,
     Vector wiL = bsdf->WorldToLocal(*wi);
     float wiCosTheta = wiL.z;
     bool validSample = (wiCosTheta > 1e-7);
-    
+
     if (validSample) {
         float verifyPdf = bsdf->Pdf(wo, *wi, inflags);
         if (fabs(verifyPdf - *pdf) > 1e-4) {

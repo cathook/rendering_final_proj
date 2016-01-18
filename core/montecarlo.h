@@ -229,7 +229,7 @@ public:
     void Sample(uint32_t n, float *out) const {
         uint32_t *p = permute;
         for (uint32_t i = 0; i < dims; ++i) {
-            out[i] = min(float(PermutedRadicalInverse(n, b[i], p)), 
+            out[i] = min(float(PermutedRadicalInverse(n, b[i], p)),
                          OneMinusEpsilon);
             p += b[i];
         }

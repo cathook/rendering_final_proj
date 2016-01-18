@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -103,7 +103,7 @@ TileOffsets::anyOffsetsAreInvalid () const
 	    for (unsigned int dx = 0; dx < _offsets[l][dy].size(); ++dx)
 		if (_offsets[l][dy][dx] <= 0)
 		    return true;
-    
+
     return false;
 }
 
@@ -222,7 +222,7 @@ TileOffsets::writeTo (OStream &os) const
     // return the position of the start of the table
     // in the file.
     //
-    
+
     Int64 pos = os.tellp();
 
     if (pos == -1)
@@ -297,7 +297,7 @@ TileOffsets::isValidTile (int dx, int dy, int lx, int ly) const
 
         return false;
     }
-    
+
     return false;
 }
 

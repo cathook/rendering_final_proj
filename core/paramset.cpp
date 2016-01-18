@@ -163,7 +163,7 @@ void ParamSet::AddSampledSpectrumFiles(const string &name, const char **names,
 
         vector<float> vals;
         if (!ReadFloatFile(fn.c_str(), &vals)) {
-            Warning("Unable to read SPD file \"%s\".  Using black distribution.", 
+            Warning("Unable to read SPD file \"%s\".  Using black distribution.",
                     fn.c_str());
             s[i] = Spectrum(0.);
         }

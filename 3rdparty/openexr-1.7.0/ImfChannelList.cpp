@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -61,7 +61,7 @@ Channel::Channel (PixelType t, int xs, int ys, bool pl):
 }
 
 
-bool	
+bool
 Channel::operator == (const Channel &other) const
 {
     return type == other.type &&
@@ -71,7 +71,7 @@ Channel::operator == (const Channel &other) const
 }
 
 
-void	
+void
 ChannelList::insert (const char name[], const Channel &channel)
 {
     if (name[0] == 0)
@@ -81,7 +81,7 @@ ChannelList::insert (const char name[], const Channel &channel)
 }
 
 
-void	
+void
 ChannelList::insert (const string &name, const Channel &channel)
 {
     insert (name.c_str(), channel);
@@ -156,14 +156,14 @@ ChannelList::findChannel (const string &name) const
 }
 
 
-ChannelList::Iterator		
+ChannelList::Iterator
 ChannelList::begin ()
 {
     return _map.begin();
 }
 
 
-ChannelList::ConstIterator	
+ChannelList::ConstIterator
 ChannelList::begin () const
 {
     return _map.begin();
@@ -177,7 +177,7 @@ ChannelList::end ()
 }
 
 
-ChannelList::ConstIterator	
+ChannelList::ConstIterator
 ChannelList::end () const
 {
     return _map.end();
@@ -249,7 +249,7 @@ ChannelList::channelsInLayer (const string &layerName,
 }
 
 
-void		
+void
 ChannelList::channelsWithPrefix (const char prefix[],
 				 Iterator &first,
 				 Iterator &last)
@@ -281,7 +281,7 @@ ChannelList::channelsWithPrefix (const char prefix[],
 }
 
 
-void		
+void
 ChannelList::channelsWithPrefix (const string &prefix,
 				 Iterator &first,
 				 Iterator &last)
@@ -299,7 +299,7 @@ ChannelList::channelsWithPrefix (const string &prefix,
 }
 
 
-bool		
+bool
 ChannelList::operator == (const ChannelList &other) const
 {
     ConstIterator i = begin();

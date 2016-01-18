@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -50,7 +50,7 @@ using namespace Imath;
 namespace Imf {
 namespace LatLongMap {
 
-V2f	
+V2f
 latLong (const V3f &dir)
 {
     float r = sqrt (dir.z * dir.z + dir.x * dir.x);
@@ -263,7 +263,7 @@ direction (CubeMapFace face, const Box2i &dataWindow, const V2f &positionInFace)
     int sof = sizeOfFace (dataWindow);
 
     V2f pos;
-    
+
     if (sof > 1)
     {
 	pos = V2f (positionInFace.x / (sof - 1) * 2 - 1,

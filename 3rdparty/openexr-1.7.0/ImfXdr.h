@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -56,7 +56,7 @@
 //	    size<S>();			returns the size, in bytes, of the
 //					machine-independent representation
 //					of an object of type S.
-//					
+//
 //	The write() and read() routines are templates; data can be written
 //	to and read from any output or input buffer type T for which a helper
 //	class, R, exits.  Class R must define a method to store a char array
@@ -448,7 +448,7 @@ write (T &out, signed long v)
 	b[7] = (signed char) (v >> 56);
 
     #else
-	
+
 	#error write<T> (T &out, signed long v) not implemented
 
     #endif
@@ -483,7 +483,7 @@ write (T &out, unsigned long v)
 	b[7] = (unsigned char) (v >> 56);
 
     #else
-	
+
 	#error write<T> (T &out, unsigned long v) not implemented
 
     #endif

@@ -352,7 +352,7 @@ reconstructChromaVert (int n,
     }
 }
 
-			 
+
 void
 YCAtoRGBA (const Imath::V3f &yw,
 	   int n,
@@ -435,7 +435,7 @@ desaturate (const Rgba &in, float f, const V3f &yw, Rgba &out)
 
 } // namespace
 
-			 
+
 void
 fixSaturation (const Imath::V3f &yw,
 	       int n,

@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -333,10 +333,10 @@ PizCompressor::compress (const char *inPtr,
     int maxX = range.max.x;
     int minY = range.min.y;
     int maxY = range.max.y;
-    
+
     if (maxY > _maxY)
         maxY = _maxY;
-    
+
     if (maxX > _maxX)
         maxX = _maxX;
 
@@ -490,7 +490,7 @@ PizCompressor::uncompress (const char *inPtr,
     // This is the cunompress function which is used by both the tiled and
     // scanline decompression routines.
     //
-    
+
     //
     // Special case - empty input buffer
     //
@@ -509,10 +509,10 @@ PizCompressor::uncompress (const char *inPtr,
     int maxX = range.max.x;
     int minY = range.min.y;
     int maxY = range.max.y;
-    
+
     if (maxY > _maxY)
         maxY = _maxY;
-    
+
     if (maxX > _maxX)
         maxX = _maxX;
 
@@ -596,7 +596,7 @@ PizCompressor::uncompress (const char *inPtr,
     //
 
     applyLut (lut, _tmpBuffer, tmpBufferEnd - _tmpBuffer);
-    
+
     //
     // Rearrange the pixel data into the format expected by the caller.
     //

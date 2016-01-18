@@ -254,14 +254,14 @@ private:
     void ReleaseRead();
     void AcquireWrite();
     void ReleaseWrite();
-    
+
     LONG numWritersWaiting;
     LONG numReadersWaiting;
-    
+
     // HIWORD is writer active flag;
     // LOWORD is readers active count;
     DWORD activeWriterReaders;
-    
+
     HANDLE hReadyToRead;
     HANDLE hReadyToWrite;
     CRITICAL_SECTION cs;

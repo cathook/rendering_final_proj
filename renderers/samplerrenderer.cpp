@@ -54,7 +54,7 @@ static uint32_t hash(char *key, uint32_t len)
     hash ^= (hash >> 11);
     hash += (hash << 15);
     return hash;
-} 
+}
 
 // SamplerRendererTask Definitions
 void SamplerRendererTask::Run() {
@@ -207,8 +207,8 @@ void SamplerRenderer::Render(const Scene *scene) {
     vector<Task *> renderTasks;
     for (int i = 0; i < nTasks; ++i)
         renderTasks.push_back(new SamplerRendererTask(scene, this, camera,
-                                                      reporter, sampler, sample, 
-                                                      visualizeObjectIds, 
+                                                      reporter, sampler, sample,
+                                                      visualizeObjectIds,
                                                       nTasks-1-i, nTasks));
     EnqueueTasks(renderTasks);
     WaitForAllTasks();

@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -325,11 +325,11 @@ convertToXdr (OutputFile::Data *ofd,
     // Xdr representation.  This makes it possible to convert the
     // pixel data in place, without an intermediate temporary buffer.
     //
-   
+
     int startY, endY;		// The first and last scanlines in
     				// the file that are in the lineBuffer.
     int step;
-    
+
     if (ofd->lineOrder == INCREASING_Y)
     {
 	startY = max (lineBufferMinY, ofd->minY);
@@ -353,14 +353,14 @@ convertToXdr (OutputFile::Data *ofd,
         // Set these to point to the start of line y.
         // We will write to writePtr from readPtr.
 	//
-	
+
         char *writePtr = lineBuffer + ofd->offsetInLineBuffer[y - ofd->minY];
         const char *readPtr = writePtr;
-        
+
 	//
         // Iterate over all slices in the file.
 	//
-	
+
         for (unsigned int i = 0; i < ofd->slices.size(); ++i)
         {
             //
@@ -382,11 +382,11 @@ convertToXdr (OutputFile::Data *ofd,
 
             int dMinX = divp (ofd->minX, slice.xSampling);
             int dMaxX = divp (ofd->maxX, slice.xSampling);
-            
+
 	    //
             // Convert the samples in place.
 	    //
-            
+
             convertInPlace (writePtr, readPtr, slice.type, dMaxX - dMinX + 1);
         }
     }
@@ -409,7 +409,7 @@ class LineBufferTask: public Task
                     int scanLineMin,
 		    int scanLineMax);
 
-    virtual ~LineBufferTask (); 
+    virtual ~LineBufferTask ();
 
     virtual void	execute ();
 
@@ -436,7 +436,7 @@ LineBufferTask::LineBufferTask
     //
 
     _lineBuffer->wait ();
-    
+
     //
     // Initialize the lineBuffer data if necessary
     //
@@ -452,7 +452,7 @@ LineBufferTask::LineBufferTask
 
         _lineBuffer->partiallyFull = true;
     }
-    
+
     _lineBuffer->scanLineMin = max (_lineBuffer->minY, scanLineMin);
     _lineBuffer->scanLineMax = min (_lineBuffer->maxY, scanLineMax);
 }
@@ -477,7 +477,7 @@ LineBufferTask::execute ()
         // First copy the pixel data from the
 	// frame buffer into the line buffer
         //
-        
+
         int yStart, yStop, dy;
 
         if (_ofd->lineOrder == INCREASING_Y)
@@ -492,7 +492,7 @@ LineBufferTask::execute ()
             yStop = _lineBuffer->scanLineMin - 1;
             dy = -1;
         }
-    
+
 	int y;
 
         for (y = yStart; y != yStop; y += dy)
@@ -501,45 +501,45 @@ LineBufferTask::execute ()
             // Gather one scan line's worth of pixel data and store
             // them in _ofd->lineBuffer.
             //
-        
+
             char *writePtr = _lineBuffer->buffer +
                              _ofd->offsetInLineBuffer[y - _ofd->minY];
             //
             // Iterate over all image channels.
             //
-        
+
             for (unsigned int i = 0; i < _ofd->slices.size(); ++i)
             {
                 //
                 // Test if scan line y of this channel contains any data
 		// (the scan line contains data only if y % ySampling == 0).
                 //
-        
+
                 const OutSliceInfo &slice = _ofd->slices[i];
-        
+
                 if (modp (y, slice.ySampling) != 0)
                     continue;
-        
+
                 //
                 // Find the x coordinates of the leftmost and rightmost
                 // sampled pixels (i.e. pixels within the data window
                 // for which x % xSampling == 0).
                 //
-        
+
                 int dMinX = divp (_ofd->minX, slice.xSampling);
                 int dMaxX = divp (_ofd->maxX, slice.xSampling);
-        
+
                 //
 		// Fill the line buffer with with pixel data.
                 //
-        
+
                 if (slice.zero)
                 {
                     //
                     // The frame buffer contains no data for this channel.
                     // Store zeroes in _lineBuffer->buffer.
                     //
-                    
+
                     fillChannelWithZeroes (writePtr, _ofd->format, slice.type,
                                            dMaxX - dMinX + 1);
                 }
@@ -549,46 +549,46 @@ LineBufferTask::execute ()
                     // If necessary, convert the pixel data to Xdr format.
 		    // Then store the pixel data in _ofd->lineBuffer.
                     //
-        
+
                     const char *linePtr = slice.base +
                                           divp (y, slice.ySampling) *
                                           slice.yStride;
-        
+
                     const char *readPtr = linePtr + dMinX * slice.xStride;
                     const char *endPtr  = linePtr + dMaxX * slice.xStride;
-    
+
                     copyFromFrameBuffer (writePtr, readPtr, endPtr,
                                          slice.xStride, _ofd->format,
                                          slice.type);
                 }
             }
-        
+
             if (_lineBuffer->endOfLineBufferData < writePtr)
                 _lineBuffer->endOfLineBufferData = writePtr;
-        
+
             #ifdef DEBUG
-        
+
                 assert (writePtr - (_lineBuffer->buffer +
                         _ofd->offsetInLineBuffer[y - _ofd->minY]) ==
                         (int) _ofd->bytesPerLine[y - _ofd->minY]);
-        
+
             #endif
-        
+
         }
-    
+
         //
         // If the next scanline isn't past the bounds of the lineBuffer
         // then we are done, otherwise compress the linebuffer
         //
-    
+
         if (y >= _lineBuffer->minY && y <= _lineBuffer->maxY)
             return;
-    
+
         _lineBuffer->dataPtr = _lineBuffer->buffer;
 
         _lineBuffer->dataSize = _lineBuffer->endOfLineBufferData -
                                 _lineBuffer->buffer;
-    
+
 	//
         // Compress the data
 	//
@@ -602,7 +602,7 @@ LineBufferTask::execute ()
             int compSize = compressor->compress (_lineBuffer->dataPtr,
                                                  _lineBuffer->dataSize,
                                                  _lineBuffer->minY, compPtr);
-    
+
             if (compSize < _lineBuffer->dataSize)
             {
                 _lineBuffer->dataSize = compSize;
@@ -616,7 +616,7 @@ LineBufferTask::execute ()
                 // native format, so we need to convert the lineBuffer
                 // to Xdr.
                 //
-    
+
                 convertToXdr (_ofd, _lineBuffer->buffer, _lineBuffer->minY,
                               _lineBuffer->maxY, _lineBuffer->dataSize);
             }
@@ -801,11 +801,11 @@ OutputFile::header () const
 }
 
 
-void	
+void
 OutputFile::setFrameBuffer (const FrameBuffer &frameBuffer)
 {
     Lock lock (*_data);
-    
+
     //
     // Check if the new frame buffer descriptor
     // is compatible with the image file header.
@@ -840,7 +840,7 @@ OutputFile::setFrameBuffer (const FrameBuffer &frameBuffer)
 				"subsampling factors.");
 	}
     }
-    
+
     //
     // Initialize slice table for writePixels().
     //
@@ -901,7 +901,7 @@ OutputFile::frameBuffer () const
 }
 
 
-void	
+void
 OutputFile::writePixels (int numScanLines)
 {
     try
@@ -934,24 +934,24 @@ OutputFile::writePixels (int numScanLines)
             // taskgroup goes out of scope, the destructor waits until
 	    // all tasks are complete.
             //
-            
+
             TaskGroup taskGroup;
-            
+
             //
             // Determine the range of lineBuffers that intersect the scan
 	    // line range.  Then add the initial compression tasks to the
 	    // thread pool.  We always add in at least one task but the
 	    // individual task might not do anything if numScanLines == 0.
             //
-    
+
             if (_data->lineOrder == INCREASING_Y)
             {
                 int last = (_data->currentScanLine + (numScanLines - 1) -
                             _data->minY) / _data->linesInBuffer;
-    
+
                 scanLineMin = _data->currentScanLine;
                 scanLineMax = _data->currentScanLine + numScanLines - 1;
-    
+
                 int numTasks = max (min ((int)_data->lineBuffers.size(),
                                          last - first + 1),
 				    1);
@@ -962,7 +962,7 @@ OutputFile::writePixels (int numScanLines)
                         (new LineBufferTask (&taskGroup, _data, first + i,
                                              scanLineMin, scanLineMax));
 		}
-    
+
                 nextCompressBuffer = first + numTasks;
                 stop = last + 1;
                 step = 1;
@@ -971,10 +971,10 @@ OutputFile::writePixels (int numScanLines)
             {
                 int last = (_data->currentScanLine - (numScanLines - 1) -
                             _data->minY) / _data->linesInBuffer;
-    
+
                 scanLineMax = _data->currentScanLine;
                 scanLineMin = _data->currentScanLine - numScanLines + 1;
-    
+
                 int numTasks = max (min ((int)_data->lineBuffers.size(),
                                          first - last + 1),
 				    1);
@@ -985,12 +985,12 @@ OutputFile::writePixels (int numScanLines)
                         (new LineBufferTask (&taskGroup, _data, first - i,
                                              scanLineMin, scanLineMax));
 		}
-    
+
                 nextCompressBuffer = first - numTasks;
                 stop = last - 1;
                 step = -1;
             }
-            
+
             while (true)
             {
                 if (_data->missingScanLines <= 0)
@@ -998,7 +998,7 @@ OutputFile::writePixels (int numScanLines)
                     throw Iex::ArgExc ("Tried to write more scan lines "
                                        "than specified by the data window.");
                 }
-    
+
 		//
                 // Wait until the next line buffer is ready to be written
 		//
@@ -1007,12 +1007,12 @@ OutputFile::writePixels (int numScanLines)
 		    _data->getLineBuffer (nextWriteBuffer);
 
                 writeBuffer->wait();
-                
-                int numLines = writeBuffer->scanLineMax - 
+
+                int numLines = writeBuffer->scanLineMax -
                                writeBuffer->scanLineMin + 1;
 
                 _data->missingScanLines -= numLines;
-    
+
 		//
                 // If the line buffer is only partially full, then it is
 		// not complete and we cannot write it to disk yet.
@@ -1023,10 +1023,10 @@ OutputFile::writePixels (int numScanLines)
                     _data->currentScanLine = _data->currentScanLine +
                                              step * numLines;
                     writeBuffer->post();
-    
+
                     return;
                 }
-    
+
 		//
                 // Write the line buffer
 		//
@@ -1036,29 +1036,29 @@ OutputFile::writePixels (int numScanLines)
 
                 _data->currentScanLine = _data->currentScanLine +
                                          step * numLines;
-    
+
                 #ifdef DEBUG
-    
+
                     assert (_data->currentScanLine ==
                             ((_data->lineOrder == INCREASING_Y) ?
                              writeBuffer->scanLineMax + 1:
                              writeBuffer->scanLineMin - 1));
-    
+
                 #endif
-                
+
 		//
                 // Release the lock on the line buffer
 		//
 
                 writeBuffer->post();
-                
+
 		//
                 // If this was the last line buffer in the scanline range
 		//
 
                 if (nextWriteBuffer == stop)
                     break;
-    
+
 		//
                 // If there are no more line buffers to compress,
                 // then only continue to write out remaining lineBuffers
@@ -1066,7 +1066,7 @@ OutputFile::writePixels (int numScanLines)
 
                 if (nextCompressBuffer == stop)
                     continue;
-    
+
 		//
                 // Add nextCompressBuffer as a compression task
 		//
@@ -1074,19 +1074,19 @@ OutputFile::writePixels (int numScanLines)
                 ThreadPool::addGlobalTask
                     (new LineBufferTask (&taskGroup, _data, nextCompressBuffer,
                                          scanLineMin, scanLineMax));
-                
+
 		//
                 // Update the next line buffer we need to compress
 		//
 
                 nextCompressBuffer += step;
             }
-        
+
 	    //
             // Finish all tasks
 	    //
         }
-        
+
 	//
 	// Exeption handling:
 	//
@@ -1126,7 +1126,7 @@ OutputFile::writePixels (int numScanLines)
 }
 
 
-int	
+int
 OutputFile::currentScanLine () const
 {
     Lock lock (*_data);
@@ -1134,7 +1134,7 @@ OutputFile::currentScanLine () const
 }
 
 
-void	
+void
 OutputFile::copyPixels (InputFile &in)
 {
     Lock lock (*_data);
@@ -1263,12 +1263,12 @@ OutputFile::updatePreviewImage (const PreviewRgba newPixels[])
 }
 
 
-void	
+void
 OutputFile::breakScanLine  (int y, int offset, int length, char c)
 {
     Lock lock (*_data);
 
-    Int64 position = 
+    Int64 position =
 	_data->lineOffsets[(y - _data->minY) / _data->linesInBuffer];
 
     if (!position)

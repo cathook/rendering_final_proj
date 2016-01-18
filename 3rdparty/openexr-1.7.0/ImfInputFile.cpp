@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -81,13 +81,13 @@ struct InputFile::Data: public Mutex
     LineOrder		lineOrder;      // the file's lineorder
     int			minY;           // data window's min y coord
     int			maxY;           // data window's max x coord
-    
+
     FrameBuffer		tFileBuffer;
     FrameBuffer *	cachedBuffer;
-    
+
     int			cachedTileY;
     int                 offset;
-    
+
     int                 numThreads;
 
      Data (bool del, int numThreads);
@@ -122,7 +122,7 @@ InputFile::Data::~Data ()
 }
 
 
-void	
+void
 InputFile::Data::deleteCachedBuffer()
 {
     //
@@ -154,14 +154,14 @@ InputFile::Data::deleteCachedBuffer()
 
 		delete [] (((float *)s.base) + offset);
 		break;
-	    }                
+	    }
 	}
 
 	//
 	// delete the cached frame buffer
 	//
 
-	delete cachedBuffer;        
+	delete cachedBuffer;
 	cachedBuffer = 0;
     }
 }
@@ -220,7 +220,7 @@ bufferedReadPixels (InputFile::Data* ifd, int scanLine1, int scanLine2)
     //
 
     Box2i levelRange = ifd->tFile->dataWindowForLevel(0);
-    
+
     //
     // Read the tiles into our temporary framebuffer and copy them into
     // the user's buffer
@@ -276,7 +276,7 @@ bufferedReadPixels (InputFile::Data* ifd, int scanLine1, int scanLine2)
                 // Set the pointers to the start of the y scanline in
                 // this row of tiles
 		//
-                
+
                 fromPtr = fromSlice.base +
                           (y - tileRange.min.y) * fromSlice.yStride +
                           xStart * fromSlice.xStride;
@@ -373,7 +373,7 @@ InputFile::initialize ()
 	const Box2i &dataWindow = _data->header.dataWindow();
 	_data->minY = dataWindow.min.y;
 	_data->maxY = dataWindow.max.y;
-    
+
 	_data->tFile = new TiledInputFile (_data->header,
 					   _data->is,
 					   _data->version,
@@ -461,7 +461,7 @@ InputFile::setFrameBuffer (const FrameBuffer &frameBuffer)
 	    const Box2i &dataWindow = _data->header.dataWindow();
 	    _data->cachedBuffer = new FrameBuffer();
 	    _data->offset = dataWindow.min.x;
-	    
+
 	    int tileRowSize = (dataWindow.max.x - dataWindow.min.x + 1) *
 			      _data->tFile->tileYSize();
 
@@ -478,7 +478,7 @@ InputFile::setFrameBuffer (const FrameBuffer &frameBuffer)
 		    _data->cachedBuffer->insert
 			(k.name(),
 			 Slice (UINT,
-				(char *)(new unsigned int[tileRowSize] - 
+				(char *)(new unsigned int[tileRowSize] -
 					_data->offset),
 				sizeof (unsigned int),
 				sizeof (unsigned int) *
@@ -493,7 +493,7 @@ InputFile::setFrameBuffer (const FrameBuffer &frameBuffer)
 		    _data->cachedBuffer->insert
 			(k.name(),
 			 Slice (HALF,
-				(char *)(new half[tileRowSize] - 
+				(char *)(new half[tileRowSize] -
 					_data->offset),
 				sizeof (half),
 				sizeof (half) *
@@ -508,7 +508,7 @@ InputFile::setFrameBuffer (const FrameBuffer &frameBuffer)
 		    _data->cachedBuffer->insert
 			(k.name(),
 			 Slice (FLOAT,
-				(char *)(new float[tileRowSize] - 
+				(char *)(new float[tileRowSize] -
 					_data->offset),
 				sizeof(float),
 				sizeof(float) *
@@ -595,7 +595,7 @@ InputFile::rawPixelData (int firstScanLine,
 	    throw Iex::ArgExc ("Tried to read a raw scanline "
 			       "from a tiled image.");
 	}
-        
+
         _data->sFile->rawPixelData (firstScanLine, pixelData, pixelDataSize);
     }
     catch (Iex::BaseExc &e)
@@ -620,7 +620,7 @@ InputFile::rawTileData (int &dx, int &dy,
 	    throw Iex::ArgExc ("Tried to read a raw tile "
 			       "from a scanline-based image.");
 	}
-        
+
         _data->tFile->rawTileData (dx, dy, lx, ly, pixelData, pixelDataSize);
     }
     catch (Iex::BaseExc &e)

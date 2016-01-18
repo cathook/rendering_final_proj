@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -153,14 +153,14 @@ infile (const ImfTiledInputFile *in)
 } // namespace
 
 
-void	
+void
 ImfFloatToHalf (float f, ImfHalf *h)
 {
     *h = half(f).bits();
 }
 
 
-void	
+void
 ImfFloatToHalfArray (int n, const float f[/*n*/], ImfHalf h[/*n*/])
 {
     for (int i = 0; i < n; ++i)
@@ -168,7 +168,7 @@ ImfFloatToHalfArray (int n, const float f[/*n*/], ImfHalf h[/*n*/])
 }
 
 
-float	
+float
 ImfHalfToFloat (ImfHalf h)
 {
     return float (*((half *)&h));
@@ -198,7 +198,7 @@ ImfNewHeader (void)
 }
 
 
-void	
+void
 ImfDeleteHeader (ImfHeader *hdr)
 {
     delete header (hdr);
@@ -220,7 +220,7 @@ ImfCopyHeader (const ImfHeader *hdr)
 }
 
 
-void	
+void
 ImfHeaderSetDisplayWindow (ImfHeader *hdr,
 			   int xMin, int yMin,
 			   int xMax, int yMax)
@@ -229,7 +229,7 @@ ImfHeaderSetDisplayWindow (ImfHeader *hdr,
 }
 
 
-void	
+void
 ImfHeaderDisplayWindow (const ImfHeader *hdr,
 			int *xMin, int *yMin,
 			int *xMax, int *yMax)
@@ -251,7 +251,7 @@ ImfHeaderSetDataWindow (ImfHeader *hdr,
 }
 
 
-void	
+void
 ImfHeaderDataWindow (const ImfHeader *hdr,
 		     int *xMin, int *yMin,
 		     int *xMax, int *yMax)
@@ -264,28 +264,28 @@ ImfHeaderDataWindow (const ImfHeader *hdr,
 }
 
 
-void	
+void
 ImfHeaderSetPixelAspectRatio (ImfHeader *hdr, float pixelAspectRatio)
 {
     header(hdr)->pixelAspectRatio() = pixelAspectRatio;
 }
 
 
-float	
+float
 ImfHeaderPixelAspectRatio (const ImfHeader *hdr)
 {
     return header(hdr)->pixelAspectRatio();
 }
 
 
-void	
+void
 ImfHeaderSetScreenWindowCenter (ImfHeader *hdr, float x, float y)
 {
     header(hdr)->screenWindowCenter() = V2f (x, y);
 }
 
 
-void	
+void
 ImfHeaderScreenWindowCenter (const ImfHeader *hdr, float *x, float *y)
 {
     const V2i &swc = header(hdr)->screenWindowCenter();
@@ -294,49 +294,49 @@ ImfHeaderScreenWindowCenter (const ImfHeader *hdr, float *x, float *y)
 }
 
 
-void	
+void
 ImfHeaderSetScreenWindowWidth (ImfHeader *hdr, float width)
 {
     header(hdr)->screenWindowWidth() = width;
 }
 
 
-float	
+float
 ImfHeaderScreenWindowWidth (const ImfHeader *hdr)
 {
     return header(hdr)->screenWindowWidth();
 }
 
 
-void	
+void
 ImfHeaderSetLineOrder (ImfHeader *hdr, int lineOrder)
 {
     header(hdr)->lineOrder() = Imf::LineOrder (lineOrder);
 }
 
 
-int	
+int
 ImfHeaderLineOrder (const ImfHeader *hdr)
 {
     return header(hdr)->lineOrder();
 }
 
-			    
-void	
+
+void
 ImfHeaderSetCompression (ImfHeader *hdr, int compression)
 {
     header(hdr)->compression() = Imf::Compression (compression);
 }
 
 
-int	
+int
 ImfHeaderCompression (const ImfHeader *hdr)
 {
     return header(hdr)->compression();
 }
 
 
-int	
+int
 ImfHeaderSetIntAttribute (ImfHeader *hdr, const char name[], int value)
 {
     try
@@ -361,7 +361,7 @@ ImfHeaderSetIntAttribute (ImfHeader *hdr, const char name[], int value)
 }
 
 
-int	
+int
 ImfHeaderIntAttribute (const ImfHeader *hdr, const char name[], int *value)
 {
     try
@@ -377,7 +377,7 @@ ImfHeaderIntAttribute (const ImfHeader *hdr, const char name[], int *value)
 }
 
 
-int	
+int
 ImfHeaderSetFloatAttribute (ImfHeader *hdr, const char name[], float value)
 {
     try
@@ -402,7 +402,7 @@ ImfHeaderSetFloatAttribute (ImfHeader *hdr, const char name[], float value)
 }
 
 
-int	
+int
 ImfHeaderSetDoubleAttribute (ImfHeader *hdr, const char name[], double value)
 {
     try
@@ -669,7 +669,7 @@ ImfHeaderV2iAttribute (const ImfHeader *hdr,
 }
 
 
-int	
+int
 ImfHeaderSetV2fAttribute (ImfHeader *hdr,
 			  const char name[],
 			  float x, float y)
@@ -932,7 +932,7 @@ ImfHeaderM44fAttribute (const ImfHeader *hdr,
 }
 
 
-ImfOutputFile *	
+ImfOutputFile *
 ImfOpenOutputFile (const char name[], const ImfHeader *hdr, int channels)
 {
     try
@@ -948,7 +948,7 @@ ImfOpenOutputFile (const char name[], const ImfHeader *hdr, int channels)
 }
 
 
-int		
+int
 ImfCloseOutputFile (ImfOutputFile *out)
 {
     try
@@ -964,7 +964,7 @@ ImfCloseOutputFile (ImfOutputFile *out)
 }
 
 
-int		
+int
 ImfOutputSetFrameBuffer (ImfOutputFile *out,
 			 const ImfRgba *base,
 			 size_t xStride,
@@ -983,7 +983,7 @@ ImfOutputSetFrameBuffer (ImfOutputFile *out,
 }
 
 
-int		
+int
 ImfOutputWritePixels (ImfOutputFile *out, int numScanLines)
 {
     try
@@ -1020,7 +1020,7 @@ ImfOutputChannels (const ImfOutputFile *out)
 }
 
 
-ImfTiledOutputFile *	
+ImfTiledOutputFile *
 ImfOpenTiledOutputFile (const char name[],
 			const ImfHeader *hdr,
 			int channels,
@@ -1044,7 +1044,7 @@ ImfOpenTiledOutputFile (const char name[],
 }
 
 
-int		
+int
 ImfCloseTiledOutputFile (ImfTiledOutputFile *out)
 {
     try
@@ -1060,7 +1060,7 @@ ImfCloseTiledOutputFile (ImfTiledOutputFile *out)
 }
 
 
-int		
+int
 ImfTiledOutputSetFrameBuffer (ImfTiledOutputFile *out,
 			      const ImfRgba *base,
 			      size_t xStride,
@@ -1079,7 +1079,7 @@ ImfTiledOutputSetFrameBuffer (ImfTiledOutputFile *out,
 }
 
 
-int		
+int
 ImfTiledOutputWriteTile (ImfTiledOutputFile *out,
 			 int dx, int dy,
 			 int lx, int ly)
@@ -1097,7 +1097,7 @@ ImfTiledOutputWriteTile (ImfTiledOutputFile *out,
 }
 
 
-int		
+int
 ImfTiledOutputWriteTiles (ImfTiledOutputFile *out,
 			  int dxMin, int dxMax,
                           int dyMin, int dyMax,
@@ -1158,7 +1158,7 @@ ImfTiledOutputLevelRoundingMode (const ImfTiledOutputFile *out)
 }
 
 
-ImfInputFile *	
+ImfInputFile *
 ImfOpenInputFile (const char name[])
 {
     try
@@ -1189,7 +1189,7 @@ ImfCloseInputFile (ImfInputFile *in)
 }
 
 
-int		
+int
 ImfInputSetFrameBuffer (ImfInputFile *in,
 			ImfRgba *base,
 			size_t xStride,
@@ -1245,7 +1245,7 @@ ImfInputFileName (const ImfInputFile *in)
 }
 
 
-ImfTiledInputFile *	
+ImfTiledInputFile *
 ImfOpenTiledInputFile (const char name[])
 {
     try
@@ -1276,7 +1276,7 @@ ImfCloseTiledInputFile (ImfTiledInputFile *in)
 }
 
 
-int		
+int
 ImfTiledInputSetFrameBuffer (ImfTiledInputFile *in,
 			     ImfRgba *base,
 			     size_t xStride,
@@ -1427,7 +1427,7 @@ ImfApplyLut (ImfLut *lut, ImfRgba *data, int nData, int stride)
 }
 
 
-const char *	
+const char *
 ImfErrorMessage ()
 {
     return errorMessage;

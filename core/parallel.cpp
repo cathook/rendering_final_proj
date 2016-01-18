@@ -45,7 +45,7 @@
 #include <sys/param.h>
 #include <sys/sysctl.h>
 #include <errno.h>
-#endif 
+#endif
 #include <list>
 
 // Parallel Local Declarations
@@ -53,7 +53,7 @@
 static HANDLE *threads;
 #elif !defined(PBRT_USE_GRAND_CENTRAL_DISPATCH)
 static pthread_t *threads;
-#endif 
+#endif
 #ifdef PBRT_USE_GRAND_CENTRAL_DISPATCH
 static dispatch_queue_t gcdQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 static dispatch_group_t gcdGroup = dispatch_group_create();
@@ -468,7 +468,7 @@ void RWMutexLock::DowngradeToRead() {
 }
 
 
-#endif 
+#endif
 #if !defined(PBRT_IS_WINDOWS)
 Semaphore::Semaphore() {
 #ifdef PBRT_IS_OPENBSD

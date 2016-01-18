@@ -11,7 +11,7 @@ using namespace Imath;
 
 static bool ReadEXR(const char *name, float *&rgba, int &xRes, int &yRes, bool &hasAlpha);
 
-int main(int argc, char *argv[]) 
+int main(int argc, char *argv[])
 {
     if (argc < 2) {
         fprintf(stderr, "usage: exravg [file1.exr] <file2.exr> ...\n");

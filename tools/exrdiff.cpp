@@ -22,7 +22,7 @@ static void usage() {
     exit(1);
 }
 
-int main(int argc, char *argv[]) 
+int main(int argc, char *argv[])
 {
     const char *outfile = NULL;
     const char *imageFile1 = NULL, *imageFile2 = NULL;
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
     double mse = 0.f;
     for (int i = 0; i < 4*r1[0]*r1[1]; ++i) {
         if (diffImage) diffImage[i] = fabsf(im1[i] - im2[i]);
-	if (im1[i] == 0 && im2[i] == 0) 
+	if (im1[i] == 0 && im2[i] == 0)
 	    continue;
         if ((i % 4) == 3) // alpha channel
             continue;

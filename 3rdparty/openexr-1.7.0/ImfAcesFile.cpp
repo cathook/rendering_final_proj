@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2007, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,7 +35,7 @@
 //-----------------------------------------------------------------------------
 //
 //	ACES image file I/O.
-//	
+//
 //-----------------------------------------------------------------------------
 
 #include <ImfAcesFile.h>
@@ -53,7 +53,7 @@ namespace Imf {
 const Chromaticities &
 acesChromaticities ()
 {
-    static const Chromaticities acesChr 
+    static const Chromaticities acesChr
 	    (V2f (0.73470,  0.26530),	// red
 	     V2f (0.00000,  1.00000),	// green
 	     V2f (0.00010, -0.07700),	// blue
@@ -235,7 +235,7 @@ AcesOutputFile::~AcesOutputFile ()
 }
 
 
-void		
+void
 AcesOutputFile::setFrameBuffer
     (const Rgba *base,
      size_t xStride,
@@ -245,14 +245,14 @@ AcesOutputFile::setFrameBuffer
 }
 
 
-void		
+void
 AcesOutputFile::writePixels (int numScanLines)
 {
     _data->rgbaFile->writePixels (numScanLines);
 }
 
 
-int			
+int
 AcesOutputFile::currentScanLine () const
 {
     return _data->rgbaFile->currentScanLine();
@@ -280,7 +280,7 @@ AcesOutputFile::dataWindow () const
 }
 
 
-float		
+float
 AcesOutputFile::pixelAspectRatio () const
 {
     return _data->rgbaFile->pixelAspectRatio();
@@ -294,21 +294,21 @@ AcesOutputFile::screenWindowCenter () const
 }
 
 
-float		
+float
 AcesOutputFile::screenWindowWidth () const
 {
     return _data->rgbaFile->screenWindowWidth();
 }
 
 
-LineOrder		
+LineOrder
 AcesOutputFile::lineOrder () const
 {
     return _data->rgbaFile->lineOrder();
 }
 
 
-Compression		
+Compression
 AcesOutputFile::compression () const
 {
     return _data->rgbaFile->compression();
@@ -322,7 +322,7 @@ AcesOutputFile::channels () const
 }
 
 
-void		
+void
 AcesOutputFile::updatePreviewImage (const PreviewRgba pixels[])
 {
     _data->rgbaFile->updatePreviewImage (pixels);
@@ -487,7 +487,7 @@ AcesInputFile::~AcesInputFile ()
 }
 
 
-void		
+void
 AcesInputFile::setFrameBuffer (Rgba *base, size_t xStride, size_t yStride)
 {
     _data->rgbaFile->setFrameBuffer (base, xStride, yStride);
@@ -497,7 +497,7 @@ AcesInputFile::setFrameBuffer (Rgba *base, size_t xStride, size_t yStride)
 }
 
 
-void		
+void
 AcesInputFile::readPixels (int scanLine1, int scanLine2)
 {
     //
@@ -538,7 +538,7 @@ AcesInputFile::readPixels (int scanLine1, int scanLine2)
 }
 
 
-void		
+void
 AcesInputFile::readPixels (int scanLine)
 {
     readPixels (scanLine, scanLine);
@@ -608,7 +608,7 @@ AcesInputFile::channels () const
 }
 
 
-const char *  
+const char *
 AcesInputFile::fileName () const
 {
     return _data->rgbaFile->fileName();

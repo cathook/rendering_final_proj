@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -108,7 +108,7 @@ rgbaChannels (const ChannelList &ch, const string &channelNamePrefix = "")
 
     if (ch.findChannel (channelNamePrefix + "G"))
 	i |= WRITE_G;
-    
+
     if (ch.findChannel (channelNamePrefix + "B"))
 	i |= WRITE_B;
 
@@ -251,7 +251,7 @@ RgbaOutputFile::ToYca::ToYca (OutputFile &outputFile,
 
     _linesConverted = 0;
     _lineOrder = _outputFile.header().lineOrder();
-    
+
     if (_lineOrder == INCREASING_Y)
 	_currentScanLine = dw.min.y;
     else
@@ -678,7 +678,7 @@ RgbaOutputFile::setFrameBuffer (const Rgba *base,
 }
 
 
-void	
+void
 RgbaOutputFile::writePixels (int numScanLines)
 {
     if (_toYca)
@@ -693,7 +693,7 @@ RgbaOutputFile::writePixels (int numScanLines)
 }
 
 
-int	
+int
 RgbaOutputFile::currentScanLine () const
 {
     if (_toYca)
@@ -736,7 +736,7 @@ RgbaOutputFile::dataWindow () const
 }
 
 
-float	
+float
 RgbaOutputFile::pixelAspectRatio () const
 {
     return _outputFile->header().pixelAspectRatio();
@@ -750,7 +750,7 @@ RgbaOutputFile::screenWindowCenter () const
 }
 
 
-float	
+float
 RgbaOutputFile::screenWindowWidth () const
 {
     return _outputFile->header().screenWindowWidth();
@@ -778,14 +778,14 @@ RgbaOutputFile::channels () const
 }
 
 
-void		
+void
 RgbaOutputFile::updatePreviewImage (const PreviewRgba newPixels[])
 {
     _outputFile->updatePreviewImage (newPixels);
 }
 
 
-void		
+void
 RgbaOutputFile::setYCRounding (unsigned int roundY, unsigned int roundC)
 {
     if (_toYca)
@@ -796,7 +796,7 @@ RgbaOutputFile::setYCRounding (unsigned int roundY, unsigned int roundC)
 }
 
 
-void	
+void
 RgbaOutputFile::breakScanLine  (int y, int offset, int length, char c)
 {
     _outputFile->breakScanLine (y, offset, length, c);
@@ -869,7 +869,7 @@ RgbaInputFile::FromYca::FromYca (InputFile &inputFile,
 
     for (int i = 0; i < N + 2; ++i)
 	_buf1[i] = _bufBase + (i * (_width + pad));
-    
+
     for (int i = 0; i < 3; ++i)
 	_buf2[i] = _bufBase + ((i + N + 2) * (_width + pad));
 
@@ -946,7 +946,7 @@ RgbaInputFile::FromYca::setFrameBuffer (Rgba *base,
 }
 
 
-void	
+void
 RgbaInputFile::FromYca::readPixels (int scanLine1, int scanLine2)
 {
     int minY = min (scanLine1, scanLine2);
@@ -965,7 +965,7 @@ RgbaInputFile::FromYca::readPixels (int scanLine1, int scanLine2)
 }
 
 
-void	
+void
 RgbaInputFile::FromYca::readPixels (int scanLine)
 {
     if (_fbBase == 0)
@@ -1222,7 +1222,7 @@ RgbaInputFile::~RgbaInputFile ()
 }
 
 
-void	
+void
 RgbaInputFile::setFrameBuffer (Rgba *base, size_t xStride, size_t yStride)
 {
     if (_fromYca)
@@ -1288,7 +1288,7 @@ RgbaInputFile::setLayerName (const string &layerName)
 }
 
 
-void	
+void
 RgbaInputFile::readPixels (int scanLine1, int scanLine2)
 {
     if (_fromYca)
@@ -1303,7 +1303,7 @@ RgbaInputFile::readPixels (int scanLine1, int scanLine2)
 }
 
 
-void	
+void
 RgbaInputFile::readPixels (int scanLine)
 {
     readPixels (scanLine, scanLine);
@@ -1331,7 +1331,7 @@ RgbaInputFile::fileName () const
 }
 
 
-const FrameBuffer &	
+const FrameBuffer &
 RgbaInputFile::frameBuffer () const
 {
     return _inputFile->frameBuffer();
@@ -1352,21 +1352,21 @@ RgbaInputFile::dataWindow () const
 }
 
 
-float	
+float
 RgbaInputFile::pixelAspectRatio () const
 {
     return _inputFile->header().pixelAspectRatio();
 }
 
 
-const Imath::V2f	
+const Imath::V2f
 RgbaInputFile::screenWindowCenter () const
 {
     return _inputFile->header().screenWindowCenter();
 }
 
 
-float	
+float
 RgbaInputFile::screenWindowWidth () const
 {
     return _inputFile->header().screenWindowWidth();
@@ -1387,7 +1387,7 @@ RgbaInputFile::compression () const
 }
 
 
-RgbaChannels	
+RgbaChannels
 RgbaInputFile::channels () const
 {
     return rgbaChannels (_inputFile->header().channels(), _channelNamePrefix);

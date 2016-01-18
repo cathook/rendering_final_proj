@@ -94,7 +94,7 @@ void Heightfield::Refine(vector<Reference<Shape> > &refined) const {
             *vp++ = VERT(x, y);
             *vp++ = VERT(x+1, y);
             *vp++ = VERT(x+1, y+1);
-    
+
             *vp++ = VERT(x, y);
             *vp++ = VERT(x+1, y+1);
             *vp++ = VERT(x, y+1);

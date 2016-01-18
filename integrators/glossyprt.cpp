@@ -110,7 +110,7 @@ Spectrum GlossyPRTIntegrator::Li(const Scene *scene, const Renderer *,
         if (pdf > 0.f && !f.IsBlack() && !scene->IntersectP(Ray(p, wi))) {
             f *= fabsf(Dot(wi, n)) / (pdf * ns);
             SHEvaluate(bsdf->WorldToLocal(wi), lmax, Ylm);
-    
+
             Spectrum Li = 0.f;
             for (int j = 0; j < SHTerms(lmax); ++j)
                 Li += Ylm[j] * c_l[j] * f;

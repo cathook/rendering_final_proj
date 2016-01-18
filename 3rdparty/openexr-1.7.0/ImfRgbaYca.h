@@ -83,24 +83,24 @@
 //	Next, decimateChomaHoriz() eliminates the chroma values from
 //	the odd-numbered pixels in every scan line:
 //
-//		YCA  YA   YCA  YA   ... YCA  YA  
-//		YCA  YA   YCA  YA   ... YCA  YA  
-//		YCA  YA   YCA  YA   ... YCA  YA  
-//		YCA  YA   YCA  YA   ... YCA  YA  
+//		YCA  YA   YCA  YA   ... YCA  YA
+//		YCA  YA   YCA  YA   ... YCA  YA
+//		YCA  YA   YCA  YA   ... YCA  YA
+//		YCA  YA   YCA  YA   ... YCA  YA
 //		...
-//		YCA  YA   YCA  YA   ... YCA  YA  
-//		YCA  YA   YCA  YA   ... YCA  YA  
+//		YCA  YA   YCA  YA   ... YCA  YA
+//		YCA  YA   YCA  YA   ... YCA  YA
 //
 //	decimateChromaVert() eliminates all chroma values from the
 //	odd-numbered scan lines:
 //
-//		YCA  YA   YCA  YA   ... YCA  YA  
-//		YA   YA   YA   YA   ... YA   YA  
-//		YCA  YA   YCA  YA   ... YCA  YA  
-//		YA   YA   YA   YA   ... YA   YA  
+//		YCA  YA   YCA  YA   ... YCA  YA
+//		YA   YA   YA   YA   ... YA   YA
+//		YCA  YA   YCA  YA   ... YCA  YA
+//		YA   YA   YA   YA   ... YA   YA
 //		...
-//		YCA  YA   YCA  YA   ... YCA  YA  
-//		YA   YA   YA   YA   ... YA   YA  
+//		YCA  YA   YCA  YA   ... YCA  YA
+//		YA   YA   YA   YA   ... YA   YA
 //
 //	Finally, roundYCA() reduces the precision of the luminance
 //	and chroma values so that the pixel data shrink more when
@@ -132,7 +132,7 @@ static const int N2 = N / 2;
 //
 // Convert a set of primary chromaticities into a set of weighting
 // factors for computing a pixels's luminance, Y, from R, G and B
-// 
+//
 
 Imath::V3f computeYw (const Chromaticities &cr);
 
@@ -208,7 +208,7 @@ void reconstructChromaHoriz (int n,
 void reconstructChromaVert (int n,
 			    const Rgba * const ycaIn[N],
 			    Rgba ycaOut[/*n*/]);
-			 
+
 //
 // Convert an array of n YCA (luminance/chroma/alpha) pixels to RGBA.
 // This function is the inverse of RGBAtoYCA().
@@ -219,7 +219,7 @@ void YCAtoRGBA (const Imath::V3f &yw,
 		int n,
 		const Rgba ycaIn[/*n*/],
 		Rgba rgbaOut[/*n*/]);
-			 
+
 //
 // Eliminate super-saturated pixels:
 //

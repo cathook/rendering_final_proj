@@ -80,7 +80,7 @@ void SHRotateXPlus(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     *c_out++ = (-0.25*O(3,1) - 0.9682458365518543*O(3,3));
     *c_out++ = (-0.6123724356957945*O(3,-3) + 0.7905694150420949*O(3,-1));
     *c_out++ = (-0.9682458365518543*O(3,1) + 0.25*O(3,3));
-    
+
     if (lmax < 4) return;
     *c_out++ = (-0.9354143466934853*O(4,1) + 0.35355339059327373*O(4,3));
     *c_out++ = (-0.75*O(4,-3) + 0.6614378277661477*O(4,-1));
@@ -91,7 +91,7 @@ void SHRotateXPlus(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     *c_out++ = (0.5590169943749475*O(4,0) + 0.5*O(4,2) - 0.6614378277661477*O(4,4));
     *c_out++ = (-0.35355339059327373*O(4,-4) + 0.9354143466934853*O(4,-2));
     *c_out++ = (0.739509972887452*O(4,0) - 0.6614378277661477*O(4,2) + 0.125*O(4,4));
-    
+
     if (lmax < 5) return;
     *c_out++ = (0.701560760020114*O(5,0) - 0.6846531968814576*O(5,2) +
                 0.19764235376052372*O(5,4));
@@ -110,7 +110,7 @@ void SHRotateXPlus(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     *c_out++ = (-0.19764235376052372*O(5,-5) + 0.795495128834866*O(5,-3) -
                 0.57282196186948*O(5,-1));
     *c_out++ = (0.9057110466368399*O(5,1) - 0.4192627457812106*O(5,3) + 0.0625*O(5,5));
-    
+
     if (lmax < 6) return;
     *c_out++ = (0.879452954966893*O(6,1) - 0.46351240544347894*O(6,3) +
                 0.10825317547305482*O(6,5));
@@ -135,7 +135,7 @@ void SHRotateXPlus(const Spectrum *c_in, Spectrum *c_out, int lmax) {
                 0.8028270361665706*O(6,-2));
     *c_out++ = (-0.6716932893813962*O(6,0) + 0.6952686081652184*O(6,2) -
                 0.2538762001448738*O(6,4) + 0.03125*O(6,6));
-    
+
     if (lmax < 7) return;
     *c_out++ = (-0.6472598492877494*O(7,0) + 0.6991205412874092*O(7,2) -
                 0.2981060004427955*O(7,4) + 0.05846339666834283*O(7,6));
@@ -165,7 +165,7 @@ void SHRotateXPlus(const Spectrum *c_in, Spectrum *c_out, int lmax) {
                 0.7927281808728639*O(7,-3) + 0.4576818286211503*O(7,-1));
     *c_out++ = (-0.8562442974262661*O(7,1) + 0.4943528756111367*O(7,3) -
                 0.14905300022139775*O(7,5) + 0.015625*O(7,7));
-    
+
     if (lmax < 8) return;
     *c_out++ = (-0.8356088723200586*O(8,1) + 0.516334738808072*O(8,3) -
                 0.184877493221863*O(8,5) + 0.03125*O(8,7));
@@ -201,7 +201,7 @@ void SHRotateXPlus(const Spectrum *c_in, Spectrum *c_out, int lmax) {
                 0.6991205412874092*O(8,-2));
     *c_out++ = (0.626706654240044*O(8,0) - 0.6991205412874092*O(8,2) +
                 0.3332926407453366*O(8,4) - 0.0855816496101822*O(8,6) + 0.0078125*O(8,8));
-    
+
     if (lmax < 9) return;
     *c_out++ = (0.6090493921755238*O(9,0) - 0.6968469725305549*O(9,2) +
                 0.3615761395439417*O(9,4) - 0.11158481919598204*O(9,6) + 0.016572815184059706*O(9,8));
@@ -242,7 +242,7 @@ void SHRotateXPlus(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     *c_out++ = (0.8171255055356398*O(9,1) - 0.5322256665703469*O(9,3) + 0.21608307321780204*O(9,5) -
                 0.048317644050206957*O(9,7) + 0.00390625*O(9,9));
     Assert(lmax < 10);
-    
+
 #if 0
     if (lmax < 10) return;
     *c_out++ = (0.800447720175637*O(10,1) - 0.5437971423529642*O(10,3) + 0.24319347525427157*O(10,5) -
@@ -312,7 +312,7 @@ void SHSwapYZ(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     c_out[SHIndex(2, 2)] += c_in[SHIndex(2, 0)] * -0.86602540378444;
     c_out[SHIndex(2, 2)] += c_in[SHIndex(2, 2)] * 0.5;
     if (lmax == 2) return;
-    
+
     c_out[SHIndex(3, -3)] += c_in[SHIndex(3, 0)] * 0.79056941504209;
     c_out[SHIndex(3, -3)] += c_in[SHIndex(3, 2)] * -0.61237243569579;
     c_out[SHIndex(3, -2)] += c_in[SHIndex(3, -2)] * 1.;
@@ -327,7 +327,7 @@ void SHSwapYZ(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     c_out[SHIndex(3, 3)] += c_in[SHIndex(3, 1)] * -0.96824583655185;
     c_out[SHIndex(3, 3)] += c_in[SHIndex(3, 3)] * 0.25;
     if (lmax == 3) return;
-    
+
     c_out[SHIndex(4, -4)] += c_in[SHIndex(4, 1)] * 0.93541434669349;
     c_out[SHIndex(4, -4)] += c_in[SHIndex(4, 3)] * -0.35355339059327;
     c_out[SHIndex(4, -3)] += c_in[SHIndex(4, -3)] * 0.75;
@@ -350,8 +350,8 @@ void SHSwapYZ(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     c_out[SHIndex(4, 4)] += c_in[SHIndex(4, 2)] * -0.66143782776615;
     c_out[SHIndex(4, 4)] += c_in[SHIndex(4, 4)] * 0.125;
     if (lmax == 4) return;
-    
-    
+
+
     c_out[SHIndex(5, -5)] += c_in[SHIndex(5, 0)] * -0.70156076002011;
     c_out[SHIndex(5, -5)] += c_in[SHIndex(5, 2)] * 0.68465319688146;
     c_out[SHIndex(5, -5)] += c_in[SHIndex(5, 4)] * -0.19764235376052;
@@ -384,8 +384,8 @@ void SHSwapYZ(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     c_out[SHIndex(5, 5)] += c_in[SHIndex(5, 3)] * -0.41926274578121;
     c_out[SHIndex(5, 5)] += c_in[SHIndex(5, 5)] * 0.0625;
     if (lmax == 5) return;
-    
-    
+
+
     c_out[SHIndex(6, -6)] += c_in[SHIndex(6, 1)] * -0.87945295496689;
     c_out[SHIndex(6, -6)] += c_in[SHIndex(6, 3)] * 0.46351240544348;
     c_out[SHIndex(6, -6)] += c_in[SHIndex(6, 5)] * -0.10825317547305;
@@ -430,8 +430,8 @@ void SHSwapYZ(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     c_out[SHIndex(6, 6)] += c_in[SHIndex(6, 4)] * -0.25387620014487;
     c_out[SHIndex(6, 6)] += c_in[SHIndex(6, 6)] * 0.03125;
     if (lmax == 6) return;
-    
-    
+
+
     c_out[SHIndex(7, -7)] += c_in[SHIndex(7, 0)] * 0.64725984928775;
     c_out[SHIndex(7, -7)] += c_in[SHIndex(7, 2)] * -0.69912054128741;
     c_out[SHIndex(7, -7)] += c_in[SHIndex(7, 4)] * 0.2981060004428;
@@ -490,8 +490,8 @@ void SHSwapYZ(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     c_out[SHIndex(7, 7)] += c_in[SHIndex(7, 5)] * -0.1490530002214;
     c_out[SHIndex(7, 7)] += c_in[SHIndex(7, 7)] * 0.015625;
     if (lmax == 7) return;
-    
-    
+
+
     c_out[SHIndex(8, -8)] += c_in[SHIndex(8, 1)] * 0.83560887232006;
     c_out[SHIndex(8, -8)] += c_in[SHIndex(8, 3)] * -0.51633473880807;
     c_out[SHIndex(8, -8)] += c_in[SHIndex(8, 5)] * 0.18487749322186;
@@ -564,8 +564,8 @@ void SHSwapYZ(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     c_out[SHIndex(8, 8)] += c_in[SHIndex(8, 6)] * -0.085581649610182;
     c_out[SHIndex(8, 8)] += c_in[SHIndex(8, 8)] * 0.0078125;
     if (lmax == 8) return;
-    
-    
+
+
     c_out[SHIndex(9, -9)] += c_in[SHIndex(9, 0)] * -0.60904939217552;
     c_out[SHIndex(9, -9)] += c_in[SHIndex(9, 2)] * 0.69684697253055;
     c_out[SHIndex(9, -9)] += c_in[SHIndex(9, 4)] * -0.36157613954394;
@@ -658,8 +658,8 @@ void SHSwapYZ(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     c_out[SHIndex(9, 9)] += c_in[SHIndex(9, 7)] * -0.048317644050207;
     c_out[SHIndex(9, 9)] += c_in[SHIndex(9, 9)] * 0.00390625;
     if (lmax == 9) return;
-    
-    
+
+
     c_out[SHIndex(10, -10)] += c_in[SHIndex(10, 1)] * -0.80044772017564;
     c_out[SHIndex(10, -10)] += c_in[SHIndex(10, 3)] * 0.54379714235296;
     c_out[SHIndex(10, -10)] += c_in[SHIndex(10, 5)] * -0.24319347525427;
@@ -772,8 +772,8 @@ void SHSwapYZ(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     c_out[SHIndex(10, 10)] += c_in[SHIndex(10, 8)] * -0.026921970218926;
     c_out[SHIndex(10, 10)] += c_in[SHIndex(10, 10)] * 0.001953125;
     if (lmax == 10) return;
-    
-    
+
+
     c_out[SHIndex(11, -11)] += c_in[SHIndex(11, 0)] * 0.57997947393468;
     c_out[SHIndex(11, -11)] += c_in[SHIndex(11, 2)] * -0.68875008418642;
     c_out[SHIndex(11, -11)] += c_in[SHIndex(11, 4)] * 0.4032907544405;
@@ -906,8 +906,8 @@ void SHSwapYZ(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     c_out[SHIndex(11, 11)] += c_in[SHIndex(11, 9)] * -0.014842464993721;
     c_out[SHIndex(11, 11)] += c_in[SHIndex(11, 11)] * 0.0009765625;
     if (lmax == 11) return;
-    
-    
+
+
     c_out[SHIndex(12, -12)] += c_in[SHIndex(12, 1)] * 0.7714448170238;
     c_out[SHIndex(12, -12)] += c_in[SHIndex(12, 3)] * -0.55833076742161;
     c_out[SHIndex(12, -12)] += c_in[SHIndex(12, 5)] * 0.28725880996301;
@@ -1066,8 +1066,8 @@ void SHSwapYZ(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     c_out[SHIndex(12, 12)] += c_in[SHIndex(12, 10)] * -0.0081119373661309;
     c_out[SHIndex(12, 12)] += c_in[SHIndex(12, 12)] * 0.00048828125;
     if (lmax == 12) return;
-    
-    
+
+
     c_out[SHIndex(13, -13)] += c_in[SHIndex(13, 0)] * -0.55674234096704;
     c_out[SHIndex(13, -13)] += c_in[SHIndex(13, 2)] * 0.67861257155894;
     c_out[SHIndex(13, -13)] += c_in[SHIndex(13, 4)] * -0.43155265360434;
@@ -1252,7 +1252,7 @@ void SHSwapYZ(const Spectrum *c_in, Spectrum *c_out, int lmax) {
     c_out[SHIndex(13, 13)] += c_in[SHIndex(13, 11)] * -0.0044013077093066;
     c_out[SHIndex(13, 13)] += c_in[SHIndex(13, 13)] * 0.000244140625;
     if (lmax == 13) return;
-    
+
     c_out[SHIndex(14, -14)] += c_in[SHIndex(14, 1)] * -0.74694823221281;
     c_out[SHIndex(14, -14)] += c_in[SHIndex(14, 3)] * 0.56567677845719;
     c_out[SHIndex(14, -14)] += c_in[SHIndex(14, 5)] * -0.32081276509794;

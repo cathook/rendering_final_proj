@@ -70,7 +70,7 @@ UseRadianceProbes::UseRadianceProbes(const string &filename) {
             Error("Error reading data from radiance probe file \"%s\"", filename.c_str());
             exit(1);
         }
-    
+
         c_in = new Spectrum[SHTerms(lmax) * nProbes[0] * nProbes[1] * nProbes[2]];
         int offset = 0;
         for (int i = 0; i < nProbes[0] * nProbes[1] * nProbes[2]; ++i) {

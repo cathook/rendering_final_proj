@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -72,9 +72,9 @@ const int HUF_DECMASK = HUF_DECSIZE - 1;
 struct HufDec
 {				// short code		long code
 				//-------------------------------
-    int		len:8;		// code length		0	 
-    int		lit:24;		// lit			p size	 
-    int	*	p;		// 0			lits	 
+    int		len:8;		// code length		0
+    int		lit:24;		// lit			p size
+    int	*	p;		// 0			lits
 };
 
 
@@ -393,7 +393,7 @@ hufBuildEncTable
 	// Merge the lists that start at scode[m] and scode[mm]
 	// into a single list that starts at scode[m].
 	//
-	
+
 	//
 	// Add a bit to all codes in the first list.
 	//
@@ -483,7 +483,7 @@ hufPackEncTable
 
 	    while ((im < iM) && (zerun < LONGEST_LONG_RUN))
 	    {
-		if (hufLength (hcode[im+1]) > 0 )	 
+		if (hufLength (hcode[im+1]) > 0 )
 		    break;
 		im++;
 		zerun++;

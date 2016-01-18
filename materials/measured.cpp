@@ -75,7 +75,7 @@
 
   In the file each sample should be scaled by RGB(1500,1500,1500/1.6) of
   the original measurement.  (In order words, the sample values are scaled
-  by the inverse of that as they are read in.  
+  by the inverse of that as they are read in.
 */
 
 
@@ -97,13 +97,13 @@ MeasuredMaterial::MeasuredMaterial(const string &filename,
             thetaPhiData = loadedThetaPhi[filename];
             return;
         }
-        
+
         vector<float> values;
         if (!ReadFloatFile(filename.c_str(), &values)) {
             Error("Unable to read BRDF data from file \"%s\"", filename.c_str());
             return;
         }
-        
+
         uint32_t pos = 0;
         int numWls = int(values[pos++]);
         if ((values.size() - 1 - numWls) % (4 + numWls) != 0) {
@@ -115,7 +115,7 @@ MeasuredMaterial::MeasuredMaterial(const string &filename,
         vector<float> wls;
         for (int i = 0; i < numWls; ++i)
             wls.push_back(values[pos++]);
-        
+
         BBox bbox;
         vector<IrregIsotropicBRDFSample> samples;
         while (pos < values.size()) {
@@ -138,12 +138,12 @@ MeasuredMaterial::MeasuredMaterial(const string &filename,
         nThetaH = 90;
         nThetaD = 90;
         nPhiD = 180;
-        
+
         if (loadedRegularHalfangle.find(filename) != loadedRegularHalfangle.end()) {
             regularHalfangleData = loadedRegularHalfangle[filename];
             return;
         }
-        
+
         FILE *f = fopen(filename.c_str(), "rb");
         if (!f) {
             Error("Unable to open BRDF data file \"%s\"", filename.c_str());
@@ -162,7 +162,7 @@ MeasuredMaterial::MeasuredMaterial(const string &filename,
             fclose(f);
             return;
         }
-        
+
         regularHalfangleData = new float[3*n];
         const uint32_t chunkSize = 2*nPhiD;
         double *tmp = ALLOCA(double, chunkSize);
@@ -184,7 +184,7 @@ MeasuredMaterial::MeasuredMaterial(const string &filename,
                     regularHalfangleData[3 * offset++ + c] = max(0., tmp[j] * scales[c]);
             }
         }
-        
+
         loadedRegularHalfangle[filename] = regularHalfangleData;
         fclose(f);
     }

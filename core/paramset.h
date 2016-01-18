@@ -98,7 +98,7 @@ public:
     void ReportUnused() const;
     void Clear();
     string ToString() const;
-    
+
 private:
     // ParamSet Private Data
     vector<Reference<ParamSetItem<bool> > > bools;

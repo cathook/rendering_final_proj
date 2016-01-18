@@ -70,7 +70,7 @@ class SamplerRendererTask : public Task {
 public:
     // SamplerRendererTask Public Methods
     SamplerRendererTask(const Scene *sc, Renderer *ren, Camera *c,
-                        ProgressReporter &pr, Sampler *ms, Sample *sam, 
+                        ProgressReporter &pr, Sampler *ms, Sample *sam,
                         bool visIds, int tn, int tc)
       : reporter(pr)
     {

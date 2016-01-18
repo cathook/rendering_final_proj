@@ -106,7 +106,7 @@ public:
         for (int i = 0; i < nSamples; ++i)
             c[i] = s.c[i];
     }
-    
+
     CoefficientSpectrum &operator=(const CoefficientSpectrum &s) {
         Assert(!s.HasNaNs());
         for (int i = 0; i < nSamples; ++i)
@@ -319,7 +319,7 @@ public:
                 nRGB2SpectSamples, wl0, wl1);
             rgbRefl2SpectBlue.c[i] = AverageSpectrumSamples(RGB2SpectLambda, RGBRefl2SpectBlue,
                 nRGB2SpectSamples, wl0, wl1);
-        
+
             rgbIllum2SpectWhite.c[i] = AverageSpectrumSamples(RGB2SpectLambda, RGBIllum2SpectWhite,
                 nRGB2SpectSamples, wl0, wl1);
             rgbIllum2SpectCyan.c[i] = AverageSpectrumSamples(RGB2SpectLambda, RGBIllum2SpectCyan,

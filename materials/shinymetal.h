@@ -43,13 +43,13 @@
 class ShinyMetalMaterial : public Material {
 public:
     // ShinyMetalMaterial Public Methods
-    ShinyMetalMaterial(const Reference<Texture<Spectrum> > &ks, 
+    ShinyMetalMaterial(const Reference<Texture<Spectrum> > &ks,
                        const Reference<Texture<float> > &rough,
                        const Reference<Texture<Spectrum> > &kr,
-                       const Reference<Texture<float> > &bump) 
+                       const Reference<Texture<float> > &bump)
         : Ks(ks), Kr(kr), roughness(rough), bumpMap(bump) {
     }
-    BSDF *GetBSDF(const DifferentialGeometry &dgGeom, 
+    BSDF *GetBSDF(const DifferentialGeometry &dgGeom,
                   const DifferentialGeometry &dgShading,
                   MemoryArena &arena) const;
 private:

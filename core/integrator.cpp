@@ -230,22 +230,22 @@ Spectrum SpecularTransmit(const RayDifferential &ray, BSDF *bsdf,
             rd.hasDifferentials = true;
             rd.rxOrigin = p + isect.dg.dpdx;
             rd.ryOrigin = p + isect.dg.dpdy;
-        
+
             float eta = bsdf->eta;
             Vector w = -wo;
             if (Dot(wo, n) < 0) eta = 1.f / eta;
-        
+
             Normal dndx = bsdf->dgShading.dndu * bsdf->dgShading.dudx + bsdf->dgShading.dndv * bsdf->dgShading.dvdx;
             Normal dndy = bsdf->dgShading.dndu * bsdf->dgShading.dudy + bsdf->dgShading.dndv * bsdf->dgShading.dvdy;
-        
+
             Vector dwodx = -ray.rxDirection - wo, dwody = -ray.ryDirection - wo;
             float dDNdx = Dot(dwodx, n) + Dot(wo, dndx);
             float dDNdy = Dot(dwody, n) + Dot(wo, dndy);
-        
+
             float mu = eta * Dot(w, n) - Dot(wi, n);
             float dmudx = (eta - (eta*eta*Dot(w,n))/Dot(wi, n)) * dDNdx;
             float dmudy = (eta - (eta*eta*Dot(w,n))/Dot(wi, n)) * dDNdy;
-        
+
             rd.rxDirection = wi + eta * dwodx - Vector(mu * dndx + dmudx * n);
             rd.ryDirection = wi + eta * dwody - Vector(mu * dndy + dmudy * n);
         }

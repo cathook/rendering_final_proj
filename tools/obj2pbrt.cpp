@@ -81,7 +81,7 @@ std::string LoadObj(
 
 //
 // Copyright 2012-2013, Syoyo Fujita.
-// 
+//
 // Licensed under 2-clause BSD liecense.
 //
 
@@ -141,7 +141,7 @@ static inline bool isNewLine(const char c) {
   return (c == '\r') || (c == '\n') || (c == '\0');
 }
 
-// Make index zero-base, and also support relative index. 
+// Make index zero-base, and also support relative index.
 static inline int fixIndex(int idx, int n)
 {
   int i;
@@ -224,7 +224,7 @@ static vertex_index parseTriple(
       token += strcspn(token, "/ \t\r");
       return vi;
     }
-    
+
     // i/j/k or i/j
     vi.vt_idx = fixIndex(atoi(token), vtsize);
     token += strcspn(token, "/ \t\r");
@@ -236,7 +236,7 @@ static vertex_index parseTriple(
     token++;  // skip '/'
     vi.vn_idx = fixIndex(atoi(token), vnsize);
     token += strcspn(token, "/ \t\r");
-    return vi; 
+    return vi;
 }
 
 static unsigned int
@@ -492,7 +492,7 @@ std::string LoadMtl (
   }
 
   material_t material;
-  
+
   int maxchars = 8192;  // Alloc enough size.
   std::vector<char> buf(maxchars);  // Alloc enough size.
   while (ifs.peek() != -1) {
@@ -519,9 +519,9 @@ std::string LoadMtl (
 
     assert(token);
     if (token[0] == '\0') continue; // empty line
-    
+
     if (token[0] == '#') continue;  // comment line
-    
+
     // new mtl
     if ((0 == strncmp(token, "newmtl", 6)) && isSpace((token[6]))) {
       // flush previous material.
@@ -537,7 +537,7 @@ std::string LoadMtl (
       material.name = namebuf;
       continue;
     }
-    
+
     // ambient
     if (token[0] == 'K' && token[1] == 'a' && isSpace((token[2]))) {
       token += 2;
@@ -548,7 +548,7 @@ std::string LoadMtl (
       material.ambient[2] = b;
       continue;
     }
-    
+
     // diffuse
     if (token[0] == 'K' && token[1] == 'd' && isSpace((token[2]))) {
       token += 2;
@@ -559,7 +559,7 @@ std::string LoadMtl (
       material.diffuse[2] = b;
       continue;
     }
-    
+
     // specular
     if (token[0] == 'K' && token[1] == 's' && isSpace((token[2]))) {
       token += 2;
@@ -570,7 +570,7 @@ std::string LoadMtl (
       material.specular[2] = b;
       continue;
     }
-    
+
     // transmittance
     if (token[0] == 'K' && token[1] == 't' && isSpace((token[2]))) {
       token += 2;
@@ -736,7 +736,7 @@ LoadObj(
 
     assert(token);
     if (token[0] == '\0') continue; // empty line
-    
+
     if (token[0] == '#') continue;  // comment line
 
     // vertex
@@ -785,7 +785,7 @@ LoadObj(
       }
 
       faceGroup.push_back(face);
-      
+
       continue;
     }
 

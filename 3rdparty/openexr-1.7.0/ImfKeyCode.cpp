@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -44,7 +44,7 @@
 
 namespace Imf {
 
-   
+
 KeyCode::KeyCode (int filmMfcCode,
 		  int filmType,
 		  int prefix,
@@ -90,14 +90,14 @@ KeyCode::operator = (const KeyCode &other)
 }
 
 
-int		
+int
 KeyCode::filmMfcCode () const
 {
     return _filmMfcCode;
 }
 
 
-void	
+void
 KeyCode::setFilmMfcCode (int filmMfcCode)
 {
     if (filmMfcCode < 0 || filmMfcCode > 99)
@@ -107,14 +107,14 @@ KeyCode::setFilmMfcCode (int filmMfcCode)
     _filmMfcCode = filmMfcCode;
 }
 
-int		
+int
 KeyCode::filmType () const
 {
     return _filmType;
 }
 
 
-void	
+void
 KeyCode::setFilmType (int filmType)
 {
     if (filmType < 0 || filmType > 99)
@@ -124,14 +124,14 @@ KeyCode::setFilmType (int filmType)
     _filmType = filmType;
 }
 
-int		
+int
 KeyCode::prefix () const
 {
     return _prefix;
 }
 
 
-void	
+void
 KeyCode::setPrefix (int prefix)
 {
     if (prefix < 0 || prefix > 999999)
@@ -142,14 +142,14 @@ KeyCode::setPrefix (int prefix)
 }
 
 
-int		
+int
 KeyCode::count () const
 {
     return _count;
 }
 
 
-void	
+void
 KeyCode::setCount (int count)
 {
     if (count < 0 || count > 9999)
@@ -160,14 +160,14 @@ KeyCode::setCount (int count)
 }
 
 
-int		
+int
 KeyCode::perfOffset () const
 {
     return _perfOffset;
 }
 
 
-void	
+void
 KeyCode::setPerfOffset (int perfOffset)
 {
     if (perfOffset < 0 || perfOffset > 119)
@@ -178,7 +178,7 @@ KeyCode::setPerfOffset (int perfOffset)
 }
 
 
-int	
+int
 KeyCode::perfsPerFrame () const
 {
     return _perfsPerFrame;
@@ -196,7 +196,7 @@ KeyCode::setPerfsPerFrame (int perfsPerFrame)
 }
 
 
-int	
+int
 KeyCode::perfsPerCount () const
 {
     return _perfsPerCount;

@@ -51,7 +51,7 @@ class Pxr24Compressor: public Compressor
 {
   public:
 
-    Pxr24Compressor (const Header &hdr, 
+    Pxr24Compressor (const Header &hdr,
                      size_t maxScanLineSize,
                      size_t numScanLines);
 
@@ -64,8 +64,8 @@ class Pxr24Compressor: public Compressor
     virtual int		compress (const char *inPtr,
 				  int inSize,
 				  int minY,
-				  const char *&outPtr);                  
-                  
+				  const char *&outPtr);
+
     virtual int		compressTile (const char *inPtr,
 				      int inSize,
 				      Imath::Box2i range,
@@ -75,7 +75,7 @@ class Pxr24Compressor: public Compressor
 				    int inSize,
 				    int minY,
 				    const char *&outPtr);
-                    
+
     virtual int		uncompressTile (const char *inPtr,
 					int inSize,
 					Imath::Box2i range,
@@ -86,7 +86,7 @@ class Pxr24Compressor: public Compressor
 				  int inSize,
 				  Imath::Box2i range,
 				  const char *&outPtr);
- 
+
     int			uncompress (const char *inPtr,
 				    int inSize,
 				    Imath::Box2i range,

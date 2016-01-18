@@ -30,7 +30,7 @@
  */
 
 #if defined(_MSC_VER)
-#define NOMINMAX 
+#define NOMINMAX
 #pragma once
 #endif
 

@@ -69,7 +69,7 @@ inline float Lerp(float t, float a, float b) {
 }
 
 void bloom(float *rgb, int xResolution, int yResolution, float bloomRadius,
-           float bloomWeight) { 
+           float bloomWeight) {
     int nPix = xResolution * yResolution;
     // Possibly apply bloom effect to image
     if (bloomRadius > 0.f && bloomWeight > 0.f) {
@@ -123,7 +123,7 @@ void bloom(float *rgb, int xResolution, int yResolution, float bloomRadius,
     }
 }
 
-int main(int argc, char *argv[]) 
+int main(int argc, char *argv[])
 {
     float scale = 1.f, gamma = 2.2f;
     float bggray = -1.f;
@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
 	ARG("scale", scale)
 	ARG("gamma", gamma)
 	ARG("bg", bggray)
-	else 
+	else
 	    usage();
       ++argNum;
 
@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
     if (argNum + 2 > argc) usage();
     repeat = int(rp);
 
-    char *inFile = argv[argNum], *outFile = argv[argNum+1]; 	  
+    char *inFile = argv[argNum], *outFile = argv[argNum+1];
     float *rgba;
     int xRes, yRes;
     bool hasAlpha;
@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
                 int yy = y / repeat;
                 for (int x = 0; x < repeat * xRes; ++x) {
                     int xx = x / repeat;
-                    for (int c = 0; c < 4; ++c) 
+                    for (int c = 0; c < 4; ++c)
                         *rsp++ = rgba[4 * (yy * xRes + xx) + c];
                 }
             }
@@ -215,7 +215,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void WriteTIFF(const char *name, float *rgba, int XRes, int YRes, bool hasAlpha) 
+void WriteTIFF(const char *name, float *rgba, int XRes, int YRes, bool hasAlpha)
 {
     // Open 8-bit TIFF file for writing
     TIFF *tiff = TIFFOpen(name, "w");

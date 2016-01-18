@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2003, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -44,7 +44,7 @@
 
 namespace Imf {
 
-   
+
 Chromaticities::Chromaticities (const Imath::V2f &red,
 				const Imath::V2f &green,
 				const Imath::V2f &blue,
@@ -65,7 +65,7 @@ RGBtoXYZ (const Chromaticities chroma, float Y)
     //
     // For an explanation of how the color conversion matrix is derived,
     // see Roy Hall, "Illumination and Color in Computer Generated Imagery",
-    // Springer-Verlag, 1989, chapter 3, "Perceptual Response"; and 
+    // Springer-Verlag, 1989, chapter 3, "Perceptual Response"; and
     // Charles A. Poynton, "A Technical Introduction to Digital Video",
     // John Wiley & Sons, 1996, chapter 7, "Color science for video".
     //

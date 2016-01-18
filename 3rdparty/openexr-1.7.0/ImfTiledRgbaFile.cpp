@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -111,7 +111,7 @@ rgbaChannels (const ChannelList &ch, const string &channelNamePrefix = "")
 
     if (ch.findChannel (channelNamePrefix + "G"))
 	i |= WRITE_G;
-    
+
     if (ch.findChannel (channelNamePrefix + "B"))
 	i |= WRITE_B;
 
@@ -184,7 +184,7 @@ TiledRgbaOutputFile::ToYa::ToYa (TiledOutputFile &outputFile,
     _outputFile (outputFile)
 {
     _writeA = (rgbaChannels & WRITE_A)? true: false;
-    
+
     const TileDescription &td = outputFile.header().tileDescription();
 
     _tileXSize = td.xSize;
@@ -437,7 +437,7 @@ TiledRgbaOutputFile::dataWindow () const
 }
 
 
-float	
+float
 TiledRgbaOutputFile::pixelAspectRatio () const
 {
     return _outputFile->header().pixelAspectRatio();
@@ -451,7 +451,7 @@ TiledRgbaOutputFile::screenWindowCenter () const
 }
 
 
-float	
+float
 TiledRgbaOutputFile::screenWindowWidth () const
 {
     return _outputFile->header().screenWindowWidth();
@@ -621,7 +621,7 @@ TiledRgbaOutputFile::writeTile (int dx, int dy, int lx, int ly)
 }
 
 
-void	
+void
 TiledRgbaOutputFile::writeTiles
     (int dxMin, int dxMax, int dyMin, int dyMax, int lx, int ly)
 {
@@ -639,7 +639,7 @@ TiledRgbaOutputFile::writeTiles
     }
 }
 
-void	
+void
 TiledRgbaOutputFile::writeTiles
     (int dxMin, int dxMax, int dyMin, int dyMax, int l)
 {
@@ -739,7 +739,7 @@ TiledRgbaInputFile::FromYa::readTile (int dx, int dy, int lx, int ly)
     //
     // Read the tile requested by the caller into _buf.
     //
-    
+
     _inputFile.readTile (dx, dy, lx, ly);
 
     //
@@ -821,7 +821,7 @@ TiledRgbaInputFile::~TiledRgbaInputFile ()
 }
 
 
-void	
+void
 TiledRgbaInputFile::setFrameBuffer (Rgba *base, size_t xStride, size_t yStride)
 {
     if (_fromYa)
@@ -869,12 +869,12 @@ TiledRgbaInputFile::setFrameBuffer (Rgba *base, size_t xStride, size_t yStride)
 }
 
 
-void		
+void
 TiledRgbaInputFile::setLayerName (const std::string &layerName)
 {
     delete _fromYa;
     _fromYa = 0;
-    
+
     _channelNamePrefix = prefixFromLayerName (layerName, _inputFile->header());
 
     if (channels() & WRITE_Y)
@@ -899,7 +899,7 @@ TiledRgbaInputFile::fileName () const
 }
 
 
-const FrameBuffer &	
+const FrameBuffer &
 TiledRgbaInputFile::frameBuffer () const
 {
     return _inputFile->frameBuffer();
@@ -920,21 +920,21 @@ TiledRgbaInputFile::dataWindow () const
 }
 
 
-float	
+float
 TiledRgbaInputFile::pixelAspectRatio () const
 {
     return _inputFile->header().pixelAspectRatio();
 }
 
 
-const Imath::V2f	
+const Imath::V2f
 TiledRgbaInputFile::screenWindowCenter () const
 {
     return _inputFile->header().screenWindowCenter();
 }
 
 
-float	
+float
 TiledRgbaInputFile::screenWindowWidth () const
 {
     return _inputFile->header().screenWindowWidth();
@@ -955,7 +955,7 @@ TiledRgbaInputFile::compression () const
 }
 
 
-RgbaChannels	
+RgbaChannels
 TiledRgbaInputFile::channels () const
 {
     return rgbaChannels (_inputFile->header().channels(), _channelNamePrefix);
@@ -1118,7 +1118,7 @@ TiledRgbaInputFile::readTile (int dx, int dy, int lx, int ly)
 }
 
 
-void	
+void
 TiledRgbaInputFile::readTiles (int dxMin, int dxMax, int dyMin, int dyMax,
                                int lx, int ly)
 {
@@ -1136,7 +1136,7 @@ TiledRgbaInputFile::readTiles (int dxMin, int dxMax, int dyMin, int dyMax,
     }
 }
 
-void	
+void
 TiledRgbaInputFile::readTiles (int dxMin, int dxMax, int dyMin, int dyMax,
                                int l)
 {
@@ -1144,14 +1144,14 @@ TiledRgbaInputFile::readTiles (int dxMin, int dxMax, int dyMin, int dyMax,
 }
 
 
-void		
+void
 TiledRgbaOutputFile::updatePreviewImage (const PreviewRgba newPixels[])
 {
     _outputFile->updatePreviewImage (newPixels);
 }
 
 
-void	
+void
 TiledRgbaOutputFile::breakTile  (int dx, int dy, int lx, int ly,
 				 int offset, int length, char c)
 {

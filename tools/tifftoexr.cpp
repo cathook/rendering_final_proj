@@ -1,5 +1,5 @@
 /*
- g++ -g -Wall tifftoexr.cpp -I../../src/tangled_code/OpenEXR/include -ltiff -L../../src/tangled_code/OpenEXR/lib-linux -lIlmImf -lImath -lIex -lHalf  
+ g++ -g -Wall tifftoexr.cpp -I../../src/tangled_code/OpenEXR/include -ltiff -L../../src/tangled_code/OpenEXR/lib-linux -lIlmImf -lImath -lIex -lHalf
 
 */
 
@@ -19,7 +19,7 @@ using namespace Imath;
 static void WriteEXR(const char *name, float *rgba, int xRes, int yRes, bool hasAlpha);
 static bool ReadTIFF(const char *name, float *&rgba, int &xRes, int &yRes, bool &hasAlpha);
 
-int main(int argc, char *argv[]) 
+int main(int argc, char *argv[])
 {
     if (argc != 3) {
 	fprintf(stderr, "usage: tifftoexr [foo.tiff] [foo.exr]\n");
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void WriteEXR(const char *name, float *frgba, int xRes, int yRes, bool hasAlpha) 
+void WriteEXR(const char *name, float *frgba, int xRes, int yRes, bool hasAlpha)
 {
     Header header(xRes, yRes);
     header.channels().insert("R", Channel (HALF));
@@ -101,7 +101,7 @@ static bool ReadTIFF(const char *name, float *&rgba, int &xRes, int &yRes,
 	else
 	    sampleFormat = SAMPLEFORMAT_UINT;
     }
-	
+
     if (bitsPerSample == 32) {
 	if (sampleFormat != SAMPLEFORMAT_IEEEFP) {
 	    fprintf(stderr, "TIFFRead: 32 bit TIFF not stored in floating point format");

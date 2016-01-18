@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -70,7 +70,7 @@ half::overflow ()
 {
     volatile float f = 1e10;
 
-    for (int i = 0; i < 10; i++)	
+    for (int i = 0; i < 10; i++)
 	f *= f;				// this will overflow before
 					// the for­loop terminates
     return f;
@@ -127,7 +127,7 @@ half::convert (int i)
 
 	//
 	// Add an explicit leading 1 to the significand.
-	// 
+	//
 
 	m = m | 0x00800000;
 
@@ -139,7 +139,7 @@ half::convert (int i)
 	// our number normalized.  Because of the way a half's bits
 	// are laid out, we don't have to treat this case separately;
 	// the code below will handle it correctly.
-	// 
+	//
 
 	int t = 14 - e;
 	int a = (1 << (t - 1)) - 1;
@@ -170,7 +170,7 @@ half::convert (int i)
 	    // F is a NAN; we produce a half NAN that preserves
 	    // the sign bit and the 10 leftmost bits of the
 	    // significand of f, with one exception: If the 10
-	    // leftmost bits are all zero, the NAN would turn 
+	    // leftmost bits are all zero, the NAN would turn
 	    // into an infinity, so we have to set at least one
 	    // bit in the significand.
 	    //
@@ -288,7 +288,7 @@ printBits (char c[19], half h)
 	if (i == 15 || i == 10)
 	    c[++j] = ' ';
     }
-    
+
     c[18] = 0;
 }
 

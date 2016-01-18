@@ -349,7 +349,7 @@ BVHBuildNode *BVHAccel::recursiveBuild(MemoryArena &buildArena,
                         CompareToBucket(minCostSplit, nBuckets, dim, centroidBounds));
                     mid = pmid - &buildData[0];
                 }
-                
+
                 else {
                     // Create leaf _BVHBuildNode_
                     uint32_t firstPrimOffset = orderedPrims.size();

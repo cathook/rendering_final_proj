@@ -137,7 +137,7 @@ bool Triangle::Intersect(const Ray &ray, float *tHit, float *rayEpsilon,
     Vector e2 = p3 - p1;
     Vector s1 = Cross(ray.d, e2);
     float divisor = Dot(s1, e1);
-    
+
     if (divisor == 0.)
         return false;
     float invDivisor = 1.f / divisor;
@@ -220,7 +220,7 @@ bool Triangle::IntersectP(const Ray &ray) const {
     Vector e2 = p3 - p1;
     Vector s1 = Cross(ray.d, e2);
     float divisor = Dot(s1, e1);
-    
+
     if (divisor == 0.)
         return false;
     float invDivisor = 1.f / divisor;
@@ -327,7 +327,7 @@ void Triangle::GetShadingGeometry(const Transform &obj2world,
                                           b[1] * mesh->s[v[1]] +
                                           b[2] * mesh->s[v[2]]));
     else   ss = Normalize(dg.dpdu);
-    
+
     ts = Cross(ss, ns);
     if (ts.LengthSquared() > 0.f) {
         ts = Normalize(ts);

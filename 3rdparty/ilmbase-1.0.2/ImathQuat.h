@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -165,11 +165,11 @@ Quat<T>			slerpShortestArc
 
 
 template<class T>
-Quat<T>			squad (const Quat<T> &q1, const Quat<T> &q2, 
+Quat<T>			squad (const Quat<T> &q1, const Quat<T> &q2,
 			       const Quat<T> &qa, const Quat<T> &qb, T t);
 
 template<class T>
-void			intermediate (const Quat<T> &q0, const Quat<T> &q1, 
+void			intermediate (const Quat<T> &q0, const Quat<T> &q1,
 				      const Quat<T> &q2, const Quat<T> &q3,
 				      Quat<T> &qa, Quat<T> &qb);
 
@@ -463,7 +463,7 @@ Quat<T>::rotateVector(const Vec3<T>& original) const
 
 
 template<class T>
-inline T 
+inline T
 Quat<T>::euclideanInnerProduct (const Quat<T> &q) const
 {
     return r * q.r + v.x * q.v.x + v.y * q.v.y + v.z * q.v.z;
@@ -555,17 +555,17 @@ spline (const Quat<T> &q0, const Quat<T> &q1,
     // Given a set of quaternion keys: q0, q1, q2, q3,
     // this routine does the interpolation between
     // q1 and q2 by constructing two intermediate
-    // quaternions: qa and qb. The qa and qb are 
-    // computed by the intermediate function to 
+    // quaternions: qa and qb. The qa and qb are
+    // computed by the intermediate function to
     // guarantee the continuity of tangents across
     // adjacent cubic segments. The qa represents in-tangent
     // for q1 and the qb represents the out-tangent for q2.
-    // 
-    // The q1 q2 is the cubic segment being interpolated. 
-    // The q0 is from the previous adjacent segment and q3 is 
+    //
+    // The q1 q2 is the cubic segment being interpolated.
+    // The q0 is from the previous adjacent segment and q3 is
     // from the next adjacent segment. The q0 and q3 are used
     // in computing qa and qb.
-    // 
+    //
 
     Quat<T> qa = intermediate (q0, q1, q2);
     Quat<T> qb = intermediate (q1, q2, q3);
@@ -585,11 +585,11 @@ squad (const Quat<T> &q1, const Quat<T> &qa,
     // Spherical Quadrangle Interpolation -
     // from Advanced Animation and Rendering
     // Techniques by Watt and Watt, Page 366:
-    // It constructs a spherical cubic interpolation as 
-    // a series of three spherical linear interpolations 
-    // of a quadrangle of unit quaternions. 
-    //     
-  
+    // It constructs a spherical cubic interpolation as
+    // a series of three spherical linear interpolations
+    // of a quadrangle of unit quaternions.
+    //
+
     Quat<T> r1 = slerp (q1, q2, t);
     Quat<T> r2 = slerp (qa, qb, t);
     Quat<T> result = slerp (r1, r2, 2 * t * (1 - t));
@@ -605,10 +605,10 @@ intermediate (const Quat<T> &q0, const Quat<T> &q1, const Quat<T> &q2)
     //
     // From advanced Animation and Rendering
     // Techniques by Watt and Watt, Page 366:
-    // computing the inner quadrangle 
+    // computing the inner quadrangle
     // points (qa and qb) to guarantee tangent
     // continuity.
-    // 
+    //
 
     Quat<T> q1inv = q1.inverse();
     Quat<T> c1 = q1inv * q2;
@@ -625,7 +625,7 @@ inline Quat<T>
 Quat<T>::log () const
 {
     //
-    // For unit quaternion, from Advanced Animation and 
+    // For unit quaternion, from Advanced Animation and
     // Rendering Techniques by Watt and Watt, Page 366:
     //
 
@@ -633,9 +633,9 @@ Quat<T>::log () const
 
     if (theta == 0)
 	return Quat<T> (0, v);
-    
+
     T sintheta = Math<T>::sin (theta);
-    
+
     T k;
     if (abs (sintheta) < 1 && abs (theta) >= limits<T>::max() * abs (sintheta))
 	k = 1;
@@ -658,7 +658,7 @@ Quat<T>::exp () const
 
     T theta = v.length();
     T sintheta = Math<T>::sin (theta);
-    
+
     T k;
     if (abs (theta) < 1 && abs (sintheta) >= limits<T>::max() * abs (theta))
 	k = 1;

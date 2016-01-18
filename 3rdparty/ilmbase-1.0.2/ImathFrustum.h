@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -63,9 +63,9 @@ namespace Imath {
 //	template class Frustum<T>
 //
 //	The frustum is always located with the eye point at the
-//	origin facing down -Z. This makes the Frustum class 
+//	origin facing down -Z. This makes the Frustum class
 //	compatable with OpenGL (or anything that assumes a camera
-//	looks down -Z, hence with a right-handed coordinate system) 
+//	looks down -Z, hence with a right-handed coordinate system)
 //	but not with RenderMan which assumes the camera looks down
 //	+Z. Additional functions are provided for conversion from
 //	and from various camera coordinate spaces.
@@ -91,7 +91,7 @@ class Frustum
     //--------------------
     //  Operators:  ==, !=
     //--------------------
-    
+
     bool                        operator == (const Frustum<T> &src) const;
     bool                        operator != (const Frustum<T> &src) const;
 
@@ -99,9 +99,9 @@ class Frustum
     //  Set functions change the entire state of the Frustum
     //--------------------------------------------------------
 
-    void		set(T near, T far, 
-			    T left, T right, 
-			    T top, T bottom, 
+    void		set(T near, T far,
+			    T left, T right,
+			    T top, T bottom,
 			    bool ortho=false);
 
     void		set(T near, T far, T fovx, T fovy, T aspect);
@@ -148,10 +148,10 @@ class Frustum
     Matrix44<T>		projectionMatrix() const;
 
     //-----------------------------------------------------------------------
-    //  Takes a rectangle in the screen space (i.e., -1 <= left <= right <= 1 
+    //  Takes a rectangle in the screen space (i.e., -1 <= left <= right <= 1
     //  and -1 <= bottom <= top <= 1) of this Frustum, and returns a new
     //  Frustum whose near clipping-plane window is that rectangle in local
-    //  space.  
+    //  space.
     //-----------------------------------------------------------------------
 
     Frustum<T>		window(T left, T right, T top, T bottom) const;
@@ -501,7 +501,7 @@ Vec2<T> Frustum<T>::projectPointToScreen(const Vec3<T> &point) const
     if (orthographic() || point.z == 0)
 	return localToScreen( Vec2<T>( point.x, point.y ) );
     else
-	return localToScreen( Vec2<T>( point.x * _near / -point.z, 
+	return localToScreen( Vec2<T>( point.x * _near / -point.z,
 				       point.y * _near / -point.z ) );
 }
 
@@ -531,7 +531,7 @@ T Frustum<T>::normalizedZToDepth(T zval) const
     {
         return   -(Zp*(_far-_near) + (_far+_near))/2;
     }
-    else 
+    else
     {
 	T farTimesNear = 2 * _far * _near;
 	T farMinusNear = Zp * (_far - _near) - _far - _near;
@@ -570,8 +570,8 @@ long Frustum<T>::DepthToZ(T depth,long zmin,long zmax) const
 	T Zp = -farPlusNear/farMinusNear;
 	return long(0.5*(Zp+1)*zdiff) + zmin;
     }
-    else 
-    { 
+    else
+    {
 	// Perspective
 
 	T farTimesNear = 2*_far*_near;

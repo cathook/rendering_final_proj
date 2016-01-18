@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -157,7 +157,7 @@ class TypedAttribute: public Attribute
     //--------------------------------
 
     virtual const char *		typeName () const;
-    
+
 
     //---------------------------------------------------------
     // Static version of typeName()
@@ -165,7 +165,7 @@ class TypedAttribute: public Attribute
     //---------------------------------------------------------
 
     static const char *			staticTypeName ();
-    
+
 
     //---------------------
     // Make a new attribute
@@ -289,7 +289,7 @@ TypedAttribute<T>::value () const
 
 
 template <class T>
-const char *	
+const char *
 TypedAttribute<T>::typeName () const
 {
     return staticTypeName();
@@ -315,7 +315,7 @@ TypedAttribute<T>::copy () const
 
 
 template <class T>
-void		
+void
 TypedAttribute<T>::writeValueTo (OStream &os, int version) const
 {
     Xdr::write <StreamIO> (os, _value);
@@ -323,7 +323,7 @@ TypedAttribute<T>::writeValueTo (OStream &os, int version) const
 
 
 template <class T>
-void		
+void
 TypedAttribute<T>::readValueFrom (IStream &is, int size, int version)
 {
     Xdr::read <StreamIO> (is, _value);
@@ -331,7 +331,7 @@ TypedAttribute<T>::readValueFrom (IStream &is, int size, int version)
 
 
 template <class T>
-void		
+void
 TypedAttribute<T>::copyValueFrom (const Attribute &other)
 {
     _value = cast(other)._value;
@@ -367,7 +367,7 @@ TypedAttribute<T>::cast (const Attribute *attribute)
 
 
 template <class T>
-inline TypedAttribute<T> &	
+inline TypedAttribute<T> &
 TypedAttribute<T>::cast (Attribute &attribute)
 {
     return *cast (&attribute);

@@ -172,19 +172,19 @@ void CreateRadianceProbes::Render(const Scene *scene) {
         float rayEpsilon = 0.f;
         for (uint32_t i = 0; i < maxDepth; ++i) {
             Ray ray(pray, dir, rayEpsilon, INFINITY, time);
-        
+
             Intersection isect;
             if (!scene->Intersect(ray, &isect) &&
                 !sphere.Intersect(ray, &isect))
                 break;
-        
+
             surfacePoints.push_back(ray(ray.maxt));
-        
+
             DifferentialGeometry &hitGeometry = isect.dg;
             pray = isect.dg.p;
             rayEpsilon = isect.rayEpsilon;
             hitGeometry.nn = Faceforward(hitGeometry.nn, -ray.d);
-        
+
             dir = UniformSampleSphere(rng.RandomFloat(), rng.RandomFloat());
             dir = Faceforward(dir, hitGeometry.nn);
         }
@@ -311,7 +311,7 @@ void CreateRadProbeTask::Run() {
             for (int i = 0; i < SHTerms(lmax); ++i)
                 c_in[i] += c_probe[i];
         }
-        
+
         if (includeIndirectInProbes) {
             for (int i = 0; i < SHTerms(lmax); ++i)
                 c_probe[i] = 0.f;

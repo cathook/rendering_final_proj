@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -51,7 +51,7 @@
 //	There are 24 possible combonations of Euler angle
 //	representations of which 12 are common in CG and you will
 //	probably only use 6 of these which in this scheme are the
-//	non-relative-non-repeating types. 
+//	non-relative-non-repeating types.
 //
 //	The representations can be partitioned according to two
 //	criteria:
@@ -66,7 +66,7 @@
 //	When you construct a given representation from scratch you
 //	must order the angles according to their priorities. So, the
 //	easiest is a softimage or aerospace (yaw/pitch/roll) ordering
-//	of ZYX. 
+//	of ZYX.
 //
 //	    float x_rot = 1;
 //	    float y_rot = 2;
@@ -106,19 +106,19 @@
 //	If you want to set the Euler with an XYZVector use the
 //	optional layout argument:
 //
-//	    Eulerf angles(x_rot, y_rot, z_rot, 
+//	    Eulerf angles(x_rot, y_rot, z_rot,
 //			  Eulerf::YXZ,
 //		          Eulerf::XYZLayout);
 //
 //	This is the same as:
 //
 //	    Eulerf angles(y_rot, x_rot, z_rot, Eulerf::YXZ);
-//	    
+//
 //	Note that this won't do anything intelligent if you have a
 //	repeated axis in the euler angles (e.g. XYX)
 //
 //	If you need to use the "relative" versions of these, you will
-//	need to use the "r" enums. 
+//	need to use the "r" enums.
 //
 //      The units of the rotation angles are assumed to be radians.
 //
@@ -143,7 +143,7 @@ template <class T>
 class Euler : public Vec3<T>
 {
   public:
- 
+
     using Vec3<T>::x;
     using Vec3<T>::y;
     using Vec3<T>::z;
@@ -160,7 +160,7 @@ class Euler : public Vec3<T>
 	YXZ	= 0x1001,
 	ZXY	= 0x2101,
 	ZYX	= 0x2001,
-	
+
 	XZX	= 0x0011,	// first axis repeated
 	XYX	= 0x0111,
 	YXY	= 0x1011,
@@ -174,8 +174,8 @@ class Euler : public Vec3<T>
 	YXZr	= 0x1100,
 	ZXYr	= 0x0000,
 	ZYXr	= 0x0100,
-	
-	XZXr	= 0x2110,	// relative first axis repeated 
+
+	XZXr	= 0x2110,	// relative first axis repeated
 	XYXr	= 0x2010,
 	YXYr	= 0x1110,
 	YZYr	= 0x1010,
@@ -233,7 +233,7 @@ class Euler : public Vec3<T>
 
     //--------------------------------------------------------
     //	Set the euler value
-    //  This does NOT convert the angles, but setXYZVector() 
+    //  This does NOT convert the angles, but setXYZVector()
     //	does reorder the input vector.
     //--------------------------------------------------------
 
@@ -282,7 +282,7 @@ class Euler : public Vec3<T>
     //	Use this function to determine mapping from xyz to ijk
     // - reshuffles the xyz to match the order
     //---------------------------------------------------
-    
+
     void		angleMapping(int &i, int &j, int &k) const;
 
     //----------------------------------------------------------------------
@@ -413,11 +413,11 @@ Euler<T>::Euler(typename Euler<T>::Order p) :
 }
 
 template<class T>
-inline Euler<T>::Euler( const Vec3<T> &v, 
-			typename Euler<T>::Order p, 
-			typename Euler<T>::InputLayout l ) 
+inline Euler<T>::Euler( const Vec3<T> &v,
+			typename Euler<T>::Order p,
+			typename Euler<T>::InputLayout l )
 {
-    setOrder(p); 
+    setOrder(p);
     if ( l == XYZLayout ) setXYZVector(v);
     else { x = v.x; y = v.y; z = v.z; }
 }
@@ -437,7 +437,7 @@ inline Euler<T>::Euler(const Euler<T> &euler,Order p)
 }
 
 template<class T>
-inline Euler<T>::Euler( T xi, T yi, T zi, 
+inline Euler<T>::Euler( T xi, T yi, T zi,
 			typename Euler<T>::Order p,
 			typename Euler<T>::InputLayout l)
 {
@@ -476,7 +476,7 @@ void Euler<T>::extract(const Matrix33<T> &M)
     {
 	//
 	// Extract the first angle, x.
-	// 
+	//
 
 	x = Math<T>::atan2 (M[j][i], M[k][i]);
 
@@ -508,7 +508,7 @@ void Euler<T>::extract(const Matrix33<T> &M)
     {
 	//
 	// Extract the first angle, x.
-	// 
+	//
 
 	x = Math<T>::atan2 (M[j][k], M[k][k]);
 
@@ -558,7 +558,7 @@ void Euler<T>::extract(const Matrix44<T> &M)
     {
 	//
 	// Extract the first angle, x.
-	// 
+	//
 
 	x = Math<T>::atan2 (M[j][i], M[k][i]);
 
@@ -587,7 +587,7 @@ void Euler<T>::extract(const Matrix44<T> &M)
     {
 	//
 	// Extract the first angle, x.
-	// 
+	//
 
 	x = Math<T>::atan2 (M[j][k], M[k][k]);
 
@@ -881,7 +881,7 @@ Euler<T>::nearestRotation (Vec3<T> &xyzRot, const Vec3<T> &targetXyzRot,
     otherXyzRot[k] = M_PI+xyzRot[k];
 
     simpleXYZRotation(otherXyzRot, targetXyzRot);
-	    
+
     Vec3<T> d  = xyzRot - targetXyzRot;
     Vec3<T> od = otherXyzRot - targetXyzRot;
     T dMag     = d.dot(d);

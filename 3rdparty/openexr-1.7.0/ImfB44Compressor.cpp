@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2006, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -63,7 +63,7 @@
 //               |
 //               | 0
 //               |
-//               v 
+//               v
 //		 4 -------->  5 -------->  6 -------->  7
 //               |     4            8           12
 //               |
@@ -124,7 +124,7 @@ namespace {
 //
 // Lookup tables for
 //	y = exp (x / 8)
-// and 
+// and
 //	x = 8 * log (y)
 //
 
@@ -232,7 +232,7 @@ pack (const unsigned short s[16],
 	else
 	    t[i] = s[i] | 0x8000;
     }
-    
+
     //
     // Find the maximum, tMax, of t[0] ... t[15].
     //
@@ -383,17 +383,17 @@ unpack14 (const unsigned char b[14], unsigned short s[16])
     s[ 4] = s[ 0] + ((((b[ 2] << 4) | (b[ 3] >> 4)) & 0x3f) << shift) - bias;
     s[ 8] = s[ 4] + ((((b[ 3] << 2) | (b[ 4] >> 6)) & 0x3f) << shift) - bias;
     s[12] = s[ 8] +   ((b[ 4]                       & 0x3f) << shift) - bias;
-    
+
     s[ 1] = s[ 0] +   ((b[ 5] >> 2)                         << shift) - bias;
     s[ 5] = s[ 4] + ((((b[ 5] << 4) | (b[ 6] >> 4)) & 0x3f) << shift) - bias;
     s[ 9] = s[ 8] + ((((b[ 6] << 2) | (b[ 7] >> 6)) & 0x3f) << shift) - bias;
     s[13] = s[12] +   ((b[ 7]                       & 0x3f) << shift) - bias;
-    
+
     s[ 2] = s[ 1] +   ((b[ 8] >> 2)                         << shift) - bias;
     s[ 6] = s[ 5] + ((((b[ 8] << 4) | (b[ 9] >> 4)) & 0x3f) << shift) - bias;
     s[10] = s[ 9] + ((((b[ 9] << 2) | (b[10] >> 6)) & 0x3f) << shift) - bias;
     s[14] = s[13] +   ((b[10]                       & 0x3f) << shift) - bias;
-    
+
     s[ 3] = s[ 2] +   ((b[11] >> 2)                         << shift) - bias;
     s[ 7] = s[ 6] + ((((b[11] << 4) | (b[12] >> 4)) & 0x3f) << shift) - bias;
     s[11] = s[10] + ((((b[12] << 2) | (b[13] >> 6)) & 0x3f) << shift) - bias;
@@ -654,7 +654,7 @@ B44Compressor::compress (const char *inPtr,
     int maxX = min (range.max.x, _maxX);
     int minY = range.min.y;
     int maxY = min (range.max.y, _maxY);
-    
+
     unsigned short *tmpBufferEnd = _tmpBuffer;
     int i = 0;
 
@@ -767,7 +767,7 @@ B44Compressor::compress (const char *inPtr,
     for (int i = 0; i < _numChans; ++i)
     {
 	ChannelData &cd = _channelData[i];
-	
+
 	if (cd.type != HALF)
 	{
 	    //
@@ -780,7 +780,7 @@ B44Compressor::compress (const char *inPtr,
 
 	    continue;
 	}
-	
+
 	//
 	// HALF channel
 	//
@@ -793,7 +793,7 @@ B44Compressor::compress (const char *inPtr,
 	    // the pixel data in _tmpBuffer is not divisible
 	    // by 4, then pad the data by repeating the
 	    // rightmost column and the bottom row.
-	    // 
+	    //
 
 	    unsigned short *row0 = cd.start + y * cd.nx;
 	    unsigned short *row1 = row0 + cd.nx;
@@ -887,7 +887,7 @@ B44Compressor::uncompress (const char *inPtr,
     int maxX = min (range.max.x, _maxX);
     int minY = range.min.y;
     int maxY = min (range.max.y, _maxY);
-    
+
     unsigned short *tmpBufferEnd = _tmpBuffer;
     int i = 0;
 
@@ -941,7 +941,7 @@ B44Compressor::uncompress (const char *inPtr,
 
 	    for (int x = 0; x < cd.nx; x += 4)
 	    {
-		unsigned short s[16]; 
+		unsigned short s[16];
 
 		if (inSize < 3)
 		    notEnoughData();

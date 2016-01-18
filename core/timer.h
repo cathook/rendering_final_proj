@@ -53,11 +53,11 @@ class Timer {
 public:
     // Public Timer Methods
     Timer();
-    
+
     void Start();
     void Stop();
     void Reset();
-    
+
     double Time();
 private:
     // Private Timer Data

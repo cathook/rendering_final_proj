@@ -57,7 +57,7 @@ public:
         Assert(!v.HasNaNs());
         x = v.x; y = v.y; z = v.z;
     }
-    
+
     Vector &operator=(const Vector &v) {
         Assert(!v.HasNaNs());
         x = v.x; y = v.y; z = v.z;
@@ -68,7 +68,7 @@ public:
         Assert(!v.HasNaNs());
         return Vector(x + v.x, y + v.y, z + v.z);
     }
-    
+
     Vector& operator+=(const Vector &v) {
         Assert(!v.HasNaNs());
         x += v.x; y += v.y; z += v.z;
@@ -78,14 +78,14 @@ public:
         Assert(!v.HasNaNs());
         return Vector(x - v.x, y - v.y, z - v.z);
     }
-    
+
     Vector& operator-=(const Vector &v) {
         Assert(!v.HasNaNs());
         x -= v.x; y -= v.y; z -= v.z;
         return *this;
     }
     Vector operator*(float f) const { return Vector(f*x, f*y, f*z); }
-    
+
     Vector &operator*=(float f) {
         Assert(!isnan(f));
         x *= f; y *= f; z *= f;
@@ -96,7 +96,7 @@ public:
         float inv = 1.f / f;
         return Vector(x * inv, y * inv, z * inv);
     }
-    
+
     Vector &operator/=(float f) {
         Assert(f != 0);
         float inv = 1.f / f;
@@ -108,7 +108,7 @@ public:
         Assert(i >= 0 && i <= 2);
         return (&x)[i];
     }
-    
+
     float &operator[](int i) {
         Assert(i >= 0 && i <= 2);
         return (&x)[i];
@@ -142,7 +142,7 @@ public:
         Assert(!p.HasNaNs());
         x = p.x; y = p.y; z = p.z;
     }
-    
+
     Point &operator=(const Point &p) {
         Assert(!p.HasNaNs());
         x = p.x; y = p.y; z = p.z;
@@ -153,7 +153,7 @@ public:
         Assert(!v.HasNaNs());
         return Point(x + v.x, y + v.y, z + v.z);
     }
-    
+
     Point &operator+=(const Vector &v) {
         Assert(!v.HasNaNs());
         x += v.x; y += v.y; z += v.z;
@@ -163,12 +163,12 @@ public:
         Assert(!p.HasNaNs());
         return Vector(x - p.x, y - p.y, z - p.z);
     }
-    
+
     Point operator-(const Vector &v) const {
         Assert(!v.HasNaNs());
         return Point(x - v.x, y - v.y, z - v.z);
     }
-    
+
     Point &operator-=(const Vector &v) {
         Assert(!v.HasNaNs());
         x -= v.x; y -= v.y; z -= v.z;
@@ -203,7 +203,7 @@ public:
         Assert(i >= 0 && i <= 2);
         return (&x)[i];
     }
-    
+
     float &operator[](int i) {
         Assert(i >= 0 && i <= 2);
         return (&x)[i];
@@ -239,7 +239,7 @@ public:
         Assert(!n.HasNaNs());
         return Normal(x + n.x, y + n.y, z + n.z);
     }
-    
+
     Normal& operator+=(const Normal &n) {
         Assert(!n.HasNaNs());
         x += n.x; y += n.y; z += n.z;
@@ -249,7 +249,7 @@ public:
         Assert(!n.HasNaNs());
         return Normal(x - n.x, y - n.y, z - n.z);
     }
-    
+
     Normal& operator-=(const Normal &n) {
         Assert(!n.HasNaNs());
         x -= n.x; y -= n.y; z -= n.z;
@@ -261,7 +261,7 @@ public:
     Normal operator*(float f) const {
         return Normal(f*x, f*y, f*z);
     }
-    
+
     Normal &operator*=(float f) {
         x *= f; y *= f; z *= f;
         return *this;
@@ -271,7 +271,7 @@ public:
         float inv = 1.f/f;
         return Normal(x * inv, y * inv, z * inv);
     }
-    
+
     Normal &operator/=(float f) {
         Assert(f != 0);
         float inv = 1.f/f;
@@ -280,13 +280,13 @@ public:
     }
     float LengthSquared() const { return x*x + y*y + z*z; }
     float Length() const        { return sqrtf(LengthSquared()); }
-    
+
 #ifndef NDEBUG
     Normal(const Normal &n) {
         Assert(!n.HasNaNs());
         x = n.x; y = n.y; z = n.z;
     }
-    
+
     Normal &operator=(const Normal &n) {
         Assert(!n.HasNaNs());
         x = n.x; y = n.y; z = n.z;
@@ -301,7 +301,7 @@ public:
         Assert(i >= 0 && i <= 2);
         return (&x)[i];
     }
-    
+
     float &operator[](int i) {
         Assert(i >= 0 && i <= 2);
         return (&x)[i];

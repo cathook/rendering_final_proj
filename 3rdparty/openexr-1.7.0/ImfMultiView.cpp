@@ -1,9 +1,9 @@
 ///////////////////////////////////////////////////////////////////////////
 //
 // Copyright (c) 2007, Weta Digital Ltd
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -15,8 +15,8 @@
 // distribution.
 // *       Neither the name of Weta Digital nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -56,7 +56,7 @@ parseString (string name, char c = '.')
     StringVector r;
 
     while (name.size() > 0)
-    {  
+    {
 	size_t s = name.find (c);
 	string sec = name.substr (0, s);
 
@@ -84,7 +84,7 @@ parseString (string name, char c = '.')
 	    name = "";
 	else
 	    name = name.substr (s + 1);
-    } 
+    }
 
     return r;
 }
@@ -152,7 +152,7 @@ viewFromChannelName (const string &channel,
 	return multiView[0];
     }
     else
-    { 
+    {
 	//
 	// size >= 2 - the last part is the channel name,
 	// the next-to-last part is the view name.
@@ -212,13 +212,13 @@ channelsInNoView (const ChannelList &channelList,
     // Return a list of channels not associated with any named view.
     //
 
-    return channelsInView ("", channelList, multiView); 
+    return channelsInView ("", channelList, multiView);
 }
 
 
 
 bool
-areCounterparts (const string &channel1, 
+areCounterparts (const string &channel1,
 	         const string &channel2,
 		 const StringVector &multiView)
 {
@@ -236,7 +236,7 @@ areCounterparts (const string &channel1,
 
     if (size1 == 0 || size2 == 0)
 	return false;
-     
+
     //
     // channel1 and channel2 can't be counterparts
     // if either channel is in no view.
@@ -246,7 +246,7 @@ areCounterparts (const string &channel1,
 	return false;
 
     if (size2 > 1 && viewNum (chan2[size2 - 2], multiView) == -1)
-	return false; 
+	return false;
 
     if (viewFromChannelName (channel1, multiView) ==
 	viewFromChannelName (channel2, multiView))
@@ -260,7 +260,7 @@ areCounterparts (const string &channel1,
     }
 
     if (size1 == 1)
-    { 
+    {
 	//
 	// channel1 is a default channel - the channels will only be
 	// counterparts if channel2 is of the form <view>.<channel1>
@@ -343,7 +343,7 @@ channelInOtherView (const string &channelName,
 	if (viewFromChannelName (i.name(), multiView) == otherViewName &&
 	    areCounterparts (i.name(), channelName, multiView))
 	{
-	    return i.name(); 
+	    return i.name();
 	}
     }
 

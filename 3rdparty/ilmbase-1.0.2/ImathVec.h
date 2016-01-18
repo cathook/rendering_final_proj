@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -117,7 +117,7 @@ template <class T> class Vec2
     T *			getValue ();
     const T *		getValue () const;
 
-    
+
     //---------
     // Equality
     //---------
@@ -251,7 +251,7 @@ template <class T> class Vec2
 
     //--------------------------------------------------------------
     // Base type -- in templates, which accept a parameter, V, which
-    // could be either a Vec2<T>, a Vec3<T>, or a Vec4<T> you can 
+    // could be either a Vec2<T>, a Vec3<T>, or a Vec4<T> you can
     // refer to T as V::BaseType
     //--------------------------------------------------------------
 
@@ -463,7 +463,7 @@ template <class T> class Vec3
 
     //--------------------------------------------------------------
     // Base type -- in templates, which accept a parameter, V, which
-    // could be either a Vec2<T>, a Vec3<T>, or a Vec4<T> you can 
+    // could be either a Vec2<T>, a Vec3<T>, or a Vec4<T> you can
     // refer to T as V::BaseType
     //--------------------------------------------------------------
 
@@ -484,7 +484,7 @@ template <class T> class Vec4
     // Access to elements
     //-------------------
 
-    T               x, y, z, w; 
+    T               x, y, z, w;
 
     T &             operator [] (int i);
     const T &       operator [] (int i) const;
@@ -645,7 +645,7 @@ template <class T> class Vec4
 
     //--------------------------------------------------------------
     // Base type -- in templates, which accept a parameter, V, which
-    // could be either a Vec2<T>, a Vec3<T>, or a Vec4<T> you can 
+    // could be either a Vec2<T>, a Vec3<T>, or a Vec4<T> you can
     // refer to T as V::BaseType
     //--------------------------------------------------------------
 
@@ -1145,7 +1145,7 @@ Vec2<T>::lengthTiny () const
 {
     T absX = (x >= 0)? x: -x;
     T absY = (y >= 0)? y: -y;
-    
+
     T max = absX;
 
     if (max < absY)
@@ -1359,7 +1359,7 @@ Vec3<T>::Vec3 (const Vec4<S> &v, InfException)
     if (absW < 1)
     {
         T m = baseTypeMax() * absW;
-        
+
         if (vx <= -m || vx >= m || vy <= -m || vy >= m || vz <= -m || vz >= m)
             throw InfPointExc ("Cannot normalize point at infinity.");
     }
@@ -1632,7 +1632,7 @@ Vec3<T>::lengthTiny () const
     T absX = (x >= 0)? x: -x;
     T absY = (y >= 0)? y: -y;
     T absZ = (z >= 0)? z: -z;
-    
+
     T max = absX;
 
     if (max < absY)
@@ -2031,7 +2031,7 @@ Vec4<T>::lengthTiny () const
     T absY = (y >= 0)? y: -y;
     T absZ = (z >= 0)? z: -z;
     T absW = (w >= 0)? w: -w;
-    
+
     T max = absX;
 
     if (max < absY)

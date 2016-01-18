@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -224,7 +224,7 @@ struct TiledInputFile::Data: public Mutex
     size_t	    maxBytesPerTileLine;    // combined size of a line
 					    // over all channels
 
-    
+
     vector<TileBuffer*> tileBuffers;        // each holds a single tile
     size_t          tileBufferSize;	    // size of the tile buffers
 
@@ -292,7 +292,7 @@ readTileData (TiledInputFile::Data *ifd,
     // Look up the location for this tile in the Index and
     // seek to that position if necessary
     //
-    
+
     Int64 tileOffset = ifd->tileOffsets (dx, dy, lx, ly);
 
     if (tileOffset == 0)
@@ -309,7 +309,7 @@ readTileData (TiledInputFile::Data *ifd,
     // Verify that the tile coordinates and the level number
     // are correct.
     //
-    
+
     int tileXCoord, tileYCoord, levelX, levelY;
 
     Xdr::read <StreamIO> (*ifd->is, tileXCoord);
@@ -347,7 +347,7 @@ readTileData (TiledInputFile::Data *ifd,
     // the file, so that we can avoid redundant seekg()
     // operations (seekg() can be fairly expensive).
     //
-    
+
     ifd->currentPosition = tileOffset + 5 * Xdr::size<int>() + dataSize;
 }
 
@@ -375,13 +375,13 @@ readNextTileData (TiledInputFile::Data *ifd,
 
     if (dataSize > (int) ifd->tileBufferSize)
         throw Iex::InputExc ("Unexpected tile block length.");
-    
+
     //
     // Read the pixel data.
     //
 
     ifd->is->read (buffer, dataSize);
-    
+
     //
     // Keep track of which tile is the next one in
     // the file, so that we can avoid redundant seekg()
@@ -404,11 +404,11 @@ class TileBufferTask : public Task
     TileBufferTask (TaskGroup *group,
                     TiledInputFile::Data *ifd,
 		    TileBuffer *tileBuffer);
-                    
+
     virtual ~TileBufferTask ();
 
     virtual void		execute ();
-    
+
   private:
 
     TiledInputFile::Data *	_ifd;
@@ -447,7 +447,7 @@ TileBufferTask::execute ()
         //
         // Calculate information about the tile
         //
-    
+
         Box2i tileRange = Imf::dataWindowForTile (_ifd->tileDesc,
                                                   _ifd->minX, _ifd->maxX,
                                                   _ifd->minY, _ifd->maxY,
@@ -455,19 +455,19 @@ TileBufferTask::execute ()
                                                   _tileBuffer->dy,
                                                   _tileBuffer->lx,
                                                   _tileBuffer->ly);
-    
+
         int numPixelsPerScanLine = tileRange.max.x - tileRange.min.x + 1;
-    
+
         int numPixelsInTile = numPixelsPerScanLine *
                             (tileRange.max.y - tileRange.min.y + 1);
-    
+
         int sizeOfTile = _ifd->bytesPerPixel * numPixelsInTile;
-    
-    
+
+
         //
         // Uncompress the data, if necessary
         //
-    
+
         if (_tileBuffer->compressor && _tileBuffer->dataSize < sizeOfTile)
         {
             _tileBuffer->format = _tileBuffer->compressor->format();
@@ -482,54 +482,54 @@ TileBufferTask::execute ()
             // If the line is uncompressed, it's in XDR format,
             // regardless of the compressor's output format.
             //
-    
+
             _tileBuffer->format = Compressor::XDR;
             _tileBuffer->uncompressedData = _tileBuffer->buffer;
         }
-    
+
         //
         // Convert the tile of pixel data back from the machine-independent
 	// representation, and store the result in the frame buffer.
         //
-    
+
         const char *readPtr = _tileBuffer->uncompressedData;
                                                         // points to where we
                                                         // read from in the
                                                         // tile block
-        
+
         //
         // Iterate over the scan lines in the tile.
         //
-    
+
         for (int y = tileRange.min.y; y <= tileRange.max.y; ++y)
         {
             //
             // Iterate over all image channels.
             //
-            
+
             for (unsigned int i = 0; i < _ifd->slices.size(); ++i)
             {
                 const TInSliceInfo &slice = _ifd->slices[i];
-    
+
                 //
                 // These offsets are used to facilitate both
                 // absolute and tile-relative pixel coordinates.
                 //
-            
+
                 int xOffset = slice.xTileCoords * tileRange.min.x;
                 int yOffset = slice.yTileCoords * tileRange.min.y;
-    
+
                 //
                 // Fill the frame buffer with pixel data.
                 //
-    
+
                 if (slice.skip)
                 {
                     //
                     // The file contains data for this channel, but
                     // the frame buffer contains no slice for this channel.
                     //
-    
+
                     skipChannel (readPtr, slice.typeInFile,
                                  numPixelsPerScanLine);
                 }
@@ -538,7 +538,7 @@ TileBufferTask::execute ()
                     //
                     // The frame buffer contains a slice for this channel.
                     //
-    
+
                     char *writePtr = slice.base +
                                      (y - yOffset) * slice.yStride +
                                      (tileRange.min.x - xOffset) *
@@ -546,7 +546,7 @@ TileBufferTask::execute ()
 
                     char *endPtr = writePtr +
                                    (numPixelsPerScanLine - 1) * slice.xStride;
-                                    
+
                     copyIntoFrameBuffer (readPtr, writePtr, endPtr,
                                          slice.xStride,
                                          slice.fill, slice.fillValue,
@@ -597,7 +597,7 @@ newTileBufferTask
     try
     {
 	tileBuffer->wait();
-	
+
 	tileBuffer->dx = dx;
 	tileBuffer->dy = dy;
 	tileBuffer->lx = lx;
@@ -723,7 +723,7 @@ TiledInputFile::initialize ()
     //
     // Save the dataWindow information
     //
-    
+
     const Box2i &dataWindow = _data->header.dataWindow();
     _data->minX = dataWindow.min.x;
     _data->maxX = dataWindow.max.x;
@@ -738,7 +738,7 @@ TiledInputFile::initialize ()
 			  _data->minX, _data->maxX,
 			  _data->minY, _data->maxY,
 			  _data->numXTiles, _data->numYTiles,
-			  _data->numXLevels, _data->numYLevels);    
+			  _data->numXLevels, _data->numYLevels);
 
     _data->bytesPerPixel = calculateBytesPerPixel (_data->header);
 
@@ -805,7 +805,7 @@ TiledInputFile::version () const
 }
 
 
-void	
+void
 TiledInputFile::setFrameBuffer (const FrameBuffer &frameBuffer)
 {
     Lock lock (*_data);
@@ -953,19 +953,19 @@ TiledInputFile::readTiles (int dx1, int dx2, int dy1, int dy2, int lx, int ly)
         if (_data->slices.size() == 0)
             throw Iex::ArgExc ("No frame buffer specified "
 			       "as pixel data destination.");
-        
+
         //
         // Determine the first and last tile coordinates in both dimensions.
         // We always attempt to read the range of tiles in the order that
         // they are stored in the file.
         //
-                               
+
         if (dx1 > dx2)
             std::swap (dx1, dx2);
-        
+
         if (dy1 > dy2)
             std::swap (dy1, dy2);
-        
+
         int dyStart = dy1;
 	int dyStop  = dy2 + 1;
 	int dY      = 1;
@@ -982,11 +982,11 @@ TiledInputFile::readTiles (int dx1, int dx2, int dy1, int dy2, int lx, int ly)
 	// task group goes out of scope, the destructor waits until
 	// all tasks are complete.
         //
-        
+
         {
             TaskGroup taskGroup;
             int tileNumber = 0;
-    
+
             for (int dy = dyStart; dy != dyStop; dy += dY)
             {
                 for (int dx = dx1; dx <= dx2; dx++)
@@ -995,7 +995,7 @@ TiledInputFile::readTiles (int dx1, int dx2, int dy1, int dy2, int lx, int ly)
                         THROW (Iex::ArgExc,
 			       "Tile (" << dx << ", " << dy << ", " <<
 			       lx << "," << ly << ") is not a valid tile.");
-                    
+
                     ThreadPool::addGlobalTask (newTileBufferTask (&taskGroup,
                                                                   _data,
                                                                   tileNumber++,
@@ -1048,21 +1048,21 @@ TiledInputFile::readTiles (int dx1, int dx2, int dy1, int dy2, int lx, int ly)
 }
 
 
-void	
+void
 TiledInputFile::readTiles (int dx1, int dx2, int dy1, int dy2, int l)
 {
     readTiles (dx1, dx2, dy1, dy2, l, l);
 }
 
 
-void	
+void
 TiledInputFile::readTile (int dx, int dy, int lx, int ly)
 {
     readTiles (dx, dx, dy, dy, lx, ly);
 }
 
 
-void	
+void
 TiledInputFile::readTile (int dx, int dy, int l)
 {
     readTile (dx, dy, l, l);
@@ -1084,7 +1084,7 @@ TiledInputFile::rawTileData (int &dx, int &dy,
 			       "the image file's data window.");
 
         TileBuffer *tileBuffer = _data->getTileBuffer (0);
-        
+
         readNextTileData (_data, dx, dy, lx, ly,
 			  tileBuffer->buffer,
                           pixelDataSize);
@@ -1155,7 +1155,7 @@ TiledInputFile::numYLevels () const
 }
 
 
-bool	
+bool
 TiledInputFile::isValidLevel (int lx, int ly) const
 {
     if (lx < 0 || ly < 0)
@@ -1215,7 +1215,7 @@ TiledInputFile::numXTiles (int lx) const
 			    "(Argument is not in valid range).");
 
     }
-    
+
     return _data->numXTiles[lx];
 }
 
@@ -1229,7 +1229,7 @@ TiledInputFile::numYTiles (int ly) const
 			    "file \"" << _data->is->fileName() << "\" "
 			    "(Argument is not in valid range).");
     }
-    
+
     return _data->numYTiles[ly];
 }
 

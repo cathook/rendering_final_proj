@@ -62,7 +62,7 @@
 //	string of bytes is compressed with zlib.
 //
 //-----------------------------------------------------------------------------
-#define ZLIB_WINAPI 
+#define ZLIB_WINAPI
 
 #include <ImfPxr24Compressor.h>
 #include <ImfHeader.h>
@@ -240,7 +240,7 @@ Pxr24Compressor::compress (const char *inPtr,
 		     outPtr);
 }
 
-	      
+
 int
 Pxr24Compressor::compressTile (const char *inPtr,
 			       int inSize,
@@ -264,7 +264,7 @@ Pxr24Compressor::uncompress (const char *inPtr,
 		       outPtr);
 }
 
-		
+
 int
 Pxr24Compressor::uncompressTile (const char *inPtr,
 				 int inSize,
@@ -408,8 +408,8 @@ Pxr24Compressor::compress (const char *inPtr,
     return outSize;
 }
 
- 
-int		
+
+int
 Pxr24Compressor::uncompress (const char *inPtr,
 			     int inSize,
 			     Box2i range,

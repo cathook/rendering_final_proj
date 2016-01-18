@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -80,7 +80,7 @@ template <class T> class Shear6
     template <class S>             // (v.x v.y v.z 0 0 0)
 	Shear6 (const Vec3<S> &v);
     Shear6 (T XY, T XZ, T YZ,      // (XY XZ YZ YX ZX ZY)
-	    T YX, T ZX, T ZY);	
+	    T YX, T ZX, T ZY);
 
 
     //---------------------------------
@@ -91,7 +91,7 @@ template <class T> class Shear6
     template <class S> Shear6 (const Shear6<S> &h);
 
     const Shear6 &	operator = (const Shear6 &h);
-    template <class S> 
+    template <class S>
 	const Shear6 &	operator = (const Vec3<S> &v);
 
 
@@ -106,7 +106,7 @@ template <class T> class Shear6
     void		setValue (const Shear6<S> &h);
 
     template <class S>
-    void		getValue (S &XY, S &XZ, S &YZ, 
+    void		getValue (S &XY, S &XZ, S &YZ,
 				  S &YX, S &ZX, S &ZY) const;
 
     template <class S>
@@ -443,7 +443,7 @@ template <class S>
 inline bool
 Shear6<T>::operator == (const Shear6<S> &h) const
 {
-    return xy == h.xy  &&  xz == h.xz  &&  yz == h.yz  &&  
+    return xy == h.xy  &&  xz == h.xz  &&  yz == h.yz  &&
 	   yx == h.yx  &&  zx == h.zx  &&  zy == h.zy;
 }
 
@@ -571,7 +571,7 @@ template <class T>
 inline Shear6<T>
 Shear6<T>::operator * (const Shear6 &h) const
 {
-    return Shear6 (xy * h.xy, xz * h.xz, yz * h.yz, 
+    return Shear6 (xy * h.xy, xz * h.xz, yz * h.yz,
 		   yx * h.yx, zx * h.zx, zy * h.zy);
 }
 
@@ -634,9 +634,9 @@ template <class T>
 std::ostream &
 operator << (std::ostream &s, const Shear6<T> &h)
 {
-    return s << '(' 
-	     << h.xy << ' ' << h.xz << ' ' << h.yz 
-	     << h.yx << ' ' << h.zx << ' ' << h.zy 
+    return s << '('
+	     << h.xy << ' ' << h.xz << ' ' << h.yz
+	     << h.yx << ' ' << h.zx << ' ' << h.zy
 	     << ')';
 }
 

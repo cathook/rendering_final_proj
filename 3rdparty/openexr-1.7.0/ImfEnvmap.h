@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-// 
+//
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
@@ -16,8 +16,8 @@
 // distribution.
 // *       Neither the name of Industrial Light & Magic nor the names of
 // its contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission. 
-// 
+// from this software without specific prior written permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -177,10 +177,10 @@ namespace LatLongMap
 //      |           | /       /
 //      |           |/       /
 //      4-----------5       Z
-// 
+//
 //   dataWindow.min
 //        /
-//       / 
+//       /
 //      +-----------+
 //      |3    Y    7|
 //      |     |     |
@@ -237,7 +237,7 @@ namespace LatLongMap
 // The size of the data window should be N by 6*N pixels
 // (width by height), where N can be any integer greater
 // than 0.
-// 
+//
 //--------------------------------------------------------------
 
 //------------------------------------
@@ -305,7 +305,7 @@ namespace CubeMap
 					      CubeMapFace &face,
 					      Imath::V2f &positionInFace);
 
-   
+
     // --------------------------------------------------------
     // Given a cube face and a pixel position within that face,
     // compute the corresponding 3D direction.

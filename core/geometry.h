@@ -224,6 +224,178 @@ public:
 };
 
 
+class Point2D;
+
+
+class Vector2D {
+public:
+    Vector2D() : Vector2D(0, 0) {}
+
+    explicit Vector2D(const Point2D &p);
+
+    Vector2D(float x, float y) : x(x), y(y) { Assert(!HasNaNs()); }
+
+#ifndef NDEBUG
+    Vector2D(const Vector2D &v) : Vector2D(v.x, v.y) { Assert(!v.HasNaNs()); }
+
+    Vector2D &operator=(const Vector2D &v) {
+        Assert(!v.HasNaNs());
+        x = v.x; y = v.y;
+        return *this;
+    }
+#endif  // NDEBUG
+
+    bool HasNaNs() const { return isnan(x) || isnan(y); }
+
+    float LengthSquared() const { return x * x + y * y; }
+
+    float Length() const { return sqrtf(LengthSquared()); }
+
+    Vector2D operator+(const Vector2D &v) const {
+        Assert(!v.HasNaNs());
+        return Vector2D(x + v.x, y + v.y);
+    }
+
+    Vector2D& operator+=(const Vector2D &v) {
+        Assert(!v.HasNaNs());
+        x += v.x; y += v.y;
+        return *this;
+    }
+
+    Vector2D operator-(const Vector2D &v) const {
+        Assert(!v.HasNaNs());
+        return Vector2D(x - v.x, y - v.y);
+    }
+
+    Vector2D& operator-=(const Vector2D &v) {
+        Assert(!v.HasNaNs());
+        x -= v.x; y -= v.y;
+        return *this;
+    }
+
+    Vector2D operator*(float f) const { return Vector2D(f * x, f * y); }
+
+    Vector2D &operator*=(float f) {
+        Assert(!isnan(f));
+        x *= f; y *= f;
+        return *this;
+    }
+
+    Vector2D operator/(float f) const {
+        Assert(f != 0);
+        return operator*(1.f / f);
+    }
+
+    Vector2D &operator/=(float f) {
+        Assert(f != 0);
+        return operator*=(1.f / f);
+    }
+
+    Vector2D operator-() const { return Vector2D(-x, -y); }
+
+    float operator[](int i) const { Assert(0 <= i && i <= 1); return (&x)[i]; }
+
+    float &operator[](int i) { Assert(0 <= i && i <= 1); return (&x)[i]; }
+
+    bool operator==(const Vector2D &v) const { return x == v.x && y == v.y; }
+
+    bool operator!=(const Vector2D &v) const { return x != v.x || y != v.y; }
+
+    float x, y;
+};
+
+
+class Point2D {
+public:
+    Point2D() : Point2D(0, 0) {}
+
+    Point2D(float x, float y) : x(x), y(y) { Assert(!HasNaNs()); }
+
+#ifndef NDEBUG
+    Point2D(const Point2D &p) : Point2D(p.x, p.y) { Assert(!p.HasNaNs()); }
+
+    Point2D &operator=(const Point2D &p) {
+        Assert(!p.HasNaNs());
+        x = p.x; y = p.y;
+        return *this;
+    }
+#endif  // NDEBUG
+
+    bool HasNaNs() const { return isnan(x) || isnan(y); }
+
+    Point2D operator+(const Vector2D &v) const {
+        Assert(!v.HasNaNs());
+        return Point2D(x + v.x, y + v.y);
+    }
+
+    Point2D &operator+=(const Vector2D &v) {
+        Assert(!v.HasNaNs());
+        x += v.x; y += v.y;
+        return *this;
+    }
+
+    Vector2D operator-(const Point2D &p) const {
+        Assert(!p.HasNaNs());
+        return Vector2D(x - p.x, y - p.y);
+    }
+
+    Point2D operator-(const Vector2D &v) const {
+        Assert(!v.HasNaNs());
+        return Point2D(x - v.x, y - v.y);
+    }
+
+    Point2D &operator-=(const Vector2D &v) {
+        Assert(!v.HasNaNs());
+        x -= v.x; y -= v.y;
+        return *this;
+    }
+
+    Point2D &operator+=(const Point2D &p) {
+        Assert(!p.HasNaNs());
+        x += p.x; y += p.y;
+        return *this;
+    }
+
+    Point2D operator+(const Point2D &p) const {
+        Assert(!p.HasNaNs());
+        return Point2D(x + p.x, y + p.y);
+    }
+
+    Point2D operator*(float f) const { return Point2D(f * x, f * y); }
+
+    Point2D &operator*=(float f) { x *= f; y *= f; return *this; }
+
+    Point2D operator/(float f) const { return operator*(1.f / f); }
+
+    Point2D &operator/=(float f) { return operator*=(1.f / f); }
+
+    float operator[](int i) const { Assert(0 <= i && i <= 1); return (&x)[i]; }
+
+    float &operator[](int i) { Assert(0 <= i && i <= 1); return (&x)[i]; }
+
+    bool operator==(const Point2D &p) const { return x == p.x && y == p.y; }
+
+    bool operator!=(const Point2D &p) const { return x != p.x || y != p.y; }
+
+    float x, y;
+};
+
+
+inline Vector2D::Vector2D(const Point2D &p) : Vector2D(p.x, p.y) {}
+
+
+class Circle {
+public:
+    Circle() : Circle(Point2D(0, 0), 0) {}
+
+    Circle(const Point2D &center, float radius) :
+            center(center), radius(radius) {}
+
+    Point2D center;
+    float radius;
+};
+
+
 class Normal {
 public:
     // Normal Public Methods
@@ -462,13 +634,26 @@ inline Vector::Vector(const Point &p)
 
 
 inline Vector operator*(float f, const Vector &v) { return v*f; }
+
+inline Vector2D operator*(float f, const Vector2D &v) { return v * f; }
+
 inline float Dot(const Vector &v1, const Vector &v2) {
     Assert(!v1.HasNaNs() && !v2.HasNaNs());
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
+inline float Dot(const Vector2D &v1, const Vector2D &v2) {
+    Assert(!v1.HasNaNs() && !v2.HasNaNs());
+    return v1.x * v2.x + v1.y * v2.y;
+}
+
 
 inline float AbsDot(const Vector &v1, const Vector &v2) {
+    Assert(!v1.HasNaNs() && !v2.HasNaNs());
+    return fabsf(Dot(v1, v2));
+}
+
+inline float AbsDot(const Vector2D &v1, const Vector2D &v2) {
     Assert(!v1.HasNaNs() && !v2.HasNaNs());
     return fabsf(Dot(v1, v2));
 }
@@ -481,6 +666,12 @@ inline Vector Cross(const Vector &v1, const Vector &v2) {
     return Vector((v1y * v2z) - (v1z * v2y),
                   (v1z * v2x) - (v1x * v2z),
                   (v1x * v2y) - (v1y * v2x));
+}
+
+
+inline float Cross(const Vector2D &v1, const Vector2D &v2) {
+    Assert(!v1.HasNaNs() && !v2.HasNaNs());
+    return v1.x * v2.y - v1.y * v2.x;
 }
 
 
@@ -505,6 +696,9 @@ inline Vector Cross(const Normal &v1, const Vector &v2) {
 
 
 inline Vector Normalize(const Vector &v) { return v / v.Length(); }
+
+inline Vector2D Normalize(const Vector2D &v) { return v / v.Length(); }
+
 inline void CoordinateSystem(const Vector &v1, Vector *v2, Vector *v3) {
     if (fabsf(v1.x) > fabsf(v1.y)) {
         float invLen = 1.f / sqrtf(v1.x*v1.x + v1.z*v1.z);
@@ -522,8 +716,17 @@ inline float Distance(const Point &p1, const Point &p2) {
     return (p1 - p2).Length();
 }
 
+inline float Distance(const Point2D &p1, const Point2D &p2) {
+    return (p1 - p2).Length();
+}
+
 
 inline float DistanceSquared(const Point &p1, const Point &p2) {
+    return (p1 - p2).LengthSquared();
+}
+
+
+inline float DistanceSquared(const Point2D &p1, const Point2D &p2) {
     return (p1 - p2).LengthSquared();
 }
 
@@ -531,6 +734,11 @@ inline float DistanceSquared(const Point &p1, const Point &p2) {
 inline Point operator*(float f, const Point &p) {
     Assert(!p.HasNaNs());
     return p*f;
+}
+
+inline Point2D operator*(float f, const Point2D &p) {
+    Assert(!p.HasNaNs());
+    return p * f;
 }
 
 

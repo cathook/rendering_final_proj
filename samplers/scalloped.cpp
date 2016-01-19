@@ -116,6 +116,131 @@ public:
 };
 
 
+class UniformRegionSelector : public IRegionSelector {
+public:
+    IRegion* Select(const RNG &rng) const {
+        size_t index = rng.RandomFloat() * regions_.size();
+        return regions_[index];
+    }
+
+    void Add(IRegion *region) {
+        indexes_[region] = regions_.size();
+        regions_.emplace_back(region);
+    }
+
+    void Remove(IRegion *region) {
+        size_t index = indexes_[region];
+        regions_[index] = regions_.back();
+        indexes_[regions_.back()] = index;
+        regions_.pop_back();
+        indexes_.erase(region);
+    }
+
+private:
+    vector<IRegion*> regions_;
+    unordered_map<IRegion*, size_t> indexes_;
+};
+
+
+class UniformRegionSelectorFactory : public RegionSelectorFactory {
+public:
+    virtual IRegionSelector* CreateRegionSelector() {
+        return new UniformRegionSelector();
+    }
+};
+
+
+class WeightedRegionSelector : public IRegionSelector {
+public:
+    WeightedRegionSelector() : weight_sum_(1, 0.f), base_(0), width_(1) {}
+
+    IRegion* Select(const RNG &rng) const {
+        float weight = rng.RandomFloat() * weight_sum_[0];
+        size_t index = 0;
+        while (index < base_) {
+            float left_weight = weight_sum_[index * 2 + 1];
+            if (weight_sum_[index * 2 + 2] == 0.f || weight <= left_weight) {
+                index = index * 2 + 1;
+            } else {
+                weight -= left_weight;
+                index = index * 2 + 2;
+            }
+        }
+        return regions_[index - base_];
+    }
+
+    void Add(IRegion *region) {
+        if (regions_.size() + 1 > width_) {
+            weight_sum_.resize(weight_sum_.size() + width_ * 2, 0);
+            for (size_t b = base_ * 2 + 1, b0 = base_; b > 0; b = b0, b0 /= 2) {
+                for (size_t i = b0, j = b; i < b; ++i, ++j) {
+                    weight_sum_[j] = weight_sum_[i];
+                }
+                for (size_t i = b0 + (b - b0 + 1) / 2; i < b; ++i) {
+                    weight_sum_[i] = 0;
+                }
+            }
+            base_ = base_ * 2 + 1;
+            width_ *= 2;
+        }
+
+        size_t index = regions_.size();
+        indexes_[region] = index;
+        regions_.emplace_back(region);
+        Update_(base_ + index, region->area());
+    }
+
+    void Remove(IRegion *region) {
+        Update_(base_ + regions_.size() - 1, -regions_.back()->area());
+
+        size_t index = indexes_[region];
+        if (index + 1 != regions_.size()) {
+            Update_(base_ + index, -region->area() + regions_.back()->area());
+            regions_[index] = regions_.back();
+            indexes_[regions_.back()] = index;
+        }
+        indexes_.erase(region);
+        regions_.pop_back();
+
+        if (regions_.size() < width_ / 4) {
+            for (size_t b0 = 0, b = 1; b0 < base_; b0 = b, b = b * 2 + 1) {
+                for (size_t i = b0, j = b; i < b; ++i, ++j) {
+                    weight_sum_[i] = weight_sum_[j];
+                }
+            }
+            weight_sum_.resize(weight_sum_.size() - width_);
+            base_ /= 2;
+            width_ /= 2;
+        }
+    }
+
+private:
+    void Update_(size_t index, float delta) {
+        while (true) {
+            weight_sum_[index] += delta;
+            if (index == 0) {
+                break;
+            }
+            index = (index - 1) / 2;
+        }
+    }
+
+    vector<float> weight_sum_;
+    size_t base_;
+    size_t width_;
+    vector<IRegion*> regions_;
+    unordered_map<IRegion*, size_t> indexes_;
+};
+
+
+class WeightedRegionSelectorFactory : public RegionSelectorFactory {
+public:
+    virtual IRegionSelector* CreateRegionSelector() {
+        return new WeightedRegionSelector();
+    }
+};
+
+
 class TreeStyleArraySquareSampler : public ISquareSampler {
 public:
     TreeStyleArraySquareSampler(float size, vector<Point2D> points) :
@@ -353,6 +478,19 @@ RegionFactory* RegionFactory::CreateRegionFactory(float r_ratio) {
 }
 
 
+RegionSelectorFactory* RegionSelectorFactory::CreateRegionSelectorFactory(
+        bool weighted) {
+    if (!weighted) {
+        return new UniformRegionSelectorFactory();
+    }
+    if (weighted) {
+        return new WeightedRegionSelectorFactory();
+    }
+    Assert(false);
+    return NULL;
+}
+
+
 Sampler *CreateScallopedSampler(
         const ParamSet &params, const Film *film, const Camera *camera) {
     int xstart, xend, ystart, yend;
@@ -362,10 +500,17 @@ Sampler *CreateScallopedSampler(
     RegionFactory *region_factory = RegionFactory::CreateRegionFactory(r_ratio);
     Assert(region_factory != NULL);
 
+    bool weighted = params.FindOneBool("weighted", false);
+    RegionSelectorFactory *region_selector_factory =
+            RegionSelectorFactory::CreateRegionSelectorFactory(weighted);
+    Assert(region_selector_factory != NULL);
+
     int pixel_samples = params.FindOneInt("pixelsamples", 1);
     Assert(pixel_samples > 0);
 
+
     delete region_factory;
+    delete region_selector_factory;
     ///////
     //
     RNG rng;

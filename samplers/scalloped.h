@@ -63,11 +63,11 @@ class IRegionSelector {
 public:
     virtual ~IRegionSelector() {}
 
-    virtual IRegion* Select() const = 0;
+    virtual IRegion* Select(const RNG &rng) const = 0;
 
-    virtual void Add(IRegion *region) const = 0;
+    virtual void Add(IRegion *region) = 0;
 
-    virtual void Reomve(IRegion *region) const = 0;
+    virtual void Remove(IRegion *region) = 0;
 
 protected:
     IRegionSelector() {}

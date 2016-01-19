@@ -101,7 +101,8 @@ class ISquareSampler {
 public:
     virtual ~ISquareSampler() {}
 
-    virtual vector<Point2D> Sample(size_t num_samples, RNG &rng) const = 0;
+    virtual void Sample(size_t num_samples, RNG &rng,
+                        vector<Point2D> *out) const = 0;
 
 protected:
     ISquareSampler() {}

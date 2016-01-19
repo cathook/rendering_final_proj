@@ -251,6 +251,21 @@ public:
 
     float Length() const { return sqrtf(LengthSquared()); }
 
+    float Dot(const Vector2D &v) const {
+        Assert(!v.HasNaNs());
+        return x * v.x + y * v.y;
+    }
+
+    float Cross(const Vector2D &v) const {
+        Assert(!v.HasNaNs());
+        return x * v.y - y * v.x;
+    }
+
+    Vector2D Rotate(float angle) const {
+        Vector2D x(cosf(-angle), sinf(-angle));
+        return Vector2D(Dot(x), Cross(x));
+    }
+
     Vector2D operator+(const Vector2D &v) const {
         Assert(!v.HasNaNs());
         return Vector2D(x + v.x, y + v.y);
@@ -292,6 +307,8 @@ public:
     }
 
     Vector2D operator-() const { return Vector2D(-x, -y); }
+
+    Vector2D operator~() const { return Vector2D(-y, x); }
 
     float operator[](int i) const { Assert(0 <= i && i <= 1); return (&x)[i]; }
 
@@ -395,6 +412,30 @@ public:
 
     Point2D center;
     float radius;
+};
+
+
+class Arc : public Circle {
+public:
+    Arc() : Arc(Point2D(0, 0), 0, 0, 0) {}
+
+    Arc(const Point2D &center, float radius, float theta0, float theta) :
+            Circle(center, radius), theta0(theta0), theta(theta) {}
+
+    bool Split(float t, Arc *a1, Arc *a2) const {
+        while (t < theta0) {
+            t += M_PI * 2.f;
+        }
+        if (t == theta0 || t >= theta0 + theta) {
+            return false;
+        }
+        *a1 = Arc(center, radius, theta0, t - theta0);
+        *a2 = Arc(center, radius, t, theta0 + theta - t);
+        return true;
+    }
+
+    float theta0;
+    float theta;
 };
 
 
@@ -645,18 +686,11 @@ inline float Dot(const Vector &v1, const Vector &v2) {
 }
 
 inline float Dot(const Vector2D &v1, const Vector2D &v2) {
-    Assert(!v1.HasNaNs() && !v2.HasNaNs());
-    return v1.x * v2.x + v1.y * v2.y;
+    return v1.Dot(v2);
 }
 
 
 inline float AbsDot(const Vector &v1, const Vector &v2) {
-    Assert(!v1.HasNaNs() && !v2.HasNaNs());
-    return fabsf(Dot(v1, v2));
-}
-
-inline float AbsDot(const Vector2D &v1, const Vector2D &v2) {
-    Assert(!v1.HasNaNs() && !v2.HasNaNs());
     return fabsf(Dot(v1, v2));
 }
 
@@ -672,8 +706,7 @@ inline Vector Cross(const Vector &v1, const Vector &v2) {
 
 
 inline float Cross(const Vector2D &v1, const Vector2D &v2) {
-    Assert(!v1.HasNaNs() && !v2.HasNaNs());
-    return v1.x * v2.y - v1.y * v2.x;
+    return v1.Cross(v2);
 }
 
 

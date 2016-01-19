@@ -1,5 +1,6 @@
 #include "samplers/scalloped.h"
 
+#include <math.h>
 #include <stdint.h>
 
 #include <algorithm>
@@ -8,7 +9,6 @@
 #include <utility>
 
 #include "montecarlo.h"
-#include "pool.h"
 #include "rng.h"
 #include "tree_style_array.h"
 
@@ -21,6 +21,99 @@ using std::unordered_map;
 
 
 namespace {
+
+
+class ArcRegion : public IRegion {
+public:
+    ArcRegion(Dart *dart, float theta0, float theta) :
+            IRegion(dart), theta0_(theta0), theta_(theta) {}
+
+    float area() const { return theta_; }
+
+    bool Eclipse(const Circle &circle, vector<IRegion*> *out) const {
+        Vector2D c12(circle.center - dart()->position);
+        float l2 = c12.LengthSquared();
+        float l = sqrtf(l2);
+        if (l + 1.f <= circle.radius) {
+            out->clear();
+            return true;
+        }
+        float inv_l2 = 1.f / l2;
+        float r12 = inv_l2;
+        float r22 = circle.radius * circle.radius * inv_l2;
+
+        float theta = acosf((1.f + r12 - r22) * 0.5f * l);
+        if (isnan(theta) || theta == 0.f) {
+            return false;
+        }
+
+        float phi = atan2f(c12.y, c12.x);
+
+        Explode_(phi - theta, phi + theta, out);
+        return true;
+    }
+
+    Point2D SelectPoint(const RNG &rng) const {
+        float angle = theta0_ + rng.RandomFloat() * theta_;
+        return dart()->position + Vector2D(1.f, 0.f).Rotate(angle);
+    }
+
+private:
+    void Explode_(float t1, float t2, vector<IRegion*> *out) const {
+        t1 = AdjustToRange_(t1);
+        t2 = AdjustToRange_(t2);
+
+        out->clear();
+        if (t2 <= t1) {
+            swap(t1, t2);
+            float tlen = min(t2 - t1, theta0_ + theta_ - t1);
+            if (tlen > 0.f) {
+                out->emplace_back(
+                        new ArcRegion(dart(), AdjustAngle_(t1), tlen));
+            }
+        } else {
+            if (t1 != theta0_) {
+                out->emplace_back(new ArcRegion(dart(), theta0_, t1 - theta0_));
+            }
+            float t3 = theta0_ + theta_;
+            if (t2 < t3) {
+                out->emplace_back(
+                        new ArcRegion(dart(), AdjustAngle_(t2), t3 - t2));
+            }
+        }
+    }
+
+    static float AdjustAngle_(float angle) {
+        while (angle < 0.f) {
+            angle += 2.f * M_PI;
+        }
+        while (angle > 2.f * M_PI) {
+            angle -= 2.f * M_PI;
+        }
+        return angle;
+    }
+
+    float AdjustToRange_(float angle) const {
+        while (angle - theta0_ > theta_) {
+            angle -= 2.f * M_PI;
+        }
+        while (angle < theta0_) {
+            angle += 2.f * M_PI;
+        }
+        return angle;
+    }
+
+    float theta0_;
+    float theta_;
+};
+
+
+class ArcRegionFactory : public RegionFactory {
+public:
+    vector<IRegion*> CreateRegions(Dart *dart) const {
+        return vector<IRegion*>(1, new ArcRegion(dart, 0, 2.f * M_PI));
+    }
+};
 
 
 class TreeStyleArraySquareSampler : public ISquareSampler {
@@ -251,14 +344,30 @@ private:
 }  // namespace
 
 
+RegionFactory* RegionFactory::CreateRegionFactory(float r_ratio) {
+    if (r_ratio == 1.f) {
+        return new ArcRegionFactory();
+    }
+    Assert(false);
+    return NULL;
+}
+
+
 Sampler *CreateScallopedSampler(
         const ParamSet &params, const Film *film, const Camera *camera) {
     int xstart, xend, ystart, yend;
     film->GetSampleExtent(&xstart, &xend, &ystart, &yend);
 
+    float r_ratio = params.FindOneFloat("rratio", 1.f);
+    RegionFactory *region_factory = RegionFactory::CreateRegionFactory(r_ratio);
+    Assert(region_factory != NULL);
+
     int pixel_samples = params.FindOneInt("pixelsamples", 1);
     Assert(pixel_samples > 0);
 
+    delete region_factory;
+    ///////
+    //
     RNG rng;
     vector<Point2D> points;
     for (int i = 0; i < 1000; ++i) {

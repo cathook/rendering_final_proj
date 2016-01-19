@@ -15,35 +15,47 @@
 #include "sampler.h"
 
 
+class IRegion;
+
+
+struct Dart {
+    Dart(const Point2D &position) : position(position) {}
+
+    const Point2D position;
+
+    std::unordered_set<IRegion*> regions;
+};
+
+
 class IRegion {
 public:
     virtual ~IRegion() {}
 
-    size_t dart_id() const { return dart_id_; }
+    Dart *dart() const { return dart_; }
 
-    virtual bool IsOverlap(const Circle &circle) const = 0;
+    virtual float area() const = 0;
 
-    virtual vector<IRegion*> Eclipse(const Circle &circle) const = 0;
+    virtual bool Eclipse(const Circle &circle, vector<IRegion*> *out) const = 0;
 
-    virtual Point2D ThrowDart() const = 0;
+    virtual Point2D SelectPoint(const RNG &rng) const = 0;
 
 protected:
-    IRegion(size_t dart_id) : dart_id_(dart_id) {}
+    IRegion(Dart *dart) : dart_(dart) {}
 
-    size_t dart_id_;
+    Dart *dart_;
 };
 
 
-class RegionFactor {
+class RegionFactory {
 public:
-    virtual ~RegionFactor() {}
+    virtual ~RegionFactory() {}
 
-    virtual vector<IRegion*> CreateRegions(const Point2D &center) = 0;
+    virtual vector<IRegion*> CreateRegions(Dart *dart) const = 0;
 
-    static RegionFactor* CreateRegionFactor(float r_ratio);
+    static RegionFactory* CreateRegionFactory(float r_ratio);
 
 protected:
-    RegionFactor() {}
+    RegionFactory() {}
 };
 
 
@@ -51,36 +63,34 @@ class IRegionSelector {
 public:
     virtual ~IRegionSelector() {}
 
-    virtual const IRegion* Select() const = 0;
+    virtual IRegion* Select() const = 0;
 
-    virtual void Add(const IRegion *region) const = 0;
+    virtual void Add(IRegion *region) const = 0;
 
-    virtual void Reomve(const IRegion *region) const = 0;
+    virtual void Reomve(IRegion *region) const = 0;
 
 protected:
     IRegionSelector() {}
 };
 
 
-class RegionSelectorFactor {
+class RegionSelectorFactory {
 public:
-    virtual ~RegionSelectorFactor() {}
+    virtual ~RegionSelectorFactory() {}
 
     virtual IRegionSelector* CreateRegionSelector() = 0;
 
-    static RegionSelectorFactor* CreateRegionSelectorFactor(bool weighted);
+    static RegionSelectorFactory* CreateRegionSelectorFactory(bool weighted);
 
 protected:
-    RegionSelectorFactor() {}
+    RegionSelectorFactory() {}
 };
 
 
-struct Dart {
-    Dart(const Point2D &position) : position(position) {}
+struct DartNode : Dart {
+    DartNode(const Point2D &position) : Dart(position) {}
 
-    Point2D position;
-
-    std::unordered_set<IRegion*> regions;
+    vector<DartNode*> neighbors;
 };
 
 
@@ -88,9 +98,10 @@ class IDartsNet {
 public:
     virtual ~IDartsNet() {}
 
-    virtual vector<size_t> GetNeighbors(const Point2D &position) const = 0;
+    virtual vector<DartNode*> GetNeighbors(
+            const DartNode *mentor, const Point2D &position) const = 0;
 
-    virtual void AddNeighbor(size_t mentor_id, size_t neighbor_id) const = 0;
+    virtual void AddNeighbor(DartNode *mentor, DartNode* neighbor) const = 0;
 
 protected:
     IDartsNet() {}

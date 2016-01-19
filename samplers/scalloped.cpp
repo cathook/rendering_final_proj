@@ -5,7 +5,9 @@
 
 #include <algorithm>
 #include <memory>
+#include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 
 #include "montecarlo.h"
@@ -15,9 +17,11 @@
 
 using std::lower_bound;
 using std::pair;
+using std::queue;
 using std::sort;
 using std::unique;
 using std::unordered_map;
+using std::unordered_set;
 
 
 namespace {
@@ -241,6 +245,204 @@ public:
 };
 
 
+class BasicDartsNet : public IDartsNet {
+public:
+    BasicDartsNet(float d1, float d2) :
+            max_dist_(d1 - 1.f + d2), d1_(d1 * d1), d2_(d2 * d2) {
+        max_dist_ *= max_dist_;
+    }
+
+    Dart* WrapDart(const Dart &dart) const { return new Node_(dart); }
+
+    void DestroyAll(Dart *master) {
+        unordered_set<Node_*> removed_nodes;
+        queue<Node_*> qu;
+        qu.push(dynamic_cast<Node_*>(master));
+        while (!qu.empty()) {
+            Node_* node = qu.front();
+            qu.pop();
+            if (removed_nodes.count(node) == 0) {
+                for (Node_* nei : node->neighbors) {
+                    qu.push(nei);
+                }
+                delete node;
+                removed_nodes.insert(node);
+            }
+        }
+    }
+
+    size_t GetNears(Dart *master, const Point2D &position,
+                    vector<Dart*> *out) const {
+        Node_* node = dynamic_cast<Node_*>(master);
+        size_t ret = 1;
+        out->resize(1, master);
+        for (Node_* nei : node->neighbors) {
+            float l2 = (nei->position - position).LengthSquared();
+            if (l2 > d2_) {
+                continue;
+            }
+            out->emplace_back(nei);
+            if (l2 < d1_) {
+                swap(out->at(ret), out->back());
+                ret += 1;
+            }
+        }
+        return ret;
+    }
+
+    void AddNeighbor(Dart *master, Dart *neighbor) {
+        Node_* m = dynamic_cast<Node_*>(master);
+        Node_* n = dynamic_cast<Node_*>(neighbor);
+
+        unordered_set<Node_*> nodes;
+        for (Node_ *nei : m->neighbors) {
+            nodes.insert(nei);
+            for (Node_ *neii : nei->neighbors) {
+                if (neii != m) {
+                    nodes.insert(neii);
+                }
+            }
+        }
+
+        Connect_(m, n);
+        for (Node_ *node : nodes) {
+            TryConnect_(node, n);
+        }
+    }
+
+    void Dump(Dart* master) {
+        unordered_set<Node_*> removed_nodes;
+        queue<Node_*> qu;
+        qu.push(dynamic_cast<Node_*>(master));
+        printf("%.0f < %.0f < %.0f\n", sqrtf(d1_), sqrtf(d2_), sqrtf(max_dist_));
+        while (!qu.empty()) {
+            Node_* node = qu.front();
+            qu.pop();
+            if (removed_nodes.count(node) == 0) {
+                printf("(%2.0f, %2.0f) === ", node->position.x, node->position.y);
+                for (Node_* nei : node->neighbors) {
+                    qu.push(nei);
+                    printf("(%2.0f, %2.0f) ", nei->position.x, nei->position.y);
+                }
+                printf("\n");
+                removed_nodes.insert(node);
+            }
+        }
+        printf("\n");
+    }
+
+private:
+    struct Node_ : Dart {
+        Node_(const Dart &d) : Dart(d) {}
+
+        vector<Node_*> neighbors;
+    };
+
+    void TryConnect_(Node_* a, Node_* b) {
+        if ((a->position - b->position).LengthSquared() < max_dist_) {
+            Connect_(a, b);
+        }
+    }
+
+    static void Connect_(Node_* a, Node_* b) {
+        a->neighbors.push_back(b);
+        b->neighbors.push_back(a);
+    }
+
+    float max_dist_;
+    float d1_;
+    float d2_;
+};
+
+
+class PreSampler {
+public:
+    PreSampler(float r_ratio,
+               float size,
+               RegionFactory *region_factory,
+               RegionSelectorFactory *region_selector_factory) :
+            r_ratio_(r_ratio),
+            size_(size),
+            region_factory_(region_factory),
+            region_selector_(region_selector_factory->CreateRegionSelector()),
+            darts_net_(new BasicDartsNet(1.f, r_ratio_)) {
+        Assert(size > 1.f);
+        Assert(1.f <= r_ratio_ && r_ratio_ <= 2.f);
+    }
+
+    vector<Point2D> Sample() {
+        vector<Point2D> ret;
+
+        Dart* root = darts_net_->WrapDart(
+                Dart(Point2D(rng.RandomFloat(), rng.RandomFloat())));
+        for (IRegion* reg : region_factory_->CreateRegions(root)) {
+            AddRegion_(reg);
+        }
+
+        vector<Dart*> neighbors;
+        vector<IRegion*> regs;
+        while (!regions_.empty()) {
+            IRegion* reg = region_selector_->Select(rng);
+            Point2D p(reg->SelectPoint(rng));
+            size_t nct = darts_net_->GetNears(reg->dart(), p, &neighbors);
+            for (size_t i = 0; i < nct; ++i) {
+                for (IRegion* nreg : neighbors[i]->regions) {
+                    if (nreg->Eclipse(Circle(p, 1.f), &regs)) {
+                        for (IRegion* new_reg : regs) {
+                            AddRegion_(new_reg);
+                        }
+                        RemoveRegion_(nreg);
+                    }
+                }
+            }
+            Dart* new_dart = darts_net_->WrapDart(Dart(p));
+            for (IRegion* tmp : region_factory_->CreateRegions(new_dart)) {
+                for (Dart* neighbor : neighbors) {
+                    Circle c(neighbor->position, 2.f);
+                    if (tmp->Eclipse(c, &regs)) {
+                        for (IRegion* new_reg : regs) {
+                            AddRegion_(new_reg);
+                        }
+                        RemoveRegion_(tmp);
+                    } else {
+                        AddRegion_(tmp);
+                    }
+                }
+            }
+            darts_net_->AddNeighbor(reg->dart(), new_dart);
+
+            ret.emplace_back(p);
+        }
+
+        darts_net_->DestroyAll(root);
+
+        return ret;
+    }
+
+private:
+    void AddRegion_(IRegion* reg) {
+        reg->dart()->regions.insert(reg);
+        regions_.insert(reg);
+        region_selector_->Add(reg);
+    }
+
+    void RemoveRegion_(IRegion* reg) {
+        reg->dart()->regions.erase(reg);
+        regions_.erase(reg);
+        region_selector_->Remove(reg);
+    }
+
+    float r_ratio_;
+    float size_;
+    RegionFactory *region_factory_;
+    IRegionSelector *region_selector_;
+    IDartsNet *darts_net_;
+
+    unordered_set<IRegion*> regions_;
+    RNG rng;
+};
+
+
 class TreeStyleArraySquareSampler : public ISquareSampler {
 public:
     TreeStyleArraySquareSampler(float size, vector<Point2D> points) :
@@ -393,7 +595,9 @@ public:
             sampler_(sampler),
             img_xy_buf_(samplesPerPixel),
             lens_uv_buf_(samplesPerPixel),
-            time_samples_buf_(new float[pixel_samples]) {}
+            time_samples_buf_(new float[pixel_samples]) {
+        Assert(samplesPerPixel > 0);
+    }
 
     Sampler *GetSubSampler(int num, int count) {
         int x0, x1, y0, y1;
@@ -493,33 +697,32 @@ RegionSelectorFactory* RegionSelectorFactory::CreateRegionSelectorFactory(
 
 Sampler *CreateScallopedSampler(
         const ParamSet &params, const Film *film, const Camera *camera) {
-    int xstart, xend, ystart, yend;
-    film->GetSampleExtent(&xstart, &xend, &ystart, &yend);
-
     float r_ratio = params.FindOneFloat("rratio", 1.f);
+    float size = params.FindOneFloat("size", 1000.f);
+    bool weighted = params.FindOneBool("weighted", false);
+
     RegionFactory *region_factory = RegionFactory::CreateRegionFactory(r_ratio);
     Assert(region_factory != NULL);
 
-    bool weighted = params.FindOneBool("weighted", false);
     RegionSelectorFactory *region_selector_factory =
             RegionSelectorFactory::CreateRegionSelectorFactory(weighted);
     Assert(region_selector_factory != NULL);
 
-    int pixel_samples = params.FindOneInt("pixelsamples", 1);
-    Assert(pixel_samples > 0);
+    PreSampler pre_sampler(
+            r_ratio, size, region_factory, region_selector_factory);
 
+    vector<Point2D> points = pre_sampler.Sample();
 
     delete region_factory;
     delete region_selector_factory;
-    ///////
-    //
-    RNG rng;
-    vector<Point2D> points;
-    for (int i = 0; i < 1000; ++i) {
-        points.emplace_back(rng.RandomFloat() * 100, rng.RandomFloat() * 100);
-    }
+
+    int xstart, xend, ystart, yend;
+    film->GetSampleExtent(&xstart, &xend, &ystart, &yend);
+
+    int pixel_samples = params.FindOneInt("pixelsamples", 1);
+
     std::shared_ptr<const ISquareSampler> square_sampler(
-            new TreeStyleArraySquareSampler(100, points));
+            new TreeStyleArraySquareSampler(size, points));
 
     return new ScallopedSampler(xstart, xend, ystart, yend,
                                 pixel_samples,

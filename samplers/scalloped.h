@@ -21,6 +21,8 @@ class IRegion;
 struct Dart {
     Dart(const Point2D &position) : position(position) {}
 
+    virtual ~Dart() {}
+
     const Point2D position;
 
     std::unordered_set<IRegion*> regions;
@@ -87,21 +89,18 @@ protected:
 };
 
 
-struct DartNode : Dart {
-    DartNode(const Point2D &position) : Dart(position) {}
-
-    vector<DartNode*> neighbors;
-};
-
-
 class IDartsNet {
 public:
     virtual ~IDartsNet() {}
 
-    virtual vector<DartNode*> GetNeighbors(
-            const DartNode *mentor, const Point2D &position) const = 0;
+    virtual Dart* WrapDart(const Dart &dart) const = 0;
 
-    virtual void AddNeighbor(DartNode *mentor, DartNode* neighbor) const = 0;
+    virtual void DestroyAll(Dart *master) = 0;
+
+    virtual size_t GetNears(Dart *master, const Point2D &position,
+                            vector<Dart*> *out) const = 0;
+
+    virtual void AddNeighbor(Dart *master, Dart *neighbor) = 0;
 
 protected:
     IDartsNet() {}

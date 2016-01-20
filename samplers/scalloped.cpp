@@ -11,6 +11,7 @@
 #include <utility>
 
 #include "montecarlo.h"
+#include "progressreporter.h"
 #include "rng.h"
 #include "tree_style_array.h"
 
@@ -380,6 +381,9 @@ public:
     }
 
     vector<Point2D> Sample() {
+        size_t est_num_samples = size_ * size_ * 2.f / sqrtf(3.f) * 5.f / 6.f;
+        ProgressReporter progress_reporter(est_num_samples, "Pre-sample");
+
         Dart *old_dart;
         Dart *new_dart;
         vector<Dart*> neighbors;
@@ -387,11 +391,16 @@ public:
         vector<Point2D> ret;
 
         Dart* root = SampleFirstPoint_();
+
         ret.emplace_back(root->position);
+        progress_reporter.Update();
 
         while (!regions_.empty()) {
             ThrowDart_(&old_dart, &new_dart);
             ret.emplace_back(new_dart->position);
+            if (ret.size() < est_num_samples) {
+                progress_reporter.Update();
+            }
 
             size_t nct = darts_net_->GetNears(
                     old_dart, new_dart->position, &neighbors);
@@ -406,6 +415,8 @@ public:
         }
 
         darts_net_->DestroyAll(root);
+
+        progress_reporter.Done();
 
         return ret;
     }

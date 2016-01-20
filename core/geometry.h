@@ -403,6 +403,17 @@ public:
 inline Vector2D::Vector2D(const Point2D &p) : Vector2D(p.x, p.y) {}
 
 
+class Line2D {
+public:
+    Line2D() : Line2D(Point2D(0, 0), Vector2D(0, 0)) {}
+
+    Line2D(const Point2D &p0, const Vector2D &v) : p0(p0), v(v) {}
+
+    Point2D p0;
+    Vector2D v;
+};
+
+
 class Circle {
 public:
     Circle() : Circle(Point2D(0, 0), 0) {}

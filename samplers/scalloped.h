@@ -39,6 +39,8 @@ public:
 
     virtual bool Eclipse(const Circle &circle, vector<IRegion*> *out) const = 0;
 
+    virtual bool Eclipse(const Line2D &line, vector<IRegion*> *out) const = 0;
+
     virtual Point2D SelectPoint(const RNG &rng) const = 0;
 
 protected:

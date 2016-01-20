@@ -56,6 +56,19 @@ public:
         return Explode_(phi - theta, phi + theta, out);
     }
 
+    bool Eclipse(const Line2D &line, vector<IRegion*> *out) const {
+        Vector2D v(~-Normalize(line.v));
+
+        float theta = acosf((line.p0 - dart()->position).Dot(v));
+        if (isnan(theta) || theta == 0.f) {
+            return false;
+        }
+
+        float phi = atan2f(v.y, v.x);
+
+        return Explode_(phi - theta, phi + theta, out);
+    }
+
     Point2D SelectPoint(const RNG &rng) const {
         float angle = theta0_ + rng.RandomFloat() * theta_;
         return dart()->position + Vector2D(1.f, 0.f).Rotate(angle);
@@ -354,6 +367,16 @@ public:
             EclipseOldRegions_(this) {
         Assert(size > 1.f);
         Assert(1.f <= r_ratio_ && r_ratio_ <= 2.f);
+
+        Point2D p[] = {
+            Point2D(0, 0),
+            Point2D(size, 0),
+            Point2D(size, size),
+            Point2D(0, size)
+        };
+        for (int i = 0; i < 4; ++i) {
+            bounds_[i] = Line2D(p[i], p[(i + 1) % 4] - p[i]);
+        }
     }
 
     vector<Point2D> Sample() {
@@ -415,19 +438,11 @@ private:
                 buf1_.resize(1);
                 buf1_[0] = reg;
                 for (Dart *neighbor : neighbors) {
-                    buf2_.clear();
-                    Circle c(neighbor->position, pre_sampler_->r_ratio_);
-                    for (IRegion *r : buf1_) {
-                        if (r->Eclipse(c, &buf_e_)) {
-                            for (IRegion *new_reg : buf_e_) {
-                                buf2_.emplace_back(new_reg);
-                            }
-                            delete r;
-                        } else {
-                            buf2_.emplace_back(r);
-                        }
-                    }
-                    swap(buf1_, buf2_);
+                    EclipseAndSwap_(
+                            Circle(neighbor->position, pre_sampler_->r_ratio_));
+                }
+                for (size_t i = 0; i < 4; ++i) {
+                    EclipseAndSwap_(pre_sampler_->bounds_[i]);
                 }
                 for (IRegion *new_reg : buf1_) {
                     pre_sampler_->AddRegion_(new_reg);
@@ -437,6 +452,22 @@ private:
         }
 
     private:
+        template <typename T>
+        void EclipseAndSwap_(const T &obj) {
+            buf2_.clear();
+            for (IRegion *r : buf1_) {
+                if (r->Eclipse(obj, &buf_e_)) {
+                    for (IRegion *new_reg : buf_e_) {
+                        buf2_.emplace_back(new_reg);
+                    }
+                    delete r;
+                } else {
+                    buf2_.emplace_back(r);
+                }
+            }
+            swap(buf1_, buf2_);
+        }
+
         PreSampler* pre_sampler_;
 
         vector<IRegion*> buf_e_;
@@ -494,6 +525,8 @@ private:
     EclipseOldRegionsHandler_ EclipseOldRegions_;
 
     unordered_set<IRegion*> regions_;
+    Line2D bounds_[4];
+
     RNG rng;
 };
 

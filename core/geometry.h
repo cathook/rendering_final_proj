@@ -263,7 +263,7 @@ public:
 
     Vector2D Rotate(float angle) const {
         Vector2D x(cosf(-angle), sinf(-angle));
-        return Vector2D(Dot(x), Cross(x));
+        return Vector2D(x.Dot(*this), x.Cross(*this));
     }
 
     Vector2D operator+(const Vector2D &v) const {

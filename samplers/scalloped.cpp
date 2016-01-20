@@ -53,8 +53,7 @@ public:
 
         float phi = atan2f(c12.y, c12.x);
 
-        Explode_(phi - theta, phi + theta, out);
-        return true;
+        return Explode_(phi - theta, phi + theta, out);
     }
 
     Point2D SelectPoint(const RNG &rng) const {
@@ -63,28 +62,35 @@ public:
     }
 
 private:
-    void Explode_(float t1, float t2, vector<IRegion*> *out) const {
+    bool Explode_(float t1, float t2, vector<IRegion*> *out) const {
         t1 = AdjustToRange_(t1);
         t2 = AdjustToRange_(t2);
-
-        out->clear();
         if (t2 <= t1) {
             swap(t1, t2);
+            if (t1 == theta0_) {
+                return false;
+            }
+            out->clear();
             float tlen = min(t2 - t1, theta0_ + theta_ - t1);
             if (tlen > 0.f) {
                 out->emplace_back(
                         new ArcRegion(dart(), AdjustAngle_(t1), tlen));
             }
         } else {
+            float t3 = theta0_ + theta_;
+            if (t3 <= t1) {
+                return false;
+            }
+            out->clear();
             if (t1 != theta0_) {
                 out->emplace_back(new ArcRegion(dart(), theta0_, t1 - theta0_));
             }
-            float t3 = theta0_ + theta_;
             if (t2 < t3) {
                 out->emplace_back(
                         new ArcRegion(dart(), AdjustAngle_(t2), t3 - t2));
             }
         }
+        return true;
     }
 
     static float AdjustAngle_(float angle) {
@@ -248,9 +254,7 @@ public:
 class BasicDartsNet : public IDartsNet {
 public:
     BasicDartsNet(float d1, float d2) :
-            max_dist_(d1 - 1.f + d2), d1_(d1 * d1), d2_(d2 * d2) {
-        max_dist_ *= max_dist_;
-    }
+            max_dist_(d2 * d2 * 4), d1_(d1 * d1), d2_(d2 * d2) {}
 
     Dart* WrapDart(const Dart &dart) const { return new Node_(dart); }
 
@@ -275,7 +279,8 @@ public:
                     vector<Dart*> *out) const {
         Node_* node = dynamic_cast<Node_*>(master);
         size_t ret = 1;
-        out->resize(1, master);
+        out->resize(1);
+        out->at(0) = master;
         for (Node_* nei : node->neighbors) {
             float l2 = (nei->position - position).LengthSquared();
             if (l2 > d2_) {
@@ -308,27 +313,6 @@ public:
         for (Node_ *node : nodes) {
             TryConnect_(node, n);
         }
-    }
-
-    void Dump(Dart* master) {
-        unordered_set<Node_*> removed_nodes;
-        queue<Node_*> qu;
-        qu.push(dynamic_cast<Node_*>(master));
-        printf("%.0f < %.0f < %.0f\n", sqrtf(d1_), sqrtf(d2_), sqrtf(max_dist_));
-        while (!qu.empty()) {
-            Node_* node = qu.front();
-            qu.pop();
-            if (removed_nodes.count(node) == 0) {
-                printf("(%2.0f, %2.0f) === ", node->position.x, node->position.y);
-                for (Node_* nei : node->neighbors) {
-                    qu.push(nei);
-                    printf("(%2.0f, %2.0f) ", nei->position.x, nei->position.y);
-                }
-                printf("\n");
-                removed_nodes.insert(node);
-            }
-        }
-        printf("\n");
     }
 
 private:
@@ -365,53 +349,37 @@ public:
             size_(size),
             region_factory_(region_factory),
             region_selector_(region_selector_factory->CreateRegionSelector()),
-            darts_net_(new BasicDartsNet(1.f, r_ratio_)) {
+            darts_net_(new BasicDartsNet(r_ratio_ + 1.f, r_ratio_ * 2)),
+            EclipseAndAddNewRegions_(this),
+            EclipseOldRegions_(this) {
         Assert(size > 1.f);
         Assert(1.f <= r_ratio_ && r_ratio_ <= 2.f);
     }
 
     vector<Point2D> Sample() {
+        Dart *old_dart;
+        Dart *new_dart;
+        vector<Dart*> neighbors;
+
         vector<Point2D> ret;
 
-        Dart* root = darts_net_->WrapDart(
-                Dart(Point2D(rng.RandomFloat(), rng.RandomFloat())));
-        for (IRegion* reg : region_factory_->CreateRegions(root)) {
-            AddRegion_(reg);
-        }
+        Dart* root = SampleFirstPoint_();
+        ret.emplace_back(root->position);
 
-        vector<Dart*> neighbors;
-        vector<IRegion*> regs;
         while (!regions_.empty()) {
-            IRegion* reg = region_selector_->Select(rng);
-            Point2D p(reg->SelectPoint(rng));
-            size_t nct = darts_net_->GetNears(reg->dart(), p, &neighbors);
-            for (size_t i = 0; i < nct; ++i) {
-                for (IRegion* nreg : neighbors[i]->regions) {
-                    if (nreg->Eclipse(Circle(p, 1.f), &regs)) {
-                        for (IRegion* new_reg : regs) {
-                            AddRegion_(new_reg);
-                        }
-                        RemoveRegion_(nreg);
-                    }
-                }
-            }
-            Dart* new_dart = darts_net_->WrapDart(Dart(p));
-            for (IRegion* tmp : region_factory_->CreateRegions(new_dart)) {
-                for (Dart* neighbor : neighbors) {
-                    Circle c(neighbor->position, 2.f);
-                    if (tmp->Eclipse(c, &regs)) {
-                        for (IRegion* new_reg : regs) {
-                            AddRegion_(new_reg);
-                        }
-                        RemoveRegion_(tmp);
-                    } else {
-                        AddRegion_(tmp);
-                    }
-                }
-            }
-            darts_net_->AddNeighbor(reg->dart(), new_dart);
+            ThrowDart_(&old_dart, &new_dart);
+            ret.emplace_back(new_dart->position);
 
-            ret.emplace_back(p);
+            size_t nct = darts_net_->GetNears(
+                    old_dart, new_dart->position, &neighbors);
+
+            EclipseAndAddNewRegions_(
+                    region_factory_->CreateRegions(new_dart), neighbors);
+
+            neighbors.resize(nct);
+            EclipseOldRegions_(new_dart->position, neighbors);
+
+            darts_net_->AddNeighbor(old_dart, new_dart);
         }
 
         darts_net_->DestroyAll(root);
@@ -420,6 +388,90 @@ public:
     }
 
 private:
+    Dart* SampleFirstPoint_() {
+        Dart* d = darts_net_->WrapDart(
+                Dart(Point2D(rng.RandomFloat(), rng.RandomFloat())));
+        for (IRegion* reg : region_factory_->CreateRegions(d)) {
+            AddRegion_(reg);
+        }
+        return d;
+    }
+
+    void ThrowDart_(Dart **old_dart, Dart **new_dart) {
+        IRegion* reg = region_selector_->Select(rng);
+        *old_dart = reg->dart();
+        *new_dart = darts_net_->WrapDart(Dart(reg->SelectPoint(rng)));
+    }
+
+    class EclipseAndAddNewRegionsHandler_ {
+    public:
+        EclipseAndAddNewRegionsHandler_(PreSampler *pre_sampler) :
+                pre_sampler_(pre_sampler) {}
+
+        void operator()(const vector<IRegion*> &regs,
+                        const vector<Dart*> &neighbors) {
+            size_t ct = 0;
+            for (IRegion *reg : regs) {
+                buf1_.resize(1);
+                buf1_[0] = reg;
+                for (Dart *neighbor : neighbors) {
+                    buf2_.clear();
+                    Circle c(neighbor->position, pre_sampler_->r_ratio_);
+                    for (IRegion *r : buf1_) {
+                        if (r->Eclipse(c, &buf_e_)) {
+                            for (IRegion *new_reg : buf_e_) {
+                                buf2_.emplace_back(new_reg);
+                            }
+                            delete r;
+                        } else {
+                            buf2_.emplace_back(r);
+                        }
+                    }
+                    swap(buf1_, buf2_);
+                }
+                for (IRegion *new_reg : buf1_) {
+                    pre_sampler_->AddRegion_(new_reg);
+                }
+                ct += buf1_.size();
+            }
+        }
+
+    private:
+        PreSampler* pre_sampler_;
+
+        vector<IRegion*> buf_e_;
+        vector<IRegion*> buf1_;
+        vector<IRegion*> buf2_;
+    };
+
+    class EclipseOldRegionsHandler_ {
+    public:
+        EclipseOldRegionsHandler_(PreSampler* pre_sampler) :
+                pre_sampler_(pre_sampler) {}
+
+        void operator()(const Point2D &p, const vector<Dart*> &neighbors) {
+            unordered_set<IRegion*> regions_to_be_removed;
+            for (Dart *neighbor : neighbors) {
+                for (IRegion *old_reg : neighbor->regions) {
+                    if (old_reg->Eclipse(Circle(p, 1.f), &buf_)) {
+                        for (IRegion *new_reg : buf_) {
+                            pre_sampler_->AddRegion_(new_reg);
+                        }
+                        regions_to_be_removed.insert(old_reg);
+                    }
+                }
+            }
+            for (IRegion* reg : regions_to_be_removed) {
+                pre_sampler_->RemoveRegion_(reg);
+            }
+        }
+
+    private:
+        PreSampler* pre_sampler_;
+
+        vector<IRegion*> buf_;
+    };
+
     void AddRegion_(IRegion* reg) {
         reg->dart()->regions.insert(reg);
         regions_.insert(reg);
@@ -437,6 +489,9 @@ private:
     RegionFactory *region_factory_;
     IRegionSelector *region_selector_;
     IDartsNet *darts_net_;
+
+    EclipseAndAddNewRegionsHandler_ EclipseAndAddNewRegions_;
+    EclipseOldRegionsHandler_ EclipseOldRegions_;
 
     unordered_set<IRegion*> regions_;
     RNG rng;
@@ -708,10 +763,9 @@ Sampler *CreateScallopedSampler(
             RegionSelectorFactory::CreateRegionSelectorFactory(weighted);
     Assert(region_selector_factory != NULL);
 
-    PreSampler pre_sampler(
-            r_ratio, size, region_factory, region_selector_factory);
-
-    vector<Point2D> points = pre_sampler.Sample();
+    vector<Point2D> points(
+            PreSampler(r_ratio, size,
+                       region_factory, region_selector_factory).Sample());
 
     delete region_factory;
     delete region_selector_factory;

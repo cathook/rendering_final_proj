@@ -44,6 +44,7 @@ public:
 protected:
     IRegion(Dart *dart) : dart_(dart) {}
 
+private:
     Dart *dart_;
 };
 

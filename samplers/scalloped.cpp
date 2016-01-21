@@ -139,18 +139,19 @@ public:
     }
 };
 
+
 class ScallopeRegion : public IRegion {
 public:
-    ScallopeRegion(Dart *dart, float theta0, float theta, 
+    ScallopeRegion(Dart *dart, float theta0, float theta,
             Circle nearC, float nearCt0, float nearCt,
             Circle farC, float farCt0, float farCt) :
-            IRegion(dart), theta0_(theta0), theta_(theta), 
+            IRegion(dart), theta0_(theta0), theta_(theta),
             nearC_(nearC), nearCt0_(nearCt0), nearCt_(nearCt),
             farC_(farC), farCt0_(farCt0), farCt_(farCt) {
-                center_ = dart->position;
-            }
+        center_ = dart->position;
+    }
 
-    float area() const{
+    float area() const {
         float nearT0 = Vector2D(nearC_.center - center_).getAngle();
         float farT0 = Vector2D(farC_.center - center_).getAngle();
         float farK = isFar(farT0, farCt0_ + 0.5f * farCt_)? 1 : -1;
@@ -161,14 +162,14 @@ public:
                 + getIntegral_(nearC_, theta0_, nearK));
     }
 
-    bool Eclipse(const Circle &circle, vector<IRegion*> *out) const{
+    bool Eclipse(const Circle &circle, vector<IRegion*> *out) const {
 
         /*** Insert possible new boundary of scallopes in radius ***/
         //TODO Think about angle comparisons
         vector<float> angles;
         Vector2D oc(circle.center - center_);
         angles.push_back(theta0_), angles.push_back(theta0_ + theta_);
-        
+
         float angd = asin(circle.radius / oc.Length());
         float ang = oc.getAngle();
         angles.push_back(ang + angd), angles.push_back(ang - angd);
@@ -209,14 +210,14 @@ public:
             float tmp = 0.5f * (angles[i-1] + angles[i]);
             Line2D l(center_, Vector2D(cos(tmp), sin(tmp)));
             float near, far, nearS, farS;
-            
+
             if (circle.Intersect(l, near, far)) {
 
                 float cNearT1, cNearT0, cFarT1, cFarT0;
                 Assert(circle.Intersect(l0, cNearT0, cFarT0));
                 Assert(circle.Intersect(l1, cNearT1, cFarT1));
                 nearC_.Intersect(l, nearCt0_, nearCt_, nearS);
-                
+
                 farC_.Intersect(l, farCt0_, farCt_, farS);
                 if (near >= farS or far <= nearS)
                     tmpSc.push_back( ScallopeRegion(dart(), angles[i-1], angles[i] - angles[i-1],
@@ -265,11 +266,11 @@ public:
 
     Point2D SelectPoint(const RNG &rng) const{
         float theta = theta0_ + rng.RandomFloat() * theta_;
-        float nearT0 = Vector2D(nearC_.center - center_).getAngle(), 
+        float nearT0 = Vector2D(nearC_.center - center_).getAngle(),
                 farT0 = Vector2D(farC_.center - center_).getAngle();
-        float g = getArcDis_(nearC_, theta, 
+        float g = getArcDis_(nearC_, theta,
                 isFar(nearT0, nearCt0_ + 0.5f * nearCt_)? 1.f : -1.f),
-              h = getArcDis_(farC_, theta, 
+              h = getArcDis_(farC_, theta,
                 isFar(farT0, farCt0_ + 0.5f * farCt_)? 1.f : -1.f),
               r = sqrt(g*g + (h*h - g*g) * rng.RandomFloat());
         return center_ + Vector2D(cos(theta), sin(theta)) * r;
@@ -288,7 +289,7 @@ private:
         float sinB = asin(sinA * d / c.radius);
         float r2 = c.radius * c.radius;
 
-        return r2 * (alpha - gama) + k * r2 * sinB 
+        return r2 * (alpha - gama) + k * r2 * sinB
                 + k * d * c.radius * cos(sinB) * sinA
                 + d2 * cos(alpha - gama) * sinA;
 
@@ -299,7 +300,7 @@ private:
         float gama = atan2(oc.y, oc.x);
         float sinA = sin(alpha - gama);
 
-        return sqrt(d2) * cos(alpha - gama) 
+        return sqrt(d2) * cos(alpha - gama)
                 + k * sqrt(c.radius * c.radius - d2 * sinA * sinA);
     }
 };
@@ -308,11 +309,13 @@ private:
 class ScallopeRegionFactory : public RegionFactory {
 public:
     ScallopeRegionFactory(float r_ratio) : r_ratio_(r_ratio) {}
+
     vector<IRegion*> CreateRegions(Dart *dart) const {
         return vector<IRegion*>(1, new ScallopeRegion(dart, 0, 2.f * M_PI,
                 Circle(dart->position, 1.f), 0, 2.f * M_PI,
                 Circle(dart->position, r_ratio_), 0, 2.f * M_PI));
     }
+
 private:
     float r_ratio_;
 };
@@ -868,6 +871,7 @@ private:
     TreeStyleArray2D *table_;
 };
 
+
 class TableSquareSampler : public ISquareSampler {
 public:
     TableSquareSampler(float size, const vector<Point2D> &points) :
@@ -1044,6 +1048,7 @@ private:
     mutable unordered_map<size_t, float> xy_max_;
 };
 
+
 class ScallopedSampler : public Sampler {
 public:
     ScallopedSampler(int x_start, int x_end, int y_start, int y_end,
@@ -1159,6 +1164,7 @@ RegionSelectorFactory* RegionSelectorFactory::CreateRegionSelectorFactory(
     return NULL;
 }
 
+
 void Scalloped_Test() {
     Dart dart(Point2D(0, 0));
     Circle nearC(Point2D(0, 0), 1);
@@ -1177,8 +1183,6 @@ Sampler *CreateScallopedSampler(
     float r_ratio = params.FindOneFloat("rratio", 1.f);
     float size = params.FindOneFloat("size", 1000.f);
     bool weighted = params.FindOneBool("weighted", false);
-
-//    Scalloped_Test();
 
     RegionFactory *region_factory = RegionFactory::CreateRegionFactory(r_ratio);
     Assert(region_factory != NULL);

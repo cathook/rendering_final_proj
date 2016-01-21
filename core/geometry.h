@@ -306,6 +306,12 @@ public:
         return operator*=(1.f / f);
     }
 
+    float getAngle() {
+        float a = atan2(y, x);
+        if (a < 0.f) a += 2 * M_PI;
+        return a;
+    }
+
     Vector2D operator-() const { return Vector2D(-x, -y); }
 
     Vector2D operator~() const { return Vector2D(-y, x); }
@@ -402,6 +408,8 @@ public:
 
 inline Vector2D::Vector2D(const Point2D &p) : Vector2D(p.x, p.y) {}
 
+inline Vector2D Normalize(const Vector2D &v);
+
 
 class Line2D {
 public:
@@ -423,6 +431,46 @@ public:
 
     Point2D center;
     float radius;
+
+    bool Intersect(const Line2D &l, float &t0, float &t1) const{
+        Vector2D lc = Vector2D(center - l.p0);
+        float A = l.v.Dot(l.v);
+        float B = l.v.Cross(lc);
+        float C = lc.Dot(lc);
+        if (!Quadratic(A, B, C, &t0, &t1))
+            return false;
+        return true; 
+    }
+
+    bool Intersect(const Line2D &l, float t0, float t1, float &t) const{
+        float tt0, tt1;
+        if (Intersect(l, tt0, tt1)) {
+            Point2D p0 = l.p0 + l.v * tt0, p1 = l.p0 + l.v * tt1;
+            t = Vector2D(p0 - center).getAngle();
+            if (t >= t0 and t <= t0 + t1) return true;
+            t = Vector2D(p1 - center).getAngle();
+            if (t >= t0 and t <= t0 + t1) return true;
+            return false;
+        }
+        return false;
+    }
+
+    bool Intersect(const Circle &c, Point2D &p0, Point2D &p1) const{
+        float d = Vector2D(c.center - center).Length();
+        if (radius + c.radius > d)
+            return false;
+        float delta = acos(0.5f * (d * d + radius * radius - c.radius * c.radius)
+                / d / radius),
+              theta = Vector2D(c.center-center).getAngle();
+        p0 = center + Normalize(Vector2D(cos(theta + delta), sin(theta + delta))) * radius;
+        p1 = center + Normalize(Vector2D(cos(theta - delta), sin(theta - delta))) * radius;
+        
+        return true;
+    }
+
+    bool operator == (const Circle &c) const {
+        return c.center == center and c.radius == radius;
+    }
 };
 
 
@@ -690,6 +738,15 @@ inline Vector::Vector(const Point &p)
 inline Vector operator*(float f, const Vector &v) { return v*f; }
 
 inline Vector2D operator*(float f, const Vector2D &v) { return v * f; }
+
+inline bool isUpper(float a) {
+    // This is GARBAGe
+    float PI2 = 2 * M_PI;
+    while (a > PI2) a -= PI2;
+    while (a < 0) a += PI2;
+    if (a <= M_PI) return true;
+    return false;
+}
 
 inline float Dot(const Vector &v1, const Vector &v2) {
     Assert(!v1.HasNaNs() && !v2.HasNaNs());

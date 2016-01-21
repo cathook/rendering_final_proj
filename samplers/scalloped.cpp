@@ -147,12 +147,10 @@ public:
             IRegion(dart), theta0_(theta0), theta_(theta), 
             nearC_(nearC), nearCt0_(nearCt0), nearCt_(nearCt),
             farC_(farC), farCt0_(farCt0), farCt_(farCt) {
-                printf("c ");
                 center_ = dart->position;
             }
 
     float area() const{
-        printf("area ");
         float nearT0 = Vector2D(nearC_.center - center_).getAngle();
         float farT0 = Vector2D(farC_.center - center_).getAngle();
         float farK = isFar(farT0, farCt0_ + 0.5f * farCt_)? 1 : -1;
@@ -164,7 +162,6 @@ public:
     }
 
     bool Eclipse(const Circle &circle, vector<IRegion*> *out) const{
-        printf("Eclipse ");
 
         /*** Insert possible new boundary of scallopes in radius ***/
         //TODO Think about angle comparisons
@@ -198,7 +195,6 @@ public:
         out->clear();
         vector<ScallopeRegion> tmpSc;
 
-        printf("s ");
         /*** Split Scallope ***/
         for (int i = 1; i < angles.size(); i++) {
 
@@ -239,7 +235,6 @@ public:
             }
         }
 
-        printf("m ");
         /*** Merge Scallope ***/
         int cur = 0;
         out->emplace_back(new ScallopeRegion(tmpSc[0]));
@@ -259,7 +254,6 @@ public:
     }
 
     bool Eclipse(const Line2D &line, vector<IRegion*> *out) const{
-        printf("e2 ");
         float tmp;
         if (nearC_.Intersect(line, nearCt0_, nearCt_, tmp) or
             farC_.Intersect(line, farCt0_, farCt_, tmp)) {
@@ -270,7 +264,6 @@ public:
     }
 
     Point2D SelectPoint(const RNG &rng) const{
-        printf("se ");
         float theta = theta0_ + rng.RandomFloat() * theta_;
         float nearT0 = Vector2D(nearC_.center - center_).getAngle(), 
                 farT0 = Vector2D(farC_.center - center_).getAngle();
@@ -314,12 +307,14 @@ private:
 
 class ScallopeRegionFactory : public RegionFactory {
 public:
+    ScallopeRegionFactory(float r_ratio) : r_ratio_(r_ratio) {}
     vector<IRegion*> CreateRegions(Dart *dart) const {
-        printf("1 ");
         return vector<IRegion*>(1, new ScallopeRegion(dart, 0, 2.f * M_PI,
                 Circle(dart->position, 1.f), 0, 2.f * M_PI,
-                Circle(dart->position, 2.f), 0, 2.f * M_PI));
+                Circle(dart->position, r_ratio_), 0, 2.f * M_PI));
     }
+private:
+    float r_ratio_;
 };
 
 
@@ -1183,39 +1178,30 @@ Sampler *CreateScallopedSampler(
     float size = params.FindOneFloat("size", 1000.f);
     bool weighted = params.FindOneBool("weighted", false);
 
-    printf("Create\n");
 //    Scalloped_Test();
 
-    printf("%f\n", r_ratio);
     RegionFactory *region_factory = RegionFactory::CreateRegionFactory(r_ratio);
     Assert(region_factory != NULL);
 
-    printf("A");
     RegionSelectorFactory *region_selector_factory =
             RegionSelectorFactory::CreateRegionSelectorFactory(weighted);
     Assert(region_selector_factory != NULL);
 
-    printf("B");
     vector<Point2D> points(
             PreSampler(r_ratio, size,
                        region_factory, region_selector_factory).Sample());
 
-    printf("C");
     delete region_factory;
     delete region_selector_factory;
 
-    printf("D");
     int xstart, xend, ystart, yend;
     film->GetSampleExtent(&xstart, &xend, &ystart, &yend);
 
-    printf("E");
     int pixel_samples = params.FindOneInt("pixelsamples", 1);
 
-    printf("F");
     std::shared_ptr<const ISquareSampler> square_sampler(
             new TreeStyleArraySquareSampler(size, points));
 
-    printf("G");
     return new ScallopedSampler(xstart, xend, ystart, yend,
                                 pixel_samples,
                                 camera->shutterOpen, camera->shutterClose,

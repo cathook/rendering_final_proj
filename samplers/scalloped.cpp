@@ -588,7 +588,18 @@ public:
 
         darts_net_->DestroyAll(root);
 
+        for (int i = 0; i < int(ret.size()); ++i) {
+            if (ret[i].x < 0 || size_ < ret[i].x ||
+                ret[i].y < 0 || size_ < ret[i].y) {
+                swap(ret[i], ret.back());
+                ret.pop_back();
+                --i;
+            }
+        }
+
         progress_reporter.Done();
+        printf("Sampled %lu points in %.0fx%.0f canvas\n",
+               ret.size(), size_, size_);
 
         return ret;
     }
@@ -849,6 +860,183 @@ private:
     vector<vector<size_t>> xys_;
     mutable unordered_map<size_t, float> xy_max_;
     TreeStyleArray2D *table_;
+};
+
+
+class TableSquareSampler : public ISquareSampler {
+public:
+    TableSquareSampler(float size, const vector<Point2D> &points) :
+            size_(size),
+            index_max_(size),
+            table_((index_max_ + 1) * (index_max_ + 1)),
+            count_((index_max_ + 1) * (index_max_ + 1), 0) {
+        for (const Point2D &p : points) {
+            size_t index = PackIndexes_(p.x, p.y);
+            table_[index].emplace_back(p);
+            count_[index] += 1;
+        }
+        for (size_t i = 1; i <= index_max_; ++i) {
+            count_[PackIndexes_(i, 0)] += count_[PackIndexes_(i - 1, 0)];
+            count_[PackIndexes_(0, i)] += count_[PackIndexes_(0, i - 1)];
+        }
+        for (size_t i = 1; i <= index_max_; ++i) {
+            for (size_t j = 1; j <= index_max_; ++j) {
+                count_[PackIndexes_(i, j)] += count_[PackIndexes_(i - 1, j)];
+                count_[PackIndexes_(i, j)] += count_[PackIndexes_(i, j - 1)];
+                count_[PackIndexes_(i, j)] -=
+                        count_[PackIndexes_(i - 1, j - 1)];
+            }
+        }
+    }
+
+    void Sample(size_t num_samples, RNG &rng, vector<Point2D> *out) const {
+        Assert(num_samples > 0);
+
+        auto it = xy_max_.insert(pair<size_t, float>(num_samples, size_)).first;
+        while (true) {
+            // Anchors the bottom-left point and its xy indexes.
+            Point2D p0(rng.RandomFloat() * it->second,
+                       rng.RandomFloat() * it->second);
+            size_t ix0 = p0.x;
+            size_t iy0 = p0.y;
+
+            float sm = min(size_ - p0.x, size_ - p0.y);
+            if (GetNumPoints_(ix0, size_t(p0.x + sm), iy0, size_t(p0.y + sm),
+                              p0, p0 + Vector2D(sm, sm)) >= num_samples) {
+                for (size_t num_try = 0; num_try < 10; ++num_try) {
+                    // Binary searches the suitable square size.
+                    float lower = 0, upper = sm;
+                    upper *= 0.5f * (1.f + rng.RandomFloat());
+                    if (GetNumPoints_(ix0, size_t(p0.x + upper),
+                                      iy0, size_t(p0.y + upper),
+                                      p0, p0 + Vector2D(upper, upper))
+                        < num_samples) {
+                        sm = upper;
+                        continue;
+                    }
+                    for (int i = 0; i < 30; ++i) {
+                        // Anchors the top-right xy indexes.
+                        float mid = (lower + upper) * 0.5;
+
+                        Point2D p1(p0 + Vector2D(mid, mid));
+                        size_t ix1 = p1.x;
+                        size_t iy1 = p1.y;
+
+                        size_t n = GetNumPoints_(ix0, ix1, iy0, iy1, p0, p1);
+
+                        // Updates.
+                        if (n < num_samples) {
+                            lower = mid;
+                        } else if (n > num_samples) {
+                            upper = mid;
+                        } else {
+                            // A solution is found.
+                            SampleInSquare_(
+                                    ix0, ix1, iy0, iy1, p0, p1, mid, out);
+                            return;
+                        }
+                    }
+                }
+            }
+            it->second = min(p0.x, p0.y);
+        }
+    }
+
+private:
+    size_t GetNumPoints_(size_t ix0, size_t ix1, size_t iy0, size_t iy1,
+                         const Point2D &p0, const Point2D &p1) const {
+        size_t sum = (count_[PackIndexes_(ix1, iy1)]
+                      + count_[PackIndexes_(ix0, iy0)]
+                      - count_[PackIndexes_(ix1, iy0)]
+                      - count_[PackIndexes_(ix0, iy1)]);
+        for (size_t ix = ix0; ix <= ix1; ++ix) {
+            sum += GetNumPoints_(ix, iy0, p0, p1);
+        }
+        for (size_t iy = iy0 + 1; iy <= iy1; ++iy) {
+            sum += GetNumPoints_(ix0, iy, p0, p1);
+        }
+        if (iy0 < iy1) {
+            for (size_t ix = ix0 + 1; ix <= ix1; ++ix) {
+                sum += GetNumPoints_(ix, iy1, p0, p1);
+                sum -= table_[PackIndexes_(ix, iy1)].size();
+            }
+        }
+        if (ix0 < ix1) {
+            for (size_t iy = iy0 + 1; iy < iy1; ++iy) {
+                sum += GetNumPoints_(ix1, iy, p0, p1);
+                sum -= table_[PackIndexes_(ix1, iy)].size();
+            }
+        }
+        return sum;
+    }
+
+    size_t GetNumPoints_(size_t ix, size_t iy,
+                        const Point2D &p0, const Point2D &p1) const {
+        size_t ret = 0;
+        for (const Point2D &p : table_[PackIndexes_(ix, iy)]) {
+            if (IsInSquare_(p, p0, p1)) {
+                ret += 1;
+            }
+        }
+        return ret;
+    }
+
+    void SampleInSquare_(size_t ix0, size_t ix1, size_t iy0, size_t iy1,
+                         const Point2D &p0, const Point2D &p1, float size,
+                         vector<Point2D> *out) const {
+        out->clear();
+
+        for (size_t ix = ix0; ix <= ix1; ++ix) {
+            TrySampleInSquare_(ix, iy0, p0, p1, size, out);
+        }
+        for (size_t iy = iy0 + 1; iy <= iy1; ++iy) {
+            TrySampleInSquare_(ix0, iy, p0, p1, size, out);
+        }
+        if (iy0 < iy1) {
+            for (size_t ix = ix0 + 1; ix <= ix1; ++ix) {
+                TrySampleInSquare_(ix, iy1, p0, p1, size, out);
+            }
+        }
+        if (ix0 < ix1) {
+            for (size_t iy = iy0 + 1; iy < iy1; ++iy) {
+                TrySampleInSquare_(ix1, iy, p0, p1, size, out);
+            }
+        }
+        float inv_size = 1.f / size;
+        for (size_t ix = ix0 + 1; ix < ix1; ++ix) {
+            for (size_t iy = iy0 + 1; iy < iy1; ++iy) {
+                for (auto &p : table_[PackIndexes_(ix, iy)]) {
+                    out->emplace_back((p - p0) * inv_size);
+                }
+            }
+        }
+    }
+
+    void TrySampleInSquare_(size_t ix, size_t iy,
+                            const Point2D &p0, const Point2D &p1, float size,
+                            vector<Point2D> *out) const {
+        float inv_size = 1.f / size;
+        for (auto &p : table_[PackIndexes_(ix, iy)]) {
+            if (IsInSquare_(p, p0, p1)) {
+                out->emplace_back((p - p0) * inv_size);
+            }
+        }
+    }
+
+    static bool IsInSquare_(
+            const Point2D &p, const Point2D &p0, const Point2D &p1) {
+        return (p0.x <= p.x && p.x <= p1.x && p0.y <= p.y && p.y <= p1.y);
+    }
+
+    size_t PackIndexes_(size_t i, size_t j) const {
+        return i * (index_max_ + 1) + j;
+    }
+
+    float size_;
+    size_t index_max_;
+    vector<vector<Point2D>> table_;
+    vector<size_t> count_;
+    mutable unordered_map<size_t, float> xy_max_;
 };
 
 

@@ -739,13 +739,13 @@ inline Vector operator*(float f, const Vector &v) { return v*f; }
 
 inline Vector2D operator*(float f, const Vector2D &v) { return v * f; }
 
-inline bool isUpper(float a) {
-    // This is GARBAGe
+inline bool isFar(float gama, float alpha) {
     float PI2 = 2 * M_PI;
-    while (a > PI2) a -= PI2;
-    while (a < 0) a += PI2;
-    if (a <= M_PI) return true;
-    return false;
+    alpha -= 0.5f * M_PI - gama;
+    while (alpha < 0) alpha += PI2;
+    while (alpha >= PI2) alpha -= PI2; 
+    if (alpha <= M_PI) return true;
+    else return false;
 }
 
 inline float Dot(const Vector &v1, const Vector &v2) {

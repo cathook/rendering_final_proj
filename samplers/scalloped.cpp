@@ -299,11 +299,16 @@ private:
 
 class ScallopeRegionFactory : public RegionFactory {
 public:
+    ScallopeRegionFactory(float r_ratio) : r_ratio_(r_ratio) {}
+
     vector<IRegion*> CreateRegions(Dart *dart) const {
         return vector<IRegion*>(1, new ScallopeRegion(dart, 0, 2.f * M_PI,
                 Circle(dart->position, 1.f), 0, 2.f * M_PI,
-                Circle(dart->position, 2.f), 0, 2.f * M_PI));
+                Circle(dart->position, r_ratio_), 0, 2.f * M_PI));
     }
+
+private:
+    float r_ratio_;
 };
 
 
@@ -942,6 +947,9 @@ private:
 RegionFactory* RegionFactory::CreateRegionFactory(float r_ratio) {
     if (r_ratio == 1.f) {
         return new ArcRegionFactory();
+    }
+    if (1.f < r_ratio && r_ratio <= 2.f) {
+      return new ScallopeRegionFactory(r_ratio);
     }
     Assert(false);
     return NULL;

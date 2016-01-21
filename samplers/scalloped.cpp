@@ -146,12 +146,14 @@ public:
             Circle farC, float farCt0, float farCt) :
             IRegion(dart), theta0_(theta0), theta_(theta), 
             nearC_(nearC), nearCt0_(nearCt0), nearCt_(nearCt),
-            farC_(farC), farCt0_(farCt0), farCt_(farCt) {}
+            farC_(farC), farCt0_(farCt0), farCt_(farCt) {
+                center_ = dart->position;
+            }
 
     float area() const{
         //TODO fix isUpper it is the wrong one now SAD
-        float nearT0 = Vector2D(nearC_.center - center).getAngle();
-        float farT0 = Vector2D(farC_.center - center).getAngle();
+        float nearT0 = Vector2D(nearC_.center - center_).getAngle();
+        float farT0 = Vector2D(farC_.center - center_).getAngle();
         return 0.5f * (getIntegral_(farC_, theta0_ + theta_, isUpper(theta0_ + theta_ - farT0))
                 - getIntegral_(farC_, theta0_, isUpper(theta0_ - farT0))
                 - getIntegral_(nearC_, theta0_ + theta_, isUpper(theta0_ + theta_ - nearT0))
@@ -163,7 +165,7 @@ public:
         /*** Insert possible new boundary of scallopes in radius ***/
         //TODO Think about angle comparisons
         vector<float> angles;
-        Vector2D oc(circle.center - center);
+        Vector2D oc(circle.center - center_);
         angles.push_back(theta0_), angles.push_back(theta0_ + theta_);
         
         float angd = asin(circle.radius / oc.Length());
@@ -175,12 +177,12 @@ public:
 
         Point2D tmp0, tmp1;
         if (circle.Intersect(nearC_, tmp0, tmp1)) {
-            angles.push_back(Vector2D(tmp0 - center).getAngle());
-            angles.push_back(Vector2D(tmp1 - center).getAngle());
+            angles.push_back(Vector2D(tmp0 - center_).getAngle());
+            angles.push_back(Vector2D(tmp1 - center_).getAngle());
         }
         if (circle.Intersect(farC_, tmp0, tmp1)) {
-            angles.push_back(Vector2D(tmp0 - center).getAngle());
-            angles.push_back(Vector2D(tmp1 - center).getAngle());
+            angles.push_back(Vector2D(tmp0 - center_).getAngle());
+            angles.push_back(Vector2D(tmp1 - center_).getAngle());
         }
 
         sort(angles.begin(), angles.end());
@@ -196,15 +198,15 @@ public:
         for (int i = 1; i < angles.size(); i++) {
 
             float nearT1, nearT0, farT1, farT0;
-            Line2D l0(center, Vector2D(cos(angles[i-1]), sin(angles[i-1]))),
-                    l1(center, Vector2D(cos(angles[i]), sin(angles[i])));
+            Line2D l0(center_, Vector2D(cos(angles[i-1]), sin(angles[i-1]))),
+                    l1(center_, Vector2D(cos(angles[i]), sin(angles[i])));
             nearC_.Intersect(l0, nearCt0_, nearCt_, nearT0);
             nearC_.Intersect(l1, nearCt0_, nearCt_, nearT1);
             farC_.Intersect(l0, farCt0_, farCt_, farT0);
             farC_.Intersect(l1, farCt0_, farCt_, farT1);
 
             float tmp = 0.5f * (angles[i-1] + angles[i]);
-            Line2D l(center, Vector2D(cos(tmp), sin(tmp)));
+            Line2D l(center_, Vector2D(cos(tmp), sin(tmp)));
             float near, far, nearS, farS;
             
             if (circle.Intersect(l, near, far)) {
@@ -257,21 +259,21 @@ public:
     Point2D SelectPoint(const RNG &rng) const{
         //TODO fix isUpper, it is wrong I guess
         float theta = theta0_ + rng.RandomFloat() * theta_;
-        float nearT0 = Vector2D(nearC_.center - center).getAngle(), 
-                farT0 = Vector2D(farC_.center - center).getAngle();
+        float nearT0 = Vector2D(nearC_.center - center_).getAngle(), 
+                farT0 = Vector2D(farC_.center - center_).getAngle();
         float g = getArcDis_(nearC_, theta, isUpper(theta - nearT0)? 1.f : -1.f),
               h = getArcDis_(farC_, theta, isUpper(theta - farT0)? 1.f : -1.f),
               r = sqrt(g*g + (h*h - g*g) * rng.RandomFloat());
-        return center + Vector2D(cos(theta), sin(theta)) * r;
+        return center_ + Vector2D(cos(theta), sin(theta)) * r;
     }
+
+private:
+    Point2D center_;
     float theta0_, theta_;
     Circle nearC_, farC_;
     float farCt0_, farCt_, nearCt0_, nearCt_;
-
-private:
-    Point2D center;
     float getIntegral_(const Circle &c, float alpha, float k) const {
-        Vector2D oc(c.center - center);
+        Vector2D oc(c.center - center_);
         float d2 = oc.LengthSquared(), d = sqrt(d2);
         float gama = atan2(oc.y, oc.x);
         float sinA = sin(alpha - gama);
@@ -284,7 +286,7 @@ private:
 
     }
     float getArcDis_(const Circle &c, float alpha, float k) const{
-        Vector2D oc(c.center - center);
+        Vector2D oc(c.center - center_);
         float d2 = oc.LengthSquared(), d = sqrt(d2);
         float gama = atan2(oc.y, oc.x);
         float sinA = sin(alpha - gama);
@@ -292,7 +294,6 @@ private:
         return sqrt(d2) * cos(alpha - gama) 
                 + k * sqrt(c.radius * c.radius - d2 * sinA * sinA);
     }
-    //center is center
 };
 
 

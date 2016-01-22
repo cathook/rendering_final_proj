@@ -148,8 +148,8 @@ public:
             IRegion(dart), theta0_(theta0), theta_(theta),
             nearC_(nearC), nearCt0_(nearCt0), nearCt_(nearCt),
             farC_(farC), farCt0_(farCt0), farCt_(farCt) {
-        center_ = dart->position;
-    }
+            center_ = dart->position;
+        }
 
     float area() const {
         float nearT0 = Vector2D(nearC_.center - center_).getAngle();
@@ -166,16 +166,16 @@ public:
 
         /*** Insert possible new boundary of scallopes in radius ***/
         //TODO Think about angle comparisons
+        printf("Ec\n");
         vector<float> angles;
         Vector2D oc(circle.center - center_);
         angles.push_back(theta0_), angles.push_back(theta0_ + theta_);
 
-        float angd = asin(circle.radius / oc.Length());
-        float ang = oc.getAngle();
-        angles.push_back(ang + angd), angles.push_back(ang - angd);
-
-        if (angles[2] >= angles[1] && angles[3] >= angles[1]) return false;
-        if (angles[2] <= angles[0] && angles[3] <= angles[0]) return false;
+        if (circle.radius < oc.Length()) {
+            float angd = asin(circle.radius / oc.Length());
+            float ang = oc.getAngle();
+            angles.push_back(ang + angd), angles.push_back(ang - angd);
+        }
 
         Point2D tmp0, tmp1;
         if (circle.Intersect(nearC_, tmp0, tmp1)) {
@@ -187,14 +187,17 @@ public:
             angles.push_back(Vector2D(tmp1 - center_).getAngle());
         }
 
+        for (int i = 0; i < angles.size(); i++) printf("%f ", angles[i]); printf("\n");
         sort(angles.begin(), angles.end());
         for (int i = 0; i < angles.size(); i++) {
             while (i < angles.size() and (angles[i] < theta0_ or angles[i] > theta0_ + theta_))
                 angles.erase(angles.begin() + i);
         }
+        for (int i = 0; i < angles.size(); i++) printf("%f ", angles[i]); printf("\n");
 
         out->clear();
         vector<ScallopeRegion> tmpSc;
+        if (angles.size() <= 2) return false;
 
         /*** Split Scallope ***/
         for (int i = 1; i < angles.size(); i++) {
@@ -217,8 +220,9 @@ public:
                 Assert(circle.Intersect(l0, cNearT0, cFarT0));
                 Assert(circle.Intersect(l1, cNearT1, cFarT1));
                 nearC_.Intersect(l, nearCt0_, nearCt_, nearS);
-
                 farC_.Intersect(l, farCt0_, farCt_, farS);
+                printf("near %f %f circle %f %f\n", nearS, farS, near, far);
+                
                 if (near >= farS or far <= nearS)
                     tmpSc.push_back( ScallopeRegion(dart(), angles[i-1], angles[i] - angles[i-1],
                             nearC_, nearT0, nearT1 - nearT0, farC_, farT0, farT1 - farT0));
@@ -234,6 +238,13 @@ public:
                         nearC_, nearT0, nearT1 - nearT0,
                         farC_, farT0, farT1 - farT0));
             }
+        }
+        printf("done split %d\n", tmpSc.size());
+        for (int i = 0; i < tmpSc.size(); i++) {
+            printf("near %f %f r %f nearT %f, nearT %f\n", tmpSc[i].nearC_.center.x, tmpSc[i].nearC_.center.y, tmpSc[i].nearC_.radius, tmpSc[i].nearCt0_, tmpSc[i].nearCt_);
+            printf("far %f %f r %f farT %f, farT %f\n", tmpSc[i].farC_.center.x, tmpSc[i].farC_.center.y, tmpSc[i].farC_.radius, tmpSc[i].farCt0_, tmpSc[i].farCt_);
+            printf("%f %f theta %f %f\n", tmpSc[i].center_.x, tmpSc[i].center_.y, tmpSc[i].theta0_, tmpSc[i].theta_);
+            printf("\n");
         }
 
         /*** Merge Scallope ***/
@@ -609,6 +620,7 @@ public:
         progress_reporter.Done();
         printf("Sampled %lu points in %.0fx%.0f canvas\n",
                ret.size(), size_, size_);
+        fflush(stdout);
 
         return ret;
     }
@@ -1169,11 +1181,20 @@ void Scalloped_Test() {
     Dart dart(Point2D(0, 0));
     Circle nearC(Point2D(0, 0), 1);
     Circle farC(Point2D(0, 0), 2);
+    RNG rng;
+    vector<IRegion*> out;
+    
     ScallopeRegion sc(&dart, 0, M_PI * 0.5f,
         nearC, 0, M_PI * 0.5f,
         farC, 0, M_PI * 0.5f
     );
-    printf("%f\n", sc.area());
+
+    Point2D pt = sc.SelectPoint(rng);
+
+    bool cut = sc.Eclipse(Circle(pt, 1.f), &out);
+
+    printf("%f %f\n", pt.x, pt.y);
+    printf("%s %d\n", cut? "Yes" : "No", out.size());
     exit(1);
 }
 
@@ -1183,6 +1204,8 @@ Sampler *CreateScallopedSampler(
     float r_ratio = params.FindOneFloat("rratio", 1.f);
     float size = params.FindOneFloat("size", 1000.f);
     bool weighted = params.FindOneBool("weighted", false);
+
+    //Scalloped_Test();
 
     RegionFactory *region_factory = RegionFactory::CreateRegionFactory(r_ratio);
     Assert(region_factory != NULL);

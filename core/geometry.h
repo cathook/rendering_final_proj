@@ -433,10 +433,10 @@ public:
     float radius;
 
     bool Intersect(const Line2D &l, float &t0, float &t1) const{
-        Vector2D lc = Vector2D(center - l.p0);
+        Vector2D lc = Vector2D(l.p0 - center);
         float A = l.v.Dot(l.v);
-        float B = l.v.Cross(lc);
-        float C = lc.Dot(lc);
+        float B = 2 * l.v.Dot(lc);
+        float C = lc.Dot(lc) - radius * radius;
         if (!Quadratic(A, B, C, &t0, &t1))
             return false;
         return true; 
@@ -457,7 +457,7 @@ public:
 
     bool Intersect(const Circle &c, Point2D &p0, Point2D &p1) const{
         float d = Vector2D(c.center - center).Length();
-        if (radius + c.radius > d)
+        if (radius + c.radius < d or d + radius < c.radius or d + c.radius < radius)
             return false;
         float delta = acos(0.5f * (d * d + radius * radius - c.radius * c.radius)
                 / d / radius),

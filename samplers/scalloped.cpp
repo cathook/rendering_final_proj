@@ -213,6 +213,10 @@ public:
             float tmp = 0.5f * (angles[i-1] + angles[i]);
             Line2D l(center_, Vector2D(cos(tmp), sin(tmp)));
             float near, far, nearS, farS;
+            float angNearT0 = (l0.p0 + l0.v * nearT0 - nearC_.center).getAngle();
+            float angNearT = (l1.p0 + l1.v * nearT1 - nearC_.center).getAngle() - angNearT0;
+            float angFarT0 = (l0.p0 + l0.v * farT0 - farC_.center).getAngle();
+            float angFarT = (l1.p0 + l1.v * farT1 - farC_.center).getAngle() - angFarT0;
 
             if (circle.Intersect(l, near, far)) {
 
@@ -221,22 +225,27 @@ public:
                 Assert(circle.Intersect(l1, cNearT1, cFarT1));
                 nearC_.Intersect(l, nearCt0_, nearCt_, nearS);
                 farC_.Intersect(l, farCt0_, farCt_, farS);
+
+                float angCNearT0 = (l0.p0 + l0.v * cNearT0 - circle.center).getAngle();
+                float angCNearT = (l1.p0 + l1.v * cNearT1 - circle.center).getAngle() - angCNearT0;
+                float angCFarT0 = (l0.p0 + l0.v * cFarT0 - circle.center).getAngle();
+                float angCFarT = (l1.p0 + l1.v * cFarT1 - circle.center).getAngle() - angCFarT0;
 //                printf("near %f %f circle %f %f\n", nearS, farS, near, far);
                 
                 if (near >= farS or far <= nearS)
                     tmpSc.push_back( ScallopeRegion(dart(), angles[i-1], angles[i] - angles[i-1],
-                            nearC_, nearT0, nearT1 - nearT0, farC_, farT0, farT1 - farT0));
+                            nearC_, angNearT0, angNearT, farC_, angFarT0, angFarT));
                 if (near > nearS)
                     tmpSc.push_back( ScallopeRegion(dart(), angles[i-1], angles[i] - angles[i-1],
-                            nearC_, nearT0, nearT1 - nearT0, circle, cNearT0, cNearT1 - cNearT0));
+                            nearC_, angNearT0, angNearT, circle, angCNearT0, angCNearT));
                 if (far < farS)
                     tmpSc.push_back( ScallopeRegion(dart(), angles[i-1], angles[i] - angles[i-1],
-                            circle, cFarT0, cFarT1 - cFarT0, farC_, farT0, farT1 - farT0));
+                            circle, angCFarT0, angCFarT, farC_, angFarT0, angFarT));
 
             } else {
                 tmpSc.push_back( ScallopeRegion(dart(), angles[i-1], angles[i] - angles[i-1],
-                        nearC_, nearT0, nearT1 - nearT0,
-                        farC_, farT0, farT1 - farT0));
+                        nearC_, angNearT0, angNearT,
+                        farC_, angFarT0, angFarT));
             }
         }
 //        printf("done split %d\n", tmpSc.size());
@@ -251,8 +260,10 @@ public:
         out->clear();
         if (tmpSc.size() <= 0) return true;
         int cur = 0;
+        if (tmpSc[0].nearCt0_ > 1000 or tmpSc[0].nearCt_ > 1000 or tmpSc[0].farCt0_ > 1000 or tmpSc[0].farCt_ > 1000
+                or tmpSc[0].nearCt0_ < -1000 or tmpSc[0].nearCt_ <-1000 or tmpSc[0].farCt0_ < -1000 or tmpSc[0].farCt_ < -1000)
+                printf("GOD %f %f %f %f\n", tmpSc[0].nearCt0_, tmpSc[0].nearCt_, tmpSc[0].farCt0_, tmpSc[0].farCt_);
         out->emplace_back(new ScallopeRegion(tmpSc[0]));
-        tmpSc.push_back(tmpSc[0]);
         for (int i = 1; i < tmpSc.size(); i++) {
             if (tmpSc[i].nearC_ == tmpSc[cur].nearC_ and tmpSc[i].farC_ == tmpSc[cur].farC_) {
                 tmpSc[cur].theta_ += tmpSc[i].theta_;
@@ -263,7 +274,6 @@ public:
                 out->emplace_back(new ScallopeRegion(tmpSc[i]));
             }
         }
-
         return true;
     }
 
@@ -286,6 +296,8 @@ public:
               h = getArcDis_(farC_, theta,
                 isFar(farT0, farCt0_ + 0.5f * farCt_)? 1.f : -1.f),
               r = sqrt(g*g + (h*h - g*g) * rng.RandomFloat());
+        Point2D ret(center_ + Vector2D(cos(theta), sin(theta)) * r);
+        //printf("New Point at %f %f\n", ret.x, ret.y);
         return center_ + Vector2D(cos(theta), sin(theta)) * r;
     }
 

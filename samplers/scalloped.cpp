@@ -166,7 +166,7 @@ public:
 
         /*** Insert possible new boundary of scallopes in radius ***/
         //TODO Think about angle comparisons
-        printf("Ec\n");
+//        printf("Ec\n");
         vector<float> angles;
         Vector2D oc(circle.center - center_);
         angles.push_back(theta0_), angles.push_back(theta0_ + theta_);
@@ -187,13 +187,13 @@ public:
             angles.push_back(Vector2D(tmp1 - center_).getAngle());
         }
 
-        for (int i = 0; i < angles.size(); i++) printf("%f ", angles[i]); printf("\n");
+//        for (int i = 0; i < angles.size(); i++) printf("%f ", angles[i]); printf("\n");
         sort(angles.begin(), angles.end());
         for (int i = 0; i < angles.size(); i++) {
             while (i < angles.size() and (angles[i] < theta0_ or angles[i] > theta0_ + theta_))
                 angles.erase(angles.begin() + i);
         }
-        for (int i = 0; i < angles.size(); i++) printf("%f ", angles[i]); printf("\n");
+//        for (int i = 0; i < angles.size(); i++) printf("%f ", angles[i]); printf("\n");
 
         out->clear();
         vector<ScallopeRegion> tmpSc;
@@ -221,7 +221,7 @@ public:
                 Assert(circle.Intersect(l1, cNearT1, cFarT1));
                 nearC_.Intersect(l, nearCt0_, nearCt_, nearS);
                 farC_.Intersect(l, farCt0_, farCt_, farS);
-                printf("near %f %f circle %f %f\n", nearS, farS, near, far);
+//                printf("near %f %f circle %f %f\n", nearS, farS, near, far);
                 
                 if (near >= farS or far <= nearS)
                     tmpSc.push_back( ScallopeRegion(dart(), angles[i-1], angles[i] - angles[i-1],
@@ -239,15 +239,17 @@ public:
                         farC_, farT0, farT1 - farT0));
             }
         }
-        printf("done split %d\n", tmpSc.size());
-        for (int i = 0; i < tmpSc.size(); i++) {
-            printf("near %f %f r %f nearT %f, nearT %f\n", tmpSc[i].nearC_.center.x, tmpSc[i].nearC_.center.y, tmpSc[i].nearC_.radius, tmpSc[i].nearCt0_, tmpSc[i].nearCt_);
-            printf("far %f %f r %f farT %f, farT %f\n", tmpSc[i].farC_.center.x, tmpSc[i].farC_.center.y, tmpSc[i].farC_.radius, tmpSc[i].farCt0_, tmpSc[i].farCt_);
-            printf("%f %f theta %f %f\n", tmpSc[i].center_.x, tmpSc[i].center_.y, tmpSc[i].theta0_, tmpSc[i].theta_);
-            printf("\n");
-        }
+//        printf("done split %d\n", tmpSc.size());
+//        for (int i = 0; i < tmpSc.size(); i++) {
+//            printf("near %f %f r %f nearT %f, nearT %f\n", tmpSc[i].nearC_.center.x, tmpSc[i].nearC_.center.y, tmpSc[i].nearC_.radius, tmpSc[i].nearCt0_, tmpSc[i].nearCt_);
+//            printf("far %f %f r %f farT %f, farT %f\n", tmpSc[i].farC_.center.x, tmpSc[i].farC_.center.y, tmpSc[i].farC_.radius, tmpSc[i].farCt0_, tmpSc[i].farCt_);
+//            printf("%f %f theta %f %f\n", tmpSc[i].center_.x, tmpSc[i].center_.y, tmpSc[i].theta0_, tmpSc[i].theta_);
+//            printf("\n");
+//        }
 
         /*** Merge Scallope ***/
+        out->clear();
+        if (tmpSc.size() <= 0) return true;
         int cur = 0;
         out->emplace_back(new ScallopeRegion(tmpSc[0]));
         tmpSc.push_back(tmpSc[0]);

@@ -148,8 +148,8 @@ public:
             IRegion(dart), theta0_(theta0), theta_(theta),
             nearC_(nearC), nearCt0_(nearCt0), nearCt_(nearCt),
             farC_(farC), farCt0_(farCt0), farCt_(farCt) {
-            center_ = dart->position;
-        }
+        center_ = dart->position;
+    }
 
     float area() const {
         float nearT0 = Vector2D(nearC_.center - center_).getAngle();

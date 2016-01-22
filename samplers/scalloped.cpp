@@ -10,6 +10,7 @@
 #include <unordered_set>
 #include <utility>
 
+#include "imageio.h"
 #include "montecarlo.h"
 #include "progressreporter.h"
 #include "rng.h"
@@ -1164,6 +1165,35 @@ private:
 };
 
 
+class PointsOutputer {
+public:
+    PointsOutputer(const vector<string> &fnames, float scale) :
+            fnames_(fnames), scale_(scale) {}
+
+    void Output(float size, const vector<Point2D> &points) const {
+        size_t mx = size * scale_ + 0.5;
+        vector<float> pixels((mx + 1) * (mx + 1) * 3, 1.f);
+        for (const Point2D &p : points) {
+            size_t row = p.y * scale_ + 0.5;
+            size_t col = p.x * scale_ + 0.5;
+            for (size_t k = 0; k < 3; ++k) {
+                pixels[row * (mx + 1) * 3 + col * 3 + k] = 0.f;
+            }
+        }
+
+        for (const string &fname : fnames_) {
+            printf("Output points into \"%s\".\n", fname.c_str());
+            WriteImage(fname, &pixels[0], NULL,
+                       mx + 1, mx + 1, mx + 1, mx + 1, 0, 0);
+        }
+    }
+
+private:
+    vector<string> fnames_;
+    float scale_;
+};
+
+
 }  // namespace
 
 
@@ -1234,6 +1264,19 @@ Sampler *CreateScallopedSampler(
 
     delete region_factory;
     delete region_selector_factory;
+
+    vector<string> output;
+    {
+        int num_output = 0;
+        const string *tmp = params.FindString("output", &num_output);
+        output.resize(num_output);
+        for (int i = 0; i < num_output; ++i) {
+            output[i] = tmp[i];
+        }
+    }
+
+    float scale = params.FindOneFloat("outputscale", 1.f);
+    PointsOutputer(output, scale).Output(size, points);
 
     int xstart, xend, ystart, yend;
     film->GetSampleExtent(&xstart, &xend, &ystart, &yend);

@@ -236,10 +236,10 @@ public:
                 if (near >= farS or far <= nearS)
                     tmpSc.push_back( ScallopeRegion(dart(), angles[i-1], angles[i] - angles[i-1],
                             nearC_, angNearT0, angNearT, farC_, angFarT0, angFarT));
-                if (near > nearS)
+                if (near > nearS and near < farS)
                     tmpSc.push_back( ScallopeRegion(dart(), angles[i-1], angles[i] - angles[i-1],
                             nearC_, angNearT0, angNearT, circle, angCNearT0, angCNearT));
-                if (far < farS)
+                if (far < farS and far > nearS)
                     tmpSc.push_back( ScallopeRegion(dart(), angles[i-1], angles[i] - angles[i-1],
                             circle, angCFarT0, angCFarT, farC_, angFarT0, angFarT));
 
@@ -261,9 +261,9 @@ public:
         out->clear();
         if (tmpSc.size() <= 0) return true;
         int cur = 0;
-        if (tmpSc[0].nearCt0_ > 1000 or tmpSc[0].nearCt_ > 1000 or tmpSc[0].farCt0_ > 1000 or tmpSc[0].farCt_ > 1000
-                or tmpSc[0].nearCt0_ < -1000 or tmpSc[0].nearCt_ <-1000 or tmpSc[0].farCt0_ < -1000 or tmpSc[0].farCt_ < -1000)
-                printf("GOD %f %f %f %f\n", tmpSc[0].nearCt0_, tmpSc[0].nearCt_, tmpSc[0].farCt0_, tmpSc[0].farCt_);
+        //if (tmpSc[0].nearCt0_ > 1000 or tmpSc[0].nearCt_ > 1000 or tmpSc[0].farCt0_ > 1000 or tmpSc[0].farCt_ > 1000
+        //        or tmpSc[0].nearCt0_ < -1000 or tmpSc[0].nearCt_ <-1000 or tmpSc[0].farCt0_ < -1000 or tmpSc[0].farCt_ < -1000)
+        //        printf("GOD %f %f %f %f\n", tmpSc[0].nearCt0_, tmpSc[0].nearCt_, tmpSc[0].farCt0_, tmpSc[0].farCt_);
         out->emplace_back(new ScallopeRegion(tmpSc[0]));
         for (int i = 1; i < tmpSc.size(); i++) {
             if (tmpSc[i].nearC_ == tmpSc[cur].nearC_ and tmpSc[i].farC_ == tmpSc[cur].farC_) {
@@ -299,6 +299,7 @@ public:
               r = sqrt(g*g + (h*h - g*g) * rng.RandomFloat());
         Point2D ret(center_ + Vector2D(cos(theta), sin(theta)) * r);
         //printf("New Point at %f %f\n", ret.x, ret.y);
+        //printf("%f %f %f %f g%f h%f\n", center_.x, center_.y, theta, r, g, h);
         return center_ + Vector2D(cos(theta), sin(theta)) * r;
     }
 
@@ -323,10 +324,11 @@ private:
     float getArcDis_(const Circle &c, float alpha, float k) const{
         Vector2D oc(c.center - center_);
         float d2 = oc.LengthSquared(), d = sqrt(d2);
-        float gama = atan2(oc.y, oc.x);
+        float gama = oc.getAngle();
         float sinA = sin(alpha - gama);
+        //printf("arc %f %f %f %f %f\n", c.radius, d2, sinA, gama, alpha);
 
-        return sqrt(d2) * cos(alpha - gama)
+        return d * cos(alpha - gama)
                 + k * sqrt(c.radius * c.radius - d2 * sinA * sinA);
     }
 };
@@ -1237,8 +1239,8 @@ void Scalloped_Test() {
 
     bool cut = sc.Eclipse(Circle(pt, 1.f), &out);
 
-    printf("%f %f\n", pt.x, pt.y);
-    printf("%s %d\n", cut? "Yes" : "No", out.size());
+    //printf("%f %f\n", pt.x, pt.y);
+    //printf("%s %d\n", cut? "Yes" : "No", out.size());
     exit(1);
 }
 
